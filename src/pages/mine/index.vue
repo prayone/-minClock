@@ -1,6 +1,6 @@
 <template>
 	<div class="mine">
-		<div class="header">
+		<div class="header" @click="edit_info">
 			<div class="head_img">
 				<img :src="userInfo.avatarUrl"  alt="">
 			</div>
@@ -18,29 +18,30 @@
 		</div>
 		<div class="content">
 			<div class="cont_item">
-				<div class="zan-panel">
+				<div class="zan-panel zan_panel">
 			      <div class="zan-cell zan-cell--access">
-			        <div class="zan-cell__bd"><span class="zan-icon zan-icon-gift-card-pay imgIcon"></span>我的关注</div>
+			        <div class="zan-cell__bd"><span class="imgIcon imgIcon1"></span>我的关注</div>
+
 			        <div class="zan-cell__ft"></div>
 			      </div>
 			      <div class="zan-cell zan-cell--access">
-			        <div class="zan-cell__bd"><span class="zan-icon zan-icon-gift-card-pay imgIcon"></span>我的粉丝</div>
+			        <div class="zan-cell__bd"><span class="imgIcon imgIcon2"></span>我的粉丝</div>
 			        <div class="zan-cell__ft"></div>
 			      </div>
 			      <div class="zan-cell zan-cell--access">
-			        <div class="zan-cell__bd"><span class="zan-icon zan-icon-gift-card-pay imgIcon"></span>我的评论</div>
+			        <div class="zan-cell__bd"><span class="imgIcon imgIcon3"></span>我的评论</div>
 			        <div class="zan-cell__ft"></div>
 			      </div>
 			      <div class="zan-cell zan-cell--access">
-			        <div class="zan-cell__bd"><span class="zan-icon zan-icon-gift-card-pay imgIcon"></span>我的赞</div>
+			        <div class="zan-cell__bd"><span class="imgIcon imgIcon4"></span>我的赞</div>
 			        <div class="zan-cell__ft"></div>
 			      </div>
 			      <div class="zan-cell zan-cell--access">
-			        <div class="zan-cell__bd"><span class="zan-icon zan-icon-gift-card-pay imgIcon"></span>设置</div>
+			        <div class="zan-cell__bd"><span class="imgIcon imgIcon5"></span>设置</div>
 			        <div class="zan-cell__ft"></div>
 			      </div>
 			      <div class="zan-cell zan-cell--access">
-			        <div class="zan-cell__bd"><span class="zan-icon zan-icon-gift-card-pay imgIcon"></span>意见反馈</div>
+			        <div class="zan-cell__bd"><span class="imgIcon imgIcon6"></span>意见反馈</div>
 			        <div class="zan-cell__ft"></div>
 			      </div>
 			    </div>
@@ -59,6 +60,10 @@
 			}
 		},
 		methods:{
+			edit_info(){
+			   const  url="../edit_info/main?userInfo="+this.userInfo.nickName+","+this.userInfo.avatarUrl
+			   wx.navigateTo({ url })
+			},
 			getUserInfo () {
 		      // 调用登录接口
 		      wx.login({
@@ -106,11 +111,45 @@
 			align-items center
 	.content
 		background-color #f7f7f7
-		padding 10rpx 0	
+		padding 14rpx 0	
+		font-size 32rpx
 		.cont_item
 			background-color #fff
+			.zan_panel
+				margin 0
+			.zan-cell__bd
+				font-size 32rpx
+				display flex
+				align-items center
 			.imgIcon
+				display inline-block
+				width 50rpx
+				height 50rpx 
 				color #5acb9a
 				margin-right 16rpx
-			
+			.imgIcon1
+				background url(../../../static/img/care@2x.png) center center no-repeat
+				background-size 100% 100%
+				
+			.imgIcon2
+				background url(../../../static/img/fensi@2x.png) center center no-repeat
+				background-size 100% 100%
+				
+			.imgIcon3
+				background url(../../../static/img/recommend@2x.png) center center no-repeat
+				background-size 100% 100%
+				
+			.imgIcon4
+				background url(../../../static/img/zan@2x.png) center center no-repeat
+				background-size 100% 100%
+				
+			.imgIcon5
+				background url(../../../static/img/set@2x.png) center center no-repeat
+				background-size 100% 100%
+				
+			.imgIcon6
+				background url(../../../static/img/idea@2x.png) center center no-repeat
+				background-size 100% 100%
+				
+				
 </style>

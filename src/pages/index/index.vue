@@ -1,7 +1,12 @@
 <template>
-  <div class="">
-    <div class="userinfo">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover"/>
+  <div class="index">
+    <div class="header">
+      <div class="headerbg">
+        <img src="/static/img/headerbg.png" alt=""> 
+      </div>
+      <div class="userinfo">
+        <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover"/>
+      </div>
     </div>
     <div class="content">
       <div class="clock" @click="new_clock">
@@ -106,22 +111,43 @@ export default {
         }
       })
     },
+    onPullDownRefresh () {
+      wx.showNavigationBarLoading() //在标题栏中显示加载
+      //模拟加载
+      setTimeout(function () {
+        // complete
+        wx.hideNavigationBarLoading() //完成停止加载
+        wx.stopPullDownRefresh() //停止下拉刷新
+      }, 1000);
+    }
   },
   created () {
     // 调用应用实例的方法获取全局数据
     this.getUserInfo()
   }
+  
 }
 </script>
 <style lang='stylus' scoped>
-.userinfo 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.header 
+  position relative 
+  margin-bottom 70rpx
+.headerbg
+  width 100%
+  height 70rpx
+  img
+    width 100%
+    height 100%
+.userinfo
+  width 100%
+  text-align center
+  position absolute
+  top 10rpx
+  left 0
+  z-index 10
   .userinfo-avatar 
     width: 128rpx;
     height: 128rpx;
-    margin: 20rpx;
     border-radius: 50%;
 .content
   padding 24rpx
@@ -167,6 +193,4 @@ export default {
         background-color #5acb9a
         color #fff
         font-size 30rpx
-      
-       
 </style>

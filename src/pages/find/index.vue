@@ -5,6 +5,9 @@
 				<span class="zan-icon zan-icon-search search_icon"></span>
 				搜索
 			</div>
+			
+		</div>
+		<div class="content">
 			<div class="tag">
 				<div class="row">
 					<div class="col">全部</div>
@@ -13,14 +16,12 @@
 					<div class="col">亲子</div>
 				</div>
 				<div class="row">
-					<div class="col">全部</div>
-					<div class="col">阅读</div>
-					<div class="col">外语</div>
-					<div class="col">亲子</div>
+					<div class="col">技能</div>
+					<div class="col">习惯</div>
+					<div class="col">运动</div>
+					<div class="col">艺术</div>
 				</div>
 			</div>
-		</div>
-		<div class="content">
 			<div class="clock_item">
 	           <div class="clock_img">
 	              <img src="/static/img/header.jpg" alt="">
@@ -118,7 +119,7 @@
 			text-align center
 			border 1px solid #ccc
 			margin 0 auto
-			width 98%
+			width 98% 
 			padding 12rpx 0
 			border-radius 8rpx
 			.search_icon
@@ -127,6 +128,7 @@
 				height 30rpx
 				color #999
 		.tag
+			margin-bottom 30rpx
 			.row
 				display flex
 				justify-content space-around

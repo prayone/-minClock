@@ -53,25 +53,26 @@
 <style lang='stylus'>
 	.new_clock
 		padding 0 28rpx
-		font-size 24rpx
+		font-size 28rpx
 		.active_title
-			font-size 28rpx
+			font-size 34rpx
 			color #000
 			margin 40rpx 0 20rpx 0
 		.active_input
 			border 1px solid #ddd
-			padding 4rpx 24rpx 
+			padding 14rpx 24rpx 
 			border-radius 5rpx
 		.content
 			margin 70rpx 0
 			.radio_detail
 				margin-bottom 20rpx 
+				font-size 28rpx
 				.remark
 					margin-left 15rpx
-					font-size 22rpx
+					font-size 24rpx
 					color #999
 		.footer
-			margin-bottom 150rpx	
+			margin-bottom 180rpx	
 			.entry_fee
 				display flex
 				justify-content space-between
