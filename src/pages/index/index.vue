@@ -85,16 +85,19 @@
            </div>
       </div>
     </div>
+    <button @click="record">录音</button>
+    <button @click="play_record">播放录音</button>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      userInfo: {}
+      userInfo: {},
+      tempFilePath:'aa'
     }
   },
-  methods: {
+  methods: {                      
     new_clock () {
       const url = '../new_clock/main'
       wx.navigateTo({ url })
@@ -111,20 +114,80 @@ export default {
         }
       })
     },
-    onPullDownRefresh () {
+    record(){
+      var that=this
+      wx.startRecord({
+        success: function(res) {
+          that.tempFilePath = res.tempFilePath 
+          wx.showModal({
+            title: '提示',
+            content: that.tempFilePath,
+            success: function(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        },
+        fail: function(res) {
+           wx.showModal({
+            title: '提示',
+            content: "失败",
+            success: function(res) {
+              if (res.confirm) {
+                console.log('用户点击确定')
+              } else if (res.cancel) {
+                console.log('用户点击取消')
+              }
+            }
+          })
+        }
+      })
+      setTimeout(function() {
+        //结束录音  
+        wx.stopRecord()
+      }, 1000)
+    },
+    play_record(){
+      console.log(this.tempFilePath)
+       wx.playVoice({
+        filePath: this.tempFilePath,
+        complete: function(){
+          console.log(88)
+          // wx.showModal({
+          //   title: '提示',
+          //   content: this.tempFilePath,
+          //   success: function(res) {
+          //     if (res.confirm) {
+          //       console.log('用户点击确定')
+          //     } else if (res.cancel) {
+          //       console.log('用户点击取消')
+          //     }
+          //   }
+          // })
+        }
+      })
+    }
+  
+  },
+    onPullDownRefresh () {                          
       wx.showNavigationBarLoading() //在标题栏中显示加载
       //模拟加载
       setTimeout(function () {
         // complete
         wx.hideNavigationBarLoading() //完成停止加载
         wx.stopPullDownRefresh() //停止下拉刷新
-      }, 1000);
-    }
-  },
+      }, 1000)
+    },
   created () {
     // 调用应用实例的方法获取全局数据
     this.getUserInfo()
-  }
+
+  },
+
+
   
 }
 </script>

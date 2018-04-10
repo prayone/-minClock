@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "touristappid",
+	"appid": "wx63fabae13c45e5ae",
 	"projectname": "minclock",
 	"condition": {
 		"search": {
