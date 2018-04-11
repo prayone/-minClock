@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="all">
     <div
       v-for="item in list"
       :key="id"
@@ -38,5 +38,11 @@
 </script>
 
 <style scoped>
-
+.all{
+  display: flex;
+  justify-content: space-between;
+  width:100%;
+}
+.zan-tab__item{
+}
 </style>

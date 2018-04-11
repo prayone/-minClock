@@ -1,18 +1,18 @@
 <template>
   <div class="zan-tab">
-    <block v-if="scroll || false">
+    <block  v-if="scroll || false">
       <scroll-view
         class="zan-tab__bd zan-tab__bd--scroll"
         :class="{ 'zan-tab__bd--fixed' : fixed }"
         scroll-x="true"
         :style="'height' + mao +  height + 'px auto'"
       >
-        <ZanTabList v-bind="{ list , selectedId, componentId, _handleZanTabChange }"/>
+        <ZanTabList  v-bind="{ list , selectedId, componentId, _handleZanTabChange }"/>
       </scroll-view>
     </block>
     <block wx:else>
       <div class="zan-tab__bd" :class="{ 'zan-tab__bd--fixed' : fixed }">
-        <ZanTabList v-bind="{ list, selectedId, componentId , _handleZanTabChange}"/>
+        <ZanTabList class="" v-bind="{ list, selectedId, componentId , _handleZanTabChange}"/>
       </div>
     </block>
   </div>
@@ -54,5 +54,4 @@
 </script>
 
 <style scoped>
-
 </style>

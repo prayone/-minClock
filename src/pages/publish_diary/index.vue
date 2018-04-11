@@ -46,28 +46,43 @@
 		},
 		methods:{
 			getLocation(){
-				console.log(99)
-				wx.getLocation({
-				  type: 'wgs84',
-				  success: function(res) {
-				    var latitude = res.latitude
-				    var longitude = res.longitude
-				    var speed = res.speed
-				    var accuracy = res.accuracy
-				    wx.getLocation({
-						  type: 'gcj02', //返回可以用于wx.openLocation的经纬度
-						  success: function(res) {
-						    var latitude = res.latitude
-						    var longitude = res.longitude
-						    wx.openLocation({
-						      latitude: latitude,
-						      longitude: longitude,
-						      scale: 28
-						    })
-						  }
-						})
-				  }
+				wx.getSetting({
+				  success: (res) => {
+				        console.log(res.authSetting['scope.userLocation']);
+				        if(!res.authSetting['scope.userLocation']){
+				        	wx.showModal({
+							  title: '提示',
+							  content: '小程序要获取您的地理位置',
+							  success: function(res) {
+							    if (res.confirm) {
+							      wx.openSetting({
+								      success: (res) => {
+								        console.log(res);
+								        console.log(res.authSetting['scope.userLocation']);
+								        }
+								   })
+							    } else if (res.cancel) {
+							      console.log('用户点击取消')
+							    }
+							  }
+							})
+							
+				        }else{
+				        	console.log("success")
+				        	wx.getLocation({
+							  type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+							  success: function(res) {
+							    var latitude = res.latitude
+							    var longitude = res.longitude
+							    
+							  }
+							})
+				        }
+			        }
 				})
+				
+
+				
 			}
 		},
 	}

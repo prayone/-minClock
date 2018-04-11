@@ -14,7 +14,7 @@
       <div class="clock" @click="new_clock">
           + 新建打卡
       </div>
-      <div class="clock_item" @click="clock_detail">
+      <div class="clock_item" @click="clock_detail(1)">
            <div class="clock_img">
               <img src="/static/img/header.jpg" alt="">
            </div>
@@ -35,7 +35,7 @@
              <button class="clock_button">打卡</button>
            </div>
       </div>
-      <div class="clock_item" @click="clock_detail">
+      <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
               <img src="/static/img/header.jpg" alt="">
            </div>
@@ -53,7 +53,7 @@
              <button class="clock_button">打卡</button>
            </div>
       </div>
-      <div class="clock_item" @click="clock_detail">
+      <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
               <img src="/static/img/header.jpg" alt="">
            </div>
@@ -106,9 +106,13 @@ export default {
       const url = '../new_clock/main'
       wx.navigateTo({ url })
     },
-    clock_detail(){
-      const url = '../clock_detail/main'
-      wx.navigateTo({ url })
+    clock_detail(info){
+      console.log(info)
+      if(info){
+        wx.navigateTo({url:'../publish_diary/main'})
+      }else{
+        wx.navigateTo({url:'../clock_detail/main'})
+      }
     },
     getUserInfo () {
       // 调用登录接口

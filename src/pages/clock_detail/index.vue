@@ -45,7 +45,9 @@
 			</div>
 		</div>
 		<div class="sec_tab">
-			
+			<div style="margin: 20px 0">
+		      <ZanTab v-bind="tab1" :componentId="'tab1'" :handleZanTabChange="handleZanTabChange"/>
+		    </div>
 		</div>
 		<div class="footer">
 			<div class="clock_btn" @click='jump_diary'>
@@ -55,17 +57,34 @@
 	</div>
 </template>
 <script>
+	import ZanTab from '../../components/zan/tab'
 	import ZanNoticeBar from '../../components/zan/noticebar'
 	export default {
 		 components: {
-		      zanbar: ZanNoticeBar
+		      zanbar: ZanNoticeBar,
+		      ZanTab
 		    },
 		data(){
 			return {
+
 				 movable: {
 		          text: '生活赋予我们一种巨大的和无限高贵的礼品，这就是青春：充满着力量，充满着期待志愿，充满着求知和斗争的志向，充满着希望信心和青春。',
-		          animationData: []
+		          animationData: [],
 		        },
+		         tab1: {
+			          list: [{
+			            id: 'all',
+			            title: '日记'
+			          },{
+			            id: 'send',
+			            title: '详情'
+			          }, {
+			            id: 'sign',
+			            title: '成员'
+			          }],
+			          scroll: false,
+			          selectedId: 'all'
+			        },
 			}
 		},
 		methods:{
@@ -87,7 +106,12 @@
 		      jump_diary(){
 		      	const url="../publish_diary/main"
 		      	wx.navigateTo({ url })
-		      }
+		      },
+		      ...ZanTab.methods,
+		      handleZanTabChange (e) {
+		        const {componentId, selectedId} = e
+		        this[componentId].selectedId = selectedId
+		      },
 		}
 	}
 </script>
