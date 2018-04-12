@@ -38,14 +38,23 @@
 	</div>
 </template>
 <script>
+	import QQMapWX from '../../assets/js/qqmap-wx-jssdk.min.js'
+	// var  QQMapWX = require('../../assets/js/qqmap-wx-jssdk.min.js');
 	export default {
 		data(){
 			return {
-
+				qqmapsdk:null
 			}
+		},
+		onLoad(){
+			 // 实例化API核心类
+	         this.qqmapsdk = new QQMapWX({
+	            key: 'MRLBZ-7AQ35-SHHIU-QMQMQ-VFRU6-JMB5Z'
+	        });
 		},
 		methods:{
 			getLocation(){
+				var that=this
 				wx.getSetting({
 				  success: (res) => {
 				        console.log(res.authSetting['scope.userLocation']);
@@ -74,15 +83,27 @@
 							  success: function(res) {
 							    var latitude = res.latitude
 							    var longitude = res.longitude
-							    
+							    // 调用接口
+								that.qqmapsdk.reverseGeocoder({
+								    location: {
+								        latitude: latitude,
+								        longitude: longitude
+								    },
+								    success: function(res) {
+								        console.log("llllllllllllllllllllllll"+res);
+								    },
+								    fail: function(res) {
+								        console.log(res);
+								    },
+								    complete: function(res) {
+								        console.log(res);
+								    }
+								});
 							  }
 							})
 				        }
 			        }
 				})
-				
-
-				
 			}
 		},
 	}

@@ -12,7 +12,7 @@
     </block>
     <block wx:else>
       <div class="zan-tab__bd" :class="{ 'zan-tab__bd--fixed' : fixed }">
-        <ZanTabList class="" v-bind="{ list, selectedId, componentId , _handleZanTabChange}"/>
+        <ZanTabList  v-bind="{ list, selectedId, componentId , _handleZanTabChange}"/>
       </div>
     </block>
   </div>

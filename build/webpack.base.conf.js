@@ -6,6 +6,9 @@ var vueLoaderConfig = require('./vue-loader.conf')
 var MpvuePlugin = require('webpack-mpvue-asset-plugin')
 var glob = require('glob')
 
+// 在开头引入webpack，后面的plugins那里需要
+var webpack = require('webpack')
+
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
@@ -41,7 +44,8 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue': 'mpvue',
-      '@': resolve('src')
+      '@': resolve('src'),
+      'QQMapWX': resolve('src/assets/js/qqmap-wx-jssdk.min.js')
     },
     symlinks: false
   },

@@ -14,19 +14,19 @@
       <div class="clock" @click="new_clock">
           + 新建打卡
       </div>
-      <div class="clock_item" @click="clock_detail(1)">
+      <div class="clock_item" @click="clock_detail(team_leader)">
            <div class="clock_img">
               <img src="/static/img/header.jpg" alt="">
            </div>
            <div class="cont">
                <p class="cont_title">
                 活动名称
-                <span class="team_leader">群主</span>
+                <span v-if="team_leader" class="team_leader">群主</span>
               </p>
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
                  <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user.png" alt="">
+                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
                  <span>18人已打卡</span>
                </p>
                
@@ -44,7 +44,7 @@
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
                  <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user.png" alt="">
+                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
                  <span>18人已打卡</span>
                </p>
                
@@ -62,7 +62,7 @@
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
                  <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user.png" alt="">
+                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
                  <span>18人已打卡</span>
                </p>
                
@@ -71,7 +71,7 @@
              <button class="clock_button">打卡</button>
            </div>
       </div>
-      <div class="clock_item">
+      <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
               <img src="/static/img/header.jpg" alt="">
            </div>
@@ -80,7 +80,7 @@
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
                  <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user.png" alt="">
+                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
                  <span>18人已打卡</span>
                </p>
                
@@ -98,7 +98,8 @@ export default {
   data () {
     return {
       userInfo: {},
-      tempFilePath:''
+      tempFilePath:'',
+      team_leader:1
     }
   },
   methods: {                      
@@ -108,11 +109,7 @@ export default {
     },
     clock_detail(info){
       console.log(info)
-      if(info){
-        wx.navigateTo({url:'../publish_diary/main'})
-      }else{
-        wx.navigateTo({url:'../clock_detail/main'})
-      }
+      wx.navigateTo({url:'../clock_detail/main?team_lead='+info})
     },
     getUserInfo () {
       // 调用登录接口
