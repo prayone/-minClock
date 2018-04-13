@@ -3,11 +3,48 @@
 		<div class="header">
 			<textarea class="textarea" name="diary" placeholder="说说今天的感想和收获吧...">
 			</textarea>
+			<div class="main_function">
+				<div class="img" v-if='img_urls'>
+					<div  v-for="(item,index) in img_urls" :key="item" class="main_photo">
+						<img :src="item" alt="">
+						<span @click='clear_img(index)' v-if='item' class="zan-icon zan-icon-clear clear"></span>
+					</div>
+					<div v-if='img_urls.length' class="addimg"  @click='add_img'>
+						<img src="/static/img/add.png" alt="">
+					</div>
+				</div>
+				<div class="main_record" v-if="!isRecord">
+					<div class="start_record" v-if='start_record'>
+						<div class="record_img" @click="over_record">
+							<div class="record_mini">
+							</div>
+						</div>
+						<div class="record_info">
+							<p class="timer">定时器</p>
+							<p class="record_text">录音时长10分钟以内</p>
+						</div>
+					</div>
+					<div class="play_record" v-if="play_record">
+						<div class="record_img" @click="play_records">
+							<img src="/static/img/play_record.png" alt="">
+						</div>
+						<div class="record_info_play">
+							<p class="record_text">点击可以播放录音</p>
+						</div>
+						<div class="remove_record">
+							<p class="remove_text" @click="remove_record">删除</p>
+						</div>
+					</div>
+				</div>
+				<div class="main_video">
+					
+				</div>
+			</div>
 			<div class="function">
-				<div class="photo">
+				<div class="photo" v-if="!img_urls.length" @click='add_img'>
 					<img src="/static/img/photo.png" alt="">
 				</div>
-				<div class="record">
+				<div class="record" v-if="isRecord" @click="add_record">
 					<img src="/static/img/record.png" alt="">
 				</div>
 				<div class="video">
@@ -23,6 +60,9 @@
 		        <div class="zan-cell__ft"></div>
 		      </div>
 		    </div>
+		</div>
+		<div>
+			
 		</div>
 		<div class="footer">
 			<div class="all">
@@ -43,9 +83,21 @@
 	export default {
 		data(){
 			return {
-				qqmapsdk:null
+				qqmapsdk:null,
+				img_urls:[],
+				addimg:false,
+				record_tempFilePath:'',
+				start_record:false,
+				play_record:false,
+				isRecord:true
 			}
 		},
+		 onReady: function (e) {
+    // 使用 wx.createAudioContext 获取 audio 上下文 context
+    this.audioCtx = wx.createAudioContext('myAudio')
+    this.audioCtx.setSrc('')
+    this.audioCtx.play()
+  },
 		onLoad(){
 			 // 实例化API核心类
 	         this.qqmapsdk = new QQMapWX({
@@ -53,6 +105,7 @@
 	        });
 		},
 		methods:{
+			//获取位置
 			getLocation(){
 				var that=this
 				wx.getSetting({
@@ -104,11 +157,78 @@
 				        }
 			        }
 				})
-			}
-		},
+			},
+			//添加图片
+			add_img(){
+				var that=this
+				wx.chooseImage({
+					  count: 9, 
+					  sizeType: ['compressed'], 
+					  sourceType: ['album', 'camera'], 
+					  success: function (res) {
+					    that.img_urls=that.img_urls.concat(res.tempFilePaths)
+					    //tempFilePaths是要上传给服务器的图片地址
+					    // that.tempFilePaths = res.tempFilePaths
+					    // console.log(that.img_urls)
+					  }
+				})
+			},
+			clear_img(index){
+				this.img_urls.splice(index,1)
+				console.log(this.img_urls)
+			},
+			add_record(){
+				console.log("sssssssssss")
+		      var that=this
+		      this.start_record=true
+		      this.isRecord=false
+		      wx.startRecord({
+		        success: function(res) {
+		        	// 本地录音文件
+		          that.record_tempFilePath = res.tempFilePath
+		          console.log(that.record_tempFilePath)
+		          wx.showModal({
+					  title: '提示',
+					  content: that.record_tempFilePath,
+					  success: function(res) {
+					    
+					  }
+					})
+		          
+		        },
+		        fail: function(res) {
+		           
+		        }
+		      })
+		    },
+		    over_record(){
+		    	wx.stopRecord()
+		    	this.start_record=false
+		   		this.play_record=true
+		    },
+		    play_records(){
+		    	console.log(99)
+		    	var that=this
+		    	wx.playVoice({
+		        filePath: that.record_tempFilePath,
+		        complete: function(){
+		          console.log(88)
+		        }
+		      })
+		    },
+		    remove_record(){
+		    	this.record_tempFilePath=null
+		      	this.isRecord=true
+				this.play_record=false
+		    }
+
+		}
 	}
 </script>
 <style lang='stylus'>
+img
+	width 100%
+	height 100%
 .publish_diary
 	.textarea
 		height 250rpx
@@ -116,6 +236,54 @@
 		width 90%
 		border-bottom 1px solid #ddd
 		padding 20rpx 40rpx
+	.main_function
+		.img
+			padding 10rpx 20rpx
+		.main_photo
+			width 120rpx;
+			height 120rpx
+			margin-right 50rpx
+			display inline-block
+			position relative
+			.clear
+				color red
+				position absolute
+				right -10rpx
+				top -10rpx
+				background-color #fff
+				border-radius 50%
+		.addimg
+			display inline-block
+			width 120rpx
+			height 120rpx
+		.start_record,.play_record
+			display flex
+			justify-content flex-start 
+			align-items center
+			padding 0 20rpx
+			.record_img
+				width 50rpx
+				height 50rpx
+				border 1px solid #ddd
+				border-radius 50%
+				padding 10rpx
+				margin-right 28rpx
+				.record_mini
+					width 50rpx
+					height 50rpx
+					border-radius 50%
+					background-color red
+			.record_text
+				font-size 24rpx
+				color #888
+			.remove_text
+				border 1px solid red
+				font-size 28rpx
+				padding 10rpx 20rpx
+				border-radius 5rpx
+		.play_record
+			justify-content space-between 
+			padding 20rpx	
 	.function	
 		padding 20rpx 40rpx 
 		.photo,.record,.video
@@ -167,5 +335,4 @@
 		.publish
 			width 62%
 			background-color #5acb9a
-			
 </style>
