@@ -53,44 +53,65 @@
              <button class="clock_button">打卡</button>
            </div>
       </div>
-      <div class="clock_item" @click="clock_detail(0)">
-           <div class="clock_img">
-              <img src="/static/img/header.jpg" alt="">
-           </div>
-           <div class="cont">
-               <p class="cont_title">活动名称</p>
-               <p class="cont_detail">
-                 <img class="cont_icon" src="/static/img/alarm.png" alt="">
-                 <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
-                 <span>18人已打卡</span>
-               </p>
-               
-           </div>
-           <div class="clock_btn">
-             <button class="clock_button">打卡</button>
-           </div>
+    </div>
+    <div class="diary_item">
+      <div class="diary">
+        <div class="diary_img">
+          <img src="/static/img/header.jpg">
+        </div>
+        <div class="userinfo_diary">
+          <p class="nickName">nickName</p>
+          <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
+        </div>
       </div>
-      <div class="clock_item" @click="clock_detail(0)">
-           <div class="clock_img">
-              <img src="/static/img/header.jpg" alt="">
-           </div>
-           <div class="cont">
-               <p class="cont_title">活动名称</p>
-               <p class="cont_detail">
-                 <img class="cont_icon" src="/static/img/alarm.png" alt="">
-                 <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
-                 <span>18人已打卡</span>
-               </p>
-               
-           </div>
-           <div class="clock_btn">
-             <button class="clock_button">打卡</button>
-           </div>
+      <div class="diary_detail">
+        今天的任务是学习日语
+      </div>
+      <div class="zan-panel active">
+          <div class="zan-cell zan-cell--access">
+              <div class="zan-cell__bd active_all">
+                <div class="active_img">
+                  <img src="/static/img/header.jpg">
+                </div>
+                <div class="active_info">
+                  <p style="margin-bottom:18rpx;">活动名称</p>
+                  <p style="color:#888;font-size:24rpx">1233人已参加</p>
+                </div>
+              </div>
+              <div class="zan-cell__ft">
+              </div>
+          </div>
       </div>
     </div>
-    
+    <div class="diary_item">
+      <div class="diary">
+        <div class="diary_img">
+          <img src="/static/img/header.jpg">
+        </div>
+        <div class="userinfo_diary">
+          <p class="nickName">nickName</p>
+          <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
+        </div>
+      </div>
+      <div class="diary_detail">
+        今天的任务是学习日语
+      </div>
+      <div class="zan-panel active">
+          <div class="zan-cell zan-cell--access">
+              <div class="zan-cell__bd active_all">
+                <div class="active_img">
+                  <img src="/static/img/header.jpg">
+                </div>
+                <div class="active_info">
+                  <p style="margin-bottom:18rpx;">活动名称</p>
+                  <p style="color:#888;font-size:24rpx">1233人已参加</p>
+                </div>
+              </div>
+              <div class="zan-cell__ft">
+              </div>
+          </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -102,7 +123,10 @@ export default {
       team_leader:1
     }
   },
-  methods: {                      
+  onLoad(){
+
+  },
+  methods: {
     new_clock () {
       const url = '../new_clock/main'
       wx.navigateTo({ url })
@@ -114,12 +138,30 @@ export default {
     getUserInfo () {
       // 调用登录接口
       wx.login({
-        success: () => {
-          wx.getUserInfo({
-            success: (res) => {
-              this.userInfo = res.userInfo
-            }
-          })
+        success: function(res) {
+           if (res.code) {
+            console.log(res.code)
+            //发起网络请求
+            wx.request({
+              url: 'https://pay.yunshuxie.com/v1/miniprogram/login.htm',
+              data: {
+                code: res.code
+              },
+              header:{
+                'content-type':'application/json'
+              },
+              success:function(res){
+                console.log(res.data)
+              }
+            })
+          } else {
+            console.log('登录失败！' + res.errMsg)
+          }
+          // wx.getUserInfo({
+          //   success: (res) => {
+          //     this.userInfo = res.userInfo
+          //   }
+          // })
         }
       })
     }
@@ -141,78 +183,129 @@ export default {
 }
 </script>
 <style lang='stylus' scoped>
-.header 
-  position relative 
-  margin-bottom 70rpx
-.headerbg
-  width 100%
-  height 70rpx
-  img
-    width 100%
-    height 100%
-.userinfo
-  width 100%
-  text-align center
-  position absolute
-  top 10rpx
-  left 0
-  z-index 10
-  .userinfo-avatar 
-    width: 128rpx;
-    height: 128rpx;
-    border-radius: 50%;
-.content
-  padding 24rpx
-  .clock
-    font-size 30rpx
-    color #5acb9a
-    margin-bottom 24rpx
-  .clock_item
-    border 1px solid #dddddd
-    padding 20rpx
-    display flex
-    justify-content space-between
-    margin-bottom 12rpx
-    .clock_img
-      width 100rpx 
-      height 100rpx
+    .header 
+      position relative 
+      margin-bottom 70rpx
+    .headerbg
+      width 100%
+      height 70rpx
       img
         width 100%
         height 100%
-    .cont
-      font-size 24rpx  
-      color #999
-      .cont_title
-        font-size 28rpx
-        color #111111
-        margin-bottom 26rpx
-        .team_leader
-          display inline-block
-          width 72rpx
-          height 40rpx
-          line-height 40rpx
-          text-align center
-          font-size 24rpx
-          background-color #eaa246
-          color #fff
-          border-radius 6rpx
-      .cont_detail
-        .cont_icon
-          width 30rpx
-          height 30rpx
-          margin-right 10rpx
-          position relative
-          top 5rpx
-        .icon_user
-          margin-left 16rpx
-    .clock_btn
-      display flex
-      align-items center
-      .clock_button
-        width 120rpx 
-        height 70rpx
-        line-height 70rpx
-        background-color #5acb9a
-        color #fff
+    .userinfo
+      width 100%
+      text-align center
+      position absolute
+      top 10rpx
+      left 0
+      z-index 10
+      .userinfo-avatar 
+        width: 128rpx;
+        height: 128rpx;
+        border-radius: 50%;
+    .content
+      padding 24rpx
+      .clock
         font-size 30rpx
+        color #5acb9a
+        margin-bottom 24rpx
+      .clock_item
+        border 1px solid #dddddd
+        padding 20rpx
+        display flex
+        justify-content space-between
+        margin-bottom 12rpx
+        .clock_img
+          width 100rpx 
+          height 100rpx
+          img
+            width 100%
+            height 100%
+        .cont
+          font-size 24rpx  
+          color #999
+          .cont_title
+            font-size 28rpx
+            color #111111
+            margin-bottom 26rpx
+            .team_leader
+              display inline-block
+              width 72rpx
+              height 40rpx
+              line-height 40rpx
+              text-align center
+              font-size 24rpx
+              background-color #eaa246
+              color #fff
+              border-radius 6rpx
+          .cont_detail
+            .cont_icon
+              width 30rpx
+              height 30rpx
+              margin-right 10rpx
+              position relative
+              top 5rpx
+            .icon_user
+              margin-left 16rpx
+        .clock_btn
+          display flex
+          align-items center
+          .clock_button
+            width 120rpx 
+            height 70rpx
+            line-height 70rpx
+            background-color #5acb9a
+            color #fff
+            font-size 30rpx
+    .diary
+      font-size 34rpx
+      padding 45rpx 30rpx 0 30rpx
+      display flex
+      justify-content flex-start
+      align-items center
+      position relative
+      &::after
+        position absolute
+        width 100%
+        left 0
+        top 0
+        background-color #f3f3f3
+        height 12rpx
+        content ''
+      .diary_img
+        width 80rpx
+        height 80rpx
+        margin-right 40rpx
+        img
+          width 100%
+          height 100%
+          border-radius 50%
+      .userinfo_diary
+        .nickName
+          color #5acb9a
+          font-size 28rpx
+        .diary_timer
+          color #888
+          font-size 24rpx
+          margin-top 10rpx
+          .timer
+            margin-right 30rpx
+    .diary_detail
+      font-size 28rpx
+      color #444
+      padding 30rpx
+    .active
+      .active_all
+        margin 0
+        display flex
+        justify-content flex-start
+        align-items center
+        .active_img
+          width 140rpx
+          height 100rpx
+          margin-right 40rpx
+          img
+            width 100%
+            height 100%
+      
 </style>

@@ -21,19 +21,19 @@
 			</div>
 		</div>
 		<div class="tools">
-			<div class="calander">
+			<div class="calander" @click="calendar">
 				<p class="calander_img">
 					<img src="/static/img/canader.png" alt="">
 				</p>
 				打卡日历
 			</div>
-			<div class="charts">
+			<div class="charts" @click="billboard">
 				<p class="calander_img">
 					<img src="/static/img/phb.png" alt="">
 				</p>
 				打卡排行
 			</div>
-			<div class="reset">
+			<div class="reset" @click="clock_set">
 				<p class="calander_img">
 					<img src="/static/img/reset.png" alt="">
 				</p>
@@ -139,6 +139,15 @@
 		      },
 		      clock_manager(){
 		      	wx.navigateTo({ url:"../clock_manager/main" })
+		      },
+		      calendar(){
+		      	wx.navigateTo({ url:"../calendar/main" })
+		      },
+		       clock_set(){
+		      	wx.navigateTo({ url:"../clock_set/main" })
+		      },
+		      billboard(){
+		      	wx.navigateTo({ url:"../billboard/main" })
 		      }
 		}
 	}

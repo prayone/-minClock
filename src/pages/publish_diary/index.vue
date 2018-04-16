@@ -24,20 +24,38 @@
 							<p class="record_text">录音时长10分钟以内</p>
 						</div>
 					</div>
+					<!-- 播放录音 -->
 					<div class="play_record" v-if="play_record">
-						<div class="record_img" @click="play_records">
-							<img src="/static/img/play_record.png" alt="">
-						</div>
-						<div class="record_info_play">
-							<p class="record_text">点击可以播放录音</p>
-						</div>
-						<div class="remove_record">
-							<p class="remove_text" @click="remove_record">删除</p>
-						</div>
+						<div class="zan-panel zan_panel">
+					      <div class="zan-cell">
+					      	<div class="zan-cell__bd flexNone">
+					        	<div class="play_record_img" @click="play_records">
+									<img :src="play_init" alt="">
+								</div>
+					        </div>
+					      	<div class="zan-cell__bd">
+					        	<div class="zan-cell__text">
+					        		<div class="record_info_play">
+										<p class="record_text">点击可以播放录音</p>
+									</div>
+					        	</div>
+					        </div>
+					        <div class="zan-cell__ft">
+					        	<div class="remove_record">
+									<p class="remove_text" @click="remove_record">删除</p>
+								</div>
+					        </div>
+					      </div>
+					    </div>
 					</div>
+
 				</div>
-				<div class="main_video">
-					
+				<!-- 视频 -->
+				<div class="main_video" v-if="video_src">
+					<video :src="video_src"></video>
+					<div class="remove_video">
+						<p class="remove_text" @click="remove_video">删除</p>
+					</div>
 				</div>
 			</div>
 			<div class="function">
@@ -47,7 +65,7 @@
 				<div class="record" v-if="isRecord" @click="add_record">
 					<img src="/static/img/record.png" alt="">
 				</div>
-				<div class="video">
+				<div class="video" v-if="!video_src" @click="add_video">
 					<img src="/static/img/video.png" alt="">
 				</div>
 			</div>
@@ -57,7 +75,7 @@
 		      <div class="zan-cell zan-cell--access">
 		      	<span class="zan-icon zan-icon-location"></span>
 		        <div class="zan-cell__bd">所在位置</div>
-		        <div class="zan-cell__ft"></div>
+		        <div class="zan-cell__ft">{{address}}</div>
 		      </div>
 		    </div>
 		</div>
@@ -89,7 +107,10 @@
 				record_tempFilePath:'',
 				start_record:false,
 				play_record:false,
-				isRecord:true
+				isRecord:true,
+				play_init:'/static/img/play_record.png',
+				address:"address",
+				video_src:''
 			}
 		},
 		 onReady: function (e) {
@@ -143,7 +164,8 @@
 								        longitude: longitude
 								    },
 								    success: function(res) {
-								        console.log("llllllllllllllllllllllll"+res);
+								        console.log(res.result.address);
+								        that.address = res.result.address
 								    },
 								    fail: function(res) {
 								        console.log(res);
@@ -208,11 +230,11 @@
 		    },
 		    play_records(){
 		    	console.log(99)
+		    	this.play_init="/static/img/bofang.gif"
 		    	var that=this
 		    	wx.playVoice({
 		        filePath: that.record_tempFilePath,
 		        complete: function(){
-		          console.log(88)
 		        }
 		      })
 		    },
@@ -220,7 +242,21 @@
 		    	this.record_tempFilePath=null
 		      	this.isRecord=true
 				this.play_record=false
-		    }
+		    },
+		    add_video(){
+		    	 var that = this
+			        wx.chooseVideo({
+			            sourceType: ['album','camera'],
+			            maxDuration: 60,
+			      camera: 'back',
+			            success: function(res) {
+			                that.video_src=res.tempFilePath
+			            }
+			        })
+		    },
+		    remove_video(){
+		    	this.video_src=''
+		    },
 
 		}
 	}
@@ -256,11 +292,14 @@ img
 			display inline-block
 			width 120rpx
 			height 120rpx
-		.start_record,.play_record
+		.main_record
+			padding 20rpx 0
+		.start_record
 			display flex
 			justify-content flex-start 
 			align-items center
 			padding 0 20rpx
+			
 			.record_img
 				width 50rpx
 				height 50rpx
@@ -276,14 +315,37 @@ img
 			.record_text
 				font-size 24rpx
 				color #888
+		.play_record
+			.record_info_play
+				color #999
+			.flexNone 
+				flex none
+				border 1px solid #bbb
+				margin-right 15rpx
+				padding 20rpx
+			.zan-cell__bd
+			.play_record_img
+				width 50rpx
+				height 50rpx
 			.remove_text
 				border 1px solid red
 				font-size 28rpx
 				padding 10rpx 20rpx
 				border-radius 5rpx
-		.play_record
-			justify-content space-between 
-			padding 20rpx	
+		.main_video
+			display flex
+			align-items center
+			justify-content space-between
+			padding 0 16rpx
+			.remove_video
+				.remove_text
+					border 1px solid red
+					font-size 28rpx
+					padding 10rpx 20rpx
+					border-radius 5rpx
+			video
+				width 70%
+				height 400rpx
 	.function	
 		padding 20rpx 40rpx 
 		.photo,.record,.video
