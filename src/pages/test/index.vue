@@ -1,24 +1,53 @@
 <template>
 	<div class="test">
-		<div class="record">
+		<!-- <div class="record">
 			<button @click="record">录音</button>
     	<button @click="play_record">播放录音</button>
 		</div>
     <view class="container">
         <button @click="bindButtonTap">获取视频</button>
         <video :src="src"></video>
-    </view>
+    </view> -->
+    <div class="ss">
+        <button @click="new_record">xin录音</button>
+    </div>
+    <div class="audio1">
+      <audio  :src="src" class="audio"></audio>
+    </div>
 	</div>
 </template>
 <script>
+const recorderManager = wx.getRecorderManager()
 	export default {
   data () {
     return {
       tempFilePath:'',
-      src:''
+      src:'/static/1.mp3'
     }
   },
-  methods: {                      
+  methods: {
+  new_record(){
+    var that=this
+      const options = {
+        duration: 10000,
+        sampleRate: 44100,
+        numberOfChannels: 1,
+        encodeBitRate: 192000,
+        format: 'mp3',
+        frameSize: 50
+      }
+
+      recorderManager.start(options)
+
+      setTimeout(function() {
+        //结束录音  
+        recorderManager.onStop((res) => {
+          console.log('recorder stop', res)
+          that.src=res.tempFilePath
+          console.log(that.src)
+        })
+      }, 1000)
+  },                      
     record(){
       var that=this
       wx.startRecord({
@@ -90,10 +119,15 @@
   },
 }
 </script>
-<style lang="stylus">
-	.test
+<style>
+	/*.test
 		padding 20rpx
-	button
-		width 80%
-		margin 10rpx auto
+	// button
+	// 	width 80%
+	// 	margin 10rpx auto*/
+    .audio{
+      width: 100%;
+      height: 400rpx;
+    }
+        
 </style>

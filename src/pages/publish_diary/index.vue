@@ -30,7 +30,7 @@
 					      <div class="zan-cell">
 					      	<div class="zan-cell__bd flexNone">
 					        	<div class="play_record_img" @click="play_records">
-									<img :src="play_init" alt="">
+									<img :src="(playStatus?'/static/img/bofang.gif':'/static/img/play_record.png')" alt="">
 								</div>
 					        </div>
 					      	<div class="zan-cell__bd">
@@ -108,6 +108,7 @@
 				start_record:false,
 				play_record:false,
 				isRecord:true,
+				playStatus:false,
 				play_init:'/static/img/play_record.png',
 				address:"address",
 				video_src:''
@@ -229,19 +230,34 @@
 		   		this.play_record=true
 		    },
 		    play_records(){
+		    	var that = this
+	    		// that.playStatus = !that.playStatus
+
+		    	if(that.playStatus){
+	    			that.playStatus = !that.playStatus
+
+		    		wx.stopVoice()
+
+		    	}else{
+	    			that.playStatus = !that.playStatus
+
+					wx.playVoice({
+				        filePath: that.record_tempFilePath,
+				        sucess: function(){
+
+				        }
+		      		})
+		    	}
 		    	console.log(99)
-		    	this.play_init="/static/img/bofang.gif"
-		    	var that=this
-		    	wx.playVoice({
-		        filePath: that.record_tempFilePath,
-		        complete: function(){
-		        }
-		      })
+		    	// this.play_init="/static/img/bofang.gif"
+		    	
+		    	
 		    },
 		    remove_record(){
 		    	this.record_tempFilePath=null
 		      	this.isRecord=true
 				this.play_record=false
+				this.playStatus=false
 		    },
 		    add_video(){
 		    	 var that = this
