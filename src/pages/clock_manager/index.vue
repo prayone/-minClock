@@ -30,6 +30,14 @@
 			      </div>
 		    </div>
 		</div>
+		<div class="notice_set">
+			<div class="zan-panel">
+		      <div class="zan-cell zan-cell--access">
+		        <div class="zan-cell__bd"><span class="zan-icon zan-icon-edit"> </span>公告设置</div>
+		      </div>
+		    </div>
+			<input type="text" class="input" placeholder="请输入公告...">
+		</div>
 		<div class="user_manager">
 			<div class="zan-panel">
 		      <div class="zan-cell zan-cell--access">
@@ -100,6 +108,18 @@
 		margin 0
 		.zan-cell__bd
 			color #555
+	.notice_set
+		background-color #fff
+		margin 20rpx 0
+		font-size 28rpx
+		.zan-icon
+			font-weight 800
+			color #5acb9a
+			margin-right 20rpx
+		.input
+			border-top 1px solid #ddd
+			border-bottom 1px solid #ddd
+			padding 20rpx 28rpx
 	.user_manager
 		margin-top 20rpx
 		background-color #fff

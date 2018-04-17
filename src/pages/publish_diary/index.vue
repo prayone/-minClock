@@ -140,10 +140,12 @@
 							  success: function(res) {
 							    if (res.confirm) {
 							      wx.openSetting({
-								      success: (res) => {
-								        console.log(res);
-								        console.log(res.authSetting['scope.userLocation']);
-								        }
+								      // success: (res) => {
+								      //   res.authSetting = {
+								      //   "scope.userLocation": true,
+								      //   "scope.userInfo":true
+								      // }
+								      //   }
 								   })
 							    } else if (res.cancel) {
 							      console.log('用户点击取消')
@@ -214,7 +216,6 @@
 					  title: '提示',
 					  content: that.record_tempFilePath,
 					  success: function(res) {
-					    
 					  }
 					})
 		          

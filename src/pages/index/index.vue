@@ -123,9 +123,11 @@ export default {
       team_leader:1
     }
   },
-  onLoad(){
+  onShow(){
+       this.getUserInfo()
 
-  },
+    },
+  
   methods: {
     new_clock () {
       const url = '../new_clock/main'
@@ -135,12 +137,30 @@ export default {
       console.log(info)
       wx.navigateTo({url:'../clock_detail/main?team_lead='+info})
     },
+    
     getUserInfo () {
+          // 调用登录接口
+          wx.login({
+            success: () => {
+              wx.getUserInfo({
+                success: (res) => {
+                  this.userInfo = res.userInfo
+                  console.log("res")
+                },
+                fail(){
+
+                  wx.navigateTo({url:'../authorize/main'})
+                }
+              })
+            }
+          })
+        },
+    getSession () {
       // 调用登录接口
       wx.login({
         success: function(res) {
            if (res.code) {
-            console.log(res.code)
+            console.log("res.code=",res.code)
             //发起网络请求
             wx.request({
               url: 'https://pay.yunshuxie.com/v1/miniprogram/login.htm',
@@ -151,7 +171,7 @@ export default {
                 'content-type':'application/json'
               },
               success:function(res){
-                console.log(res.data)
+                console.log("session=",res.data.data)
               }
             })
           } else {
@@ -177,7 +197,7 @@ export default {
     },
   created () {
     // 调用应用实例的方法获取全局数据
-    this.getUserInfo()
+    this.getSession()
   },
   
 }
@@ -307,5 +327,4 @@ export default {
           img
             width 100%
             height 100%
-      
 </style>

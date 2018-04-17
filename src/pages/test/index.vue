@@ -1,133 +1,99 @@
 <template>
 	<div class="test">
-		<!-- <div class="record">
-			<button @click="record">录音</button>
-    	<button @click="play_record">播放录音</button>
-		</div>
-    <view class="container">
-        <button @click="bindButtonTap">获取视频</button>
-        <video :src="src"></video>
-    </view> -->
-    <div class="ss">
-        <button @click="new_record">xin录音</button>
-    </div>
-    <div class="audio1">
-      <audio  :src="src" class="audio"></audio>
-    </div>
+      <div class="btn">
+        <button @click="luyin">录音</button>
+      </div>
+      <div class="btn">
+        <button @click="over_luyin">停止录音</button>
+      </div>
+      <view class="text-center">
+        <audio id="audio" :src="audio.src" loop="false" controls="true" :poster="audio.poster" :name="audio.name" :author="audio.author" :error="audioError" :play="audioPlay" :eneded="playEnd" :timeupdate="timeUpdate"></audio>
+      </view>
+      
 	</div>
 </template>
 <script>
-const recorderManager = wx.getRecorderManager()
+  const recorderManager = wx.getRecorderManager()
 	export default {
   data () {
     return {
-      tempFilePath:'',
-      src:'/static/1.mp3'
+      audioContext:'', 
+      audio:{
+          poster: 'http://y.gtimg.cn/music/photo_new/T002R300x300M000003rsKF44GyaSk.jpg',
+          name: '此时此刻',
+          author: '许巍',
+          src: '',
+          currentTime:0,
+          currtRate:0
+      }
     }
   },
+  onLoad:function(options){
+    // 生命周期函数--监听页面加载
+    this.audioContext=wx.createAudioContext('audio');
+
+  },
   methods: {
-  new_record(){
-    var that=this
-      const options = {
-        duration: 10000,
-        sampleRate: 44100,
-        numberOfChannels: 1,
-        encodeBitRate: 192000,
-        format: 'mp3',
-        frameSize: 50
-      }
+    luyin(){
 
-      recorderManager.start(options)
-
-      setTimeout(function() {
-        //结束录音  
-        recorderManager.onStop((res) => {
-          console.log('recorder stop', res)
-          that.src=res.tempFilePath
-          console.log(that.src)
-        })
-      }, 1000)
-  },                      
-    record(){
       var that=this
-      wx.startRecord({
-        success: function(res) {
-          that.tempFilePath = res.tempFilePath 
-          wx.showModal({
-            title: '提示',
-            content: that.tempFilePath,
-            success: function(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
-        },
-        fail: function(res) {
-           wx.showModal({
-            title: '提示',
-            content: "失败",
-            success: function(res) {
-              if (res.confirm) {
-                console.log('用户点击确定')
-              } else if (res.cancel) {
-                console.log('用户点击取消')
-              }
-            }
-          })
+       const options = {
+          duration: 10000,
+          sampleRate: 44100,
+          numberOfChannels: 1,
+          encodeBitRate: 192000,
+          format: 'mp3',
+          frameSize: 50
         }
-      })
-      setTimeout(function() {
-        //结束录音  
-        wx.stopRecord()
-      }, 1000)
+        recorderManager.start(options)
+
+          //结束录音  
+
+          recorderManager.onStop((res) => {
+            console.log('recorder stop', res.tempFilePath)
+            that.src=res.tempFilePath
+            that.audioContext=wx.createAudioContext('audio');
+
+
+          })
     },
-    play_record(){
-      console.log(this.tempFilePath)
-       wx.playVoice({
-        filePath: this.tempFilePath,
-        complete: function(){
-          console.log(88)
-        }
-      })
+    over_luyin(){
+      
     },
-    bindButtonTap: function() {
-        var that = this
-        wx.chooseVideo({
-            sourceType: ['album','camera'],
-            maxDuration: 60,
-      camera: 'back',
-            success: function(res) {
-                that.src = res.tempFilePath
-                 wx.showModal({
-                  title: '提示',
-                  content: that.src,
-                  success: function(res) {
-                    if (res.confirm) {
-                      console.log('用户点击确定')
-                    } else if (res.cancel) {
-                      console.log('用户点击取消')
-                    }
-                  }
-                })
-            }
-        })
-    }
-  
+    //以下是状态监听
+      audioError:function(resp){
+          console.log(resp);
+      },
+      audioPlay:function(resp){
+          console.log(resp);
+          console.log('开始播放');
+      },
+      playEnd:function(resp){
+          console.log(resp);
+          console.log('播放结束');
+      },
+      timeUpdate:function(resp){
+          this.setData({
+              currtRate:(100*resp.detail.currentTime/resp.detail.duration)
+          });//总时长
+          this.currentTime = resp.detail.currentTime;//当前时长
+          console.log(resp);
+          console.log('播放进度变化');
+      },
+      //以下是操作
+      play:function(){
+          this.audioContext.play();
+      },
+      pause:function(){
+          this.audioContext.pause();
+      },
+      goFast:function(){
+          this.audioContext.seek(this.currentTime+20);
+      },                  
+   
   },
 }
 </script>
 <style>
-	/*.test
-		padding 20rpx
-	// button
-	// 	width 80%
-	// 	margin 10rpx auto*/
-    .audio{
-      width: 100%;
-      height: 400rpx;
-    }
-        
+	
 </style>
