@@ -74,8 +74,8 @@
 			<div class="zan-panel" @click='getLocation'>
 		      <div class="zan-cell zan-cell--access">
 		      	<span class="zan-icon zan-icon-location"></span>
-		        <div class="zan-cell__bd">所在位置</div>
-		        <div class="zan-cell__ft">{{address}}</div>
+		        <div class="zan-cell__bd">{{address}}</div>
+		        <div class="zan-cell__ft"></div>
 		      </div>
 		    </div>
 		</div>
@@ -96,8 +96,6 @@
 	</div>
 </template>
 <script>
-	import QQMapWX from '../../assets/js/qqmap-wx-jssdk.min.js'
-	// var  QQMapWX = require('../../assets/js/qqmap-wx-jssdk.min.js');
 	export default {
 		data(){
 			return {
@@ -110,78 +108,35 @@
 				isRecord:true,
 				playStatus:false,
 				play_init:'/static/img/play_record.png',
-				address:"address",
+				address:"位置",
 				video_src:''
 			}
 		},
 		 onReady: function (e) {
-    // 使用 wx.createAudioContext 获取 audio 上下文 context
-    this.audioCtx = wx.createAudioContext('myAudio')
-    this.audioCtx.setSrc('')
-    this.audioCtx.play()
-  },
-		onLoad(){
-			 // 实例化API核心类
-	         this.qqmapsdk = new QQMapWX({
-	            key: 'MRLBZ-7AQ35-SHHIU-QMQMQ-VFRU6-JMB5Z'
-	        });
+			    // 使用 wx.createAudioContext 获取 audio 上下文 context
+			    this.audioCtx = wx.createAudioContext('myAudio')
+			    this.audioCtx.setSrc('')
+			    this.audioCtx.play()
+			  },
+		onShow(){
+			
 		},
 		methods:{
 			//获取位置
 			getLocation(){
 				var that=this
-				wx.getSetting({
-				  success: (res) => {
-				        console.log(res.authSetting['scope.userLocation']);
-				        if(!res.authSetting['scope.userLocation']){
-				        	wx.showModal({
-							  title: '提示',
-							  content: '小程序要获取您的地理位置',
-							  success: function(res) {
-							    if (res.confirm) {
-							      wx.openSetting({
-								      // success: (res) => {
-								      //   res.authSetting = {
-								      //   "scope.userLocation": true,
-								      //   "scope.userInfo":true
-								      // }
-								      //   }
-								   })
-							    } else if (res.cancel) {
-							      console.log('用户点击取消')
-							    }
-							  }
-							})
-							
-				        }else{
-				        	console.log("success")
-				        	wx.getLocation({
-							  type: 'gcj02', //返回可以用于wx.openLocation的经纬度
-							  success: function(res) {
-							    var latitude = res.latitude
-							    var longitude = res.longitude
-							    // 调用接口
-								that.qqmapsdk.reverseGeocoder({
-								    location: {
-								        latitude: latitude,
-								        longitude: longitude
-								    },
-								    success: function(res) {
-								        console.log(res.result.address);
-								        that.address = res.result.address
-								    },
-								    fail: function(res) {
-								        console.log(res);
-								    },
-								    complete: function(res) {
-								        console.log(res);
-								    }
-								});
-							  }
-							})
-				        }
-			        }
-				})
+				 wx.chooseLocation({
+	        		success(res){
+	        			if(res.name){
+	        				that.address=res.name
+	        			}else{
+	        				that.address="您还没有选取位置"
+	        			}
+	        		},
+	        		fail(){
+	        			console.log('取消')
+	        		}
+	        	})		
 			},
 			//添加图片
 			add_img(){
@@ -244,13 +199,14 @@
 
 					wx.playVoice({
 				        filePath: that.record_tempFilePath,
-				        sucess: function(){
+				        success: function(){
+				        },
+				        complete:function(){
+				        	console.log(111)
 
 				        }
 		      		})
 		    	}
-		    	console.log(99)
-		    	// this.play_init="/static/img/bofang.gif"
 		    	
 		    	
 		    },

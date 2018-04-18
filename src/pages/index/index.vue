@@ -115,6 +115,7 @@
   </div>
 </template>
 <script>
+import  ajax  from '../../common/js/ajax.js'
 export default {
   data () {
     return {
@@ -124,8 +125,7 @@ export default {
     }
   },
   onShow(){
-       this.getUserInfo()
-
+    this.getUserInfo()
     },
   
   methods: {
@@ -139,52 +139,60 @@ export default {
     },
     
     getUserInfo () {
-          // 调用登录接口
-          wx.login({
-            success: () => {
-              wx.getUserInfo({
-                success: (res) => {
-                  this.userInfo = res.userInfo
-                  console.log("res")
-                },
-                fail(){
+      // 调用登录接口
+      var that=this
+          wx.getUserInfo({
+            withCredentials:true,
+            success: (res) => {
+                  that.userInfo = res.userInfo
 
+                  var sessionId = wx.getStorageSync('session');
+                  var param = {
+                        url: '/v1/miniprogram/decrypt_user_info.htm',
+                        setUpUrl: true,
+                        data: {
+                          encryptedData: res.encryptedData,
+                          iv: res.iv,
+                          sessionId: sessionId
+                        },
+                      } 
+                  ajax(param).then(function(res){
+                      console.log('res',res)
+                     
+                  },function(err){
+                      console.log('err',err)
+                      that.getSession(function (){
+                        that.getUserInfo ()
+                      })
+
+                  })
+            },
+            fail(){
                   wx.navigateTo({url:'../authorize/main'})
-                }
-              })
             }
           })
         },
-    getSession () {
-      // 调用登录接口
+        // 获取session
+    getSession (callback) {
       wx.login({
         success: function(res) {
            if (res.code) {
-            console.log("res.code=",res.code)
-            //发起网络请求
-            wx.request({
-              url: 'https://pay.yunshuxie.com/v1/miniprogram/login.htm',
-              data: {
-                code: res.code
-              },
-              header:{
-                'content-type':'application/json'
-              },
-              success:function(res){
-                console.log("session=",res.data.data)
-              }
-            })
+             var param = {
+                  url: '/v1/miniprogram/login.htm',
+                  data: { code: res.code },
+                  setUpUrl: true,
+                }
+                ajax(param).then(function(res){
+                    // console.log(res.data.data)
+                    wx.setStorageSync('session', res.data.data);
+                    callback && callback()
+                })
           } else {
             console.log('登录失败！' + res.errMsg)
           }
-          // wx.getUserInfo({
-          //   success: (res) => {
-          //     this.userInfo = res.userInfo
-          //   }
-          // })
         }
       })
-    }
+    },
   },
     onPullDownRefresh () {                          
       wx.showNavigationBarLoading() //在标题栏中显示加载
