@@ -2,27 +2,13 @@
 	<div class="find">
 		<div class="header">
 			<div class="search">
+				<input type="text" class="input" placeholder="请输入搜索内容">
 				<span class="zan-icon zan-icon-search search_icon"></span>
-				搜索
 			</div>
 			
 		</div>
 		<div class="content">
-			<div class="tag">
-				<div class="row">
-					<div class="col">全部</div>
-					<div class="col">阅读</div>
-					<div class="col">外语</div>
-					<div class="col">亲子</div>
-				</div>
-				<div class="row">
-					<div class="col">技能</div>
-					<div class="col">习惯</div>
-					<div class="col">运动</div>
-					<div class="col">艺术</div>
-				</div>
-			</div>
-			<div class="clock_item">
+			<div class="clock_item" @click='jump_detail'>
 	           <div class="clock_img">
 	              <img src="/static/img/header.jpg" alt="">
 	           </div>
@@ -106,6 +92,18 @@
 	</div>
 </template>
 <script>
+export default{
+	data(){
+		return {
+
+		}
+	},
+	methods:{
+		jump_detail(){
+			wx.navigateTo({url:'../active_detail/main'})
+		}
+	}
+}
 </script>
 <style lang="stylus">
 	.find
@@ -115,30 +113,27 @@
 			padding 24rpx
 			background-color #fafafa
 		.search
-			background-color #ffffff
-			text-align center
-			border 1px solid #ccc
-			margin 0 auto
-			width 98% 
-			padding 12rpx 0
-			border-radius 8rpx
-			.search_icon
+			margin 0 50rpx
+			width 100%
+			display flex
+			justify-content flex-start
+			.input
 				display inline-block
-				width 30rpx 
-				height 30rpx
-				color #999
-		.tag
-			margin-bottom 30rpx
-			.row
-				display flex
-				justify-content space-around
-				margin-top 26rpx
-			.col
-				border 1px solid red
+				border 1px solid #ddd
+				width 70%
+				height 70rpx
+				padding 8rpx 30rpx
+				box-sizing border-box
+			.search_icon
 				text-align center
-				padding 6rpx 22rpx
-				border 1px solid #ccc
-				border-radius 6rpx
+				display inline-block
+				width 90rpx 
+				height 70rpx
+				line-height 70rpx
+				color #bbb
+				border 1px solid #ddd
+				box-sizing border-box
+				
 		.content
 			padding 20rpx
 			.clock_item

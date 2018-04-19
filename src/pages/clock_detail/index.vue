@@ -3,7 +3,7 @@
 		<div class="header">
 			<div class="header_top">
 				<div class="header_img">
-					<img src="/static/img/header.jpg" alt="">
+					<img src="/static/img/active_img.jpg" alt="">
 				</div>
 				<div class="header_text">
 					<p class="header_title">【每日一分钟】小编帮你学日语</p>
@@ -54,7 +54,7 @@
 			<div class="theme_cont">
 				<div class="header_top">
 					<div class="header_img">
-						<img src="/static/img/header.jpg" alt="">
+						<img src="/static/img/theme.jpg" alt="">
 					</div>
 					<div class="header_text">
 						<p class="header_title">【每日一分钟】小编帮你学日语</p>
@@ -70,6 +70,68 @@
 			<div style="margin: 20px 0">
 		      <ZanTab v-bind="tab1" :componentId="'tab1'" :handleZanTabChange="handleZanTabChange"/>
 		    </div>
+		     <div class="tab_cont tab_cont_diary" v-if="tab1.selectedId=='diary'">
+		    	 <div class="diary_item">
+				      <div class="diary">
+				        <div class="diary_img">
+				          <img src="/static/img/header.jpg">
+				        </div>
+				        <div class="userinfo_diary">
+				          <p class="nickName">nickName</p>
+				          <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
+				        </div>
+				      </div>
+				      <div class="diary_detail">
+				        这里显示日记详情
+				      </div>
+				  </div>
+		    </div>
+		    <div class="tab_cont tab_cont_detail" v-if="tab1.selectedId=='detail'">
+		    	<div class="img_set">
+					<div class="active_img">
+						<img src="/static/img/active_img.jpg" alt="">
+					</div>
+				</div>
+				<div class="title">
+					<p class="active_title">活动名称</p>
+					<div class="active_des">
+						<span>300人已参加</span>
+						<span class="span_icon">|</span>
+						<span>100人打卡</span>
+					</div>
+				</div>
+				<div class="active_detail space">
+					<p class="img_set_text">活动详情</p>
+					<div class="detail_des">
+						这里是活动详情的介绍，希望大家能坚持打卡。
+					</div>
+				</div>
+		    </div>
+		    <div class="tab_cont tab_cont_user" v-if="tab1.selectedId=='user'">
+		    	<div class="zan-panel">
+				    <div class="zan-cell zan-cell--access">
+				        <div class="zan-cell__bd flexNone header_img">
+				        	<img src="/static/img/header.jpg" alt="">
+				        </div>
+				        <div class="zan-cell__bd nickName">nickName</div>
+				        <div class="join_time">
+				        	<span>2018-4-10加入</span>
+				    	</div>
+				    </div>
+				    <div class="zan-cell zan-cell--access">
+				        <div class="zan-cell__bd flexNone header_img">
+				        	<img src="/static/img/header.jpg" alt="">
+				        </div>
+				        <div class="zan-cell__bd nickName">nickName</div>
+				        <div class="join_time">
+				        	<span>2018-4-10加入</span>
+				    	</div>
+				    </div>
+				      
+			    </div>
+		    </div>
+		    
+		   
 		</div>
 		<div class="footer">
 			<div class="clock_btn" @click='jump_diary'>
@@ -88,26 +150,25 @@
 		    },
 		data(){
 			return { 
-				 movable: {
+				movable: {
 		          text: '生活赋予我们一种巨大的和无限高贵的礼品，这就是青春：充满着力量，充满着期待志愿，充满着求知和斗争的志向，充满着希望信心和青春。',
 		          animationData: [],
 		        },
 		         tab1: {
 			          list: [{
-			            id: 'all',
+			            id: 'diary',
 			            title: '日记'
 			          },{
-			            id: 'send',
+			            id: 'detail',
 			            title: '详情'
 			          }, {
-			            id: 'sign',
+			            id: 'user',
 			            title: '成员'
 			          }],
 			          scroll: false,
-			          selectedId: 'all'
+			          selectedId: 'diary'
 			        },
 			    team_leader:null,
-
 			}
 		},
 		onLoad(options){
@@ -118,7 +179,7 @@
 
 			 ...ZanNoticeBar.methods,
 			 setRef: function (payload) {
-		        console.log(payload)
+		        // console.log(payload)
 		        setTimeout(() => {
 		          var that = this
 		          this.initZanNoticeBarScroll(that, 'movable')
@@ -132,7 +193,9 @@
 		      ...ZanTab.methods,
 		      handleZanTabChange (e) {
 		        const {componentId, selectedId} = e
-		        this[componentId].selectedId = selectedId
+		        this[componentId].selectedId = selectedId,
+		        console.log(">>>",this.tab1.selectedId)
+		        console.log("e.selectedId",e.selectedId)
 		      },
 		      add_theme(){
 		      	wx.navigateTo({ url:"../add_theme/main" })
@@ -281,6 +344,86 @@
 			background-color #f3f3f3
 			height 12rpx
 			content ''
+		.tab_cont
+			// border 1px solid red
+		.tab_cont_diary
+			.diary_item
+				border-bottom 1px solid #ddd
+			.diary
+				font-size 34rpx
+				padding 45rpx 30rpx 0 30rpx
+				display flex
+				justify-content flex-start
+				align-items center
+			.diary_img
+				width 80rpx
+				height 80rpx
+				margin-right 40rpx
+				img
+					width 100%
+					height 100%
+					border-radius 50%
+			.userinfo_diary
+				.nickName
+					color #5acb9a
+					font-size 28rpx
+				.diary_timer
+					color #888
+					font-size 24rpx
+					margin-top 10rpx
+				.timer
+					margin-right 30rpx
+			.diary_detail
+					font-size 28rpx
+					color #444
+					padding 30rpx
+		.tab_cont_detail
+			font-size 30rpx
+			color #333
+			padding 0 25rpx
+			.img_set
+				.img_set_text
+					span
+						color red
+				.active_img
+					width 95%
+					height 420rpx
+					margin 0 auto
+					margin-bottom 20rpx 
+					img
+						width 100%
+						height 100%
+			.title
+				margin-bottom 38rpx
+				.active_title
+					text-align center
+					font-size 34rpx
+					font-weight 700
+					margin-bottom 10rpx
+				.active_des
+					text-align center
+					color #888
+					font-size 26rpx
+					.span_icon
+						margin 0 20rpx
+			.img_set_text	
+				margin-bottom 30rpx	
+				font-weight 600
+		.tab_cont_user
+			.flexNone
+				flex none
+				margin-right 30rpx
+			.header_img
+				width 100rpx
+				height 100rpx
+				img
+					width 100%
+					height 100%
+					border-radius 50%
+			.nickName
+				color #197dbc
+			.join_time
+				color #999
 	.footer
 		border-top 1px solid #bbb
 		height 80rpx

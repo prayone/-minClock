@@ -38,6 +38,14 @@
 		    </div>
 			<input type="text" class="input" placeholder="请输入公告...">
 		</div>
+		<div class="notice_set" @click='click_set'>
+			<div class="zan-panel">
+		      <div class="zan-cell zan-cell--access">
+		        <div class="zan-cell__bd"><span class="zan-icon zan-icon-edit"></span>打卡详情设置</div>
+		       	<div class="zan-cell__ft click_set">点击设置</div>
+		      </div>
+		    </div>
+		</div>
 		<div class="user_manager">
 			<div class="zan-panel">
 		      <div class="zan-cell zan-cell--access">
@@ -79,6 +87,9 @@
 		methods:{
 			user_manager(){
 
+			},
+			click_set(){
+				 wx.navigateTo({url:'../clockDetail_set/main'})
 			}
 		}
 	}
@@ -120,6 +131,8 @@
 			border-top 1px solid #ddd
 			border-bottom 1px solid #ddd
 			padding 20rpx 28rpx
+		.click_set
+			color #5acb9a
 	.user_manager
 		margin-top 20rpx
 		background-color #fff

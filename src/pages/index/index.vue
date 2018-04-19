@@ -16,7 +16,7 @@
       </div>
       <div class="clock_item" @click="clock_detail(team_leader)">
            <div class="clock_img">
-              <img src="/static/img/header.jpg" alt="">
+              <img src="/static/img/active_img.jpg" alt="">
            </div>
            <div class="cont">
                <p class="cont_title">
@@ -37,7 +37,7 @@
       </div>
       <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
-              <img src="/static/img/header.jpg" alt="">
+              <img src="/static/img/active_img.jpg" alt="">
            </div>
            <div class="cont">
                <p class="cont_title">活动名称</p>
@@ -65,13 +65,13 @@
         </div>
       </div>
       <div class="diary_detail">
-        今天的任务是学习日语
+        这里显示日记详情
       </div>
       <div class="zan-panel active">
           <div class="zan-cell zan-cell--access">
               <div class="zan-cell__bd active_all">
                 <div class="active_img">
-                  <img src="/static/img/header.jpg">
+                  <img src="/static/img/active_img.jpg">
                 </div>
                 <div class="active_info">
                   <p style="margin-bottom:18rpx;">活动名称</p>
@@ -100,7 +100,7 @@
           <div class="zan-cell zan-cell--access">
               <div class="zan-cell__bd active_all">
                 <div class="active_img">
-                  <img src="/static/img/header.jpg">
+                  <img src="/static/img/active_img.jpg">
                 </div>
                 <div class="active_info">
                   <p style="margin-bottom:18rpx;">活动名称</p>
@@ -116,12 +116,15 @@
 </template>
 <script>
 import  ajax  from '../../common/js/ajax.js'
+import store from '../../store'
+
 export default {
   data () {
     return {
       userInfo: {},
       tempFilePath:'',
-      team_leader:1
+      team_leader:1,
+
     }
   },
   onShow(){
@@ -144,7 +147,9 @@ export default {
           wx.getUserInfo({
             withCredentials:true,
             success: (res) => {
-                  that.userInfo = res.userInfo
+                  store.state.user_info = res.userInfo
+                  that.userInfo = store.state.user_info
+                  console.log('store.state.user_info',store.state.user_info)
 
                   var sessionId = wx.getStorageSync('session');
                   var param = {
@@ -244,7 +249,7 @@ export default {
         justify-content space-between
         margin-bottom 12rpx
         .clock_img
-          width 100rpx 
+          width 160rpx 
           height 100rpx
           img
             width 100%
@@ -258,9 +263,9 @@ export default {
             margin-bottom 26rpx
             .team_leader
               display inline-block
-              width 72rpx
-              height 40rpx
-              line-height 40rpx
+              width 78rpx
+              height 42rpx
+              line-height 42rpx
               text-align center
               font-size 24rpx
               background-color #eaa246

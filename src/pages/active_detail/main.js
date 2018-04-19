@@ -5,7 +5,7 @@ const app = new Vue(App)
 app.$mount()
 export default {
   config: {
-    navigationBarTitleText: '打卡详情',
+    navigationBarTitleText: '活动详情',
     navigationBarBackgroundColor: '#5acb9a'
   }
 }

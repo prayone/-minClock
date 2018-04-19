@@ -53,11 +53,15 @@
 	</div>
 </template>
 <script>
+	import store from '../../store'
 	export default {
 		data(){
 			return {
 				userInfo: {}
 			}
+		},
+		onLoad(){
+			 this.userInfo = store.state.user_info
 		},
 		methods:{
 			edit_info(){
@@ -118,7 +122,7 @@
 			.zan_panel
 				margin 0
 			.zan-cell__bd
-				font-size 32rpx
+				font-size 34rpx
 				display flex
 				align-items center
 			.imgIcon

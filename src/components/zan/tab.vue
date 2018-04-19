@@ -42,7 +42,7 @@
     },
     methods: {
       _handleZanTabChange (data) {
-        console.info('[zan:tab:change]', data)
+        // console.info('[zan:tab:change]', data)
         if (this.handleZanTabChange) {
           this.handleZanTabChange(data)
         } else {

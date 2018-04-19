@@ -24,12 +24,12 @@
       props: ['componentId', 'animationData', 'text'],
       watch: {
         animationData: function () {
-          console.log('asd', this.animationData)
+          // console.log('asd', this.animationData)
         }
       },
       methods: {
         initZanNoticeBarScroll (that, componentId) {
-          console.log('initZanNoticeBarScroll', that)
+          // console.log('initZanNoticeBarScroll', that)
           that.zanNoticeBarNode = that.zanNoticeBarNode || {}
           that.zanNoticeBarNode[`${componentId}`] = {
             width: undefined,
