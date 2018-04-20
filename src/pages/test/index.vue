@@ -1,21 +1,24 @@
 <template>
 	<div class="test">
-      <Calendar
-      v-on:choseDay="clickDay"
-      v-on:changeMonth="changeDate"
-    ></Calendar>
+      <Calendar v-on:choseDay="clickDay" v-on:changeMonth="changeDate"></Calendar>
+      <div>{{test}}</div>
 	</div>
 </template>
 <script>
 import Calendar from '../../components/calendar/calendar.vue'
 export default {
+
   components:{
     Calendar
   },
   data () {
     return {
-      
+      test:"ss"
     }
+  },
+   onLoad(){
+      this.test = global.test; 
+      console.log(this.test)
   },
   methods: {
     clickDay(data) {

@@ -17,7 +17,7 @@
 		<div class="notice">
 			<div class="zan-panel notice_bar">
 				<div class="notice_title">公告</div>
-			    <zanbar v-on:ref="setRef" v-bind="movable"  :componentId="'movable'"/>
+			    <ZanNoticeBar v-on:ref="setRef" v-bind="movable"  :componentId="'movable'"/>
 			</div>
 		</div>
 		<div class="tools">
@@ -145,7 +145,7 @@
 	import ZanNoticeBar from '../../components/zan/noticebar'
 	export default {
 		 components: {
-		      zanbar: ZanNoticeBar,
+		      ZanNoticeBar,
 		      ZanTab
 		    },
 		data(){
@@ -173,7 +173,7 @@
 		},
 		onLoad(options){
 			this.team_leader = parseInt(this.$root.$mp.query.team_lead) 
-			console.log(typeof(this.team_leader))
+			// console.log(typeof(this.team_leader))
 		},
 		methods:{
 

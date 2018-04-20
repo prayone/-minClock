@@ -33,7 +33,7 @@
 				<div class="cancle">
 				取消
 				</div>
-				<div class="publish">
+				<div class="publish" @click="publish_theme">
 					发布主题
 				</div>
 			</div>
@@ -73,6 +73,11 @@
 			clear_img(){
 				this.img_url = "/static/img/add.png"
 				this.clear=false
+			},
+			publish_theme(){
+				wx.switchTab({
+				  url: '/pages/index/main'
+				})
 			}
 		}
 

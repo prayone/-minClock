@@ -50,7 +50,7 @@
           const currentComponent = that.zanNoticeBarNode[`${componentId}`]
           wx.createSelectorQuery().select(`#${componentId}__content`).boundingClientRect().exec((rect) => {
             if (!rect[0] || !rect[0].width) {
-              console.warn('页面缺少 noticebar 元素')
+              // console.warn('页面缺少 noticebar 元素')
               return
             }
             currentComponent.width = rect[0].width

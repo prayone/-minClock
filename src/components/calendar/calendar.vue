@@ -13,7 +13,7 @@
   .wh_content_all {
     font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', STHeiti, 'Microsoft Yahei', Tahoma,
     Simsun, sans-serif;
-    background-color: #0fc37c;
+     background-color: #dff8e3; 
     width: 100%;
     overflow: hidden;
     padding-bottom: 8px;
@@ -25,17 +25,17 @@
     width: 100%;
   }
   .wh_content:first-child .wh_content_item {
-    color: #ddd;
+    color: #efefef;
     font-size: 16px;
     height: 15%;
     line-height: 15%;
   }
   .wh_content_item {
-    font-size: 15px;
+    font-size: 14px;
     width: 13.4%;
     padding-bottom: 10.14%;
     text-align: center;
-    color: #fff;
+    color: #3f3f3f;
     position: relative;
   }
   .wh_content_item div {
@@ -62,11 +62,12 @@
   }
   .wh_top_changge {
     display: flex;
+
   }
   .wh_top_changge li {
     cursor: pointer;
     display: flex;
-    color: #fff;
+    color: #5acb9a;
     font-size: 18px;
     flex: 1;
     justify-content: center;
@@ -83,6 +84,7 @@
     border-top: 2px solid #ffffff;
     border-left: 2px solid #ffffff;
     transform: rotate(-45deg);
+    color:#5acb9a;
   }
   .wh_jiantou1:active,
   .wh_jiantou2:active {
@@ -90,10 +92,13 @@
   }
   .wh_content_item div .wh_isToday {
     margin: auto;
-    background-color: #fff;
+    /*background-color: #fff;*/
     color: #51c597;
     border-radius: 100px;
     text-align: center;
+    background: url("http://www.prayone.top/content/templates/moxiaonai/images/bg_cal_today.gif") center center no-repeat #fff;
+    background-size: 30px 30px;
+
   }
   .wh_jiantou2 {
     width: 12px;
@@ -101,15 +106,17 @@
     border-top: 2px solid #ffffff;
     border-right: 2px solid #ffffff;
     transform: rotate(45deg);
+    color:#5acb9a;
+
   }
-  .wh_content_item div .wh_isMark {
+  .wh_content_item div .wh_isMark{
     margin: auto;
     border-radius: 100px;
-    border: 1px solid blue;
+    border: 1px solid #f99774;
     z-index: 2;
   }
   .wh_content_item div .wh_nextDayShow {
-    color: #bfbfbf;
+    color: #9f9f9f;
   }
 </style>
 <template>
@@ -125,14 +132,14 @@
         </li>
       </div>
       <div class="wh_content">
-        <div class="wh_content_item" v-for="tag in textTop">
+        <div class="wh_content_item" v-for="tag in textTop" :key='tag'>
           <div>
             {{tag}}
           </div>
         </div>
       </div>
       <div class="wh_content">
-        <div class="wh_content_item" v-for="(item,index) in list" @click="clickDay(item,index)">
+        <div class="wh_content_item" v-for="(item,index) in list" :key="item" @click="clickDay(item,index)">
           <div>
             <li class="wh_nextDayShow" v-if="(isHideOtherday&&item.nextDayShow)||item.otherMonth||item.dayHide" v-bind:class="[{isToday_now:item.isTodayNow},getClass(item)]">
               {{item.id}}

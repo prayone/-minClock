@@ -54,7 +54,7 @@
            </div>
       </div>
     </div>
-    <div class="diary_item">
+    <div class="diary_item" @click='diary_share'>
       <div class="diary">
         <div class="diary_img">
           <img src="/static/img/header.jpg">
@@ -83,7 +83,7 @@
           </div>
       </div>
     </div>
-    <div class="diary_item">
+    <div class="diary_item" @click='diary_share'>
       <div class="diary">
         <div class="diary_img">
           <img src="/static/img/header.jpg">
@@ -128,16 +128,19 @@ export default {
     }
   },
   onShow(){
-    this.getUserInfo()
     },
   
   methods: {
+    diary_share(){
+      const url = '../share_diary/main'
+      wx.navigateTo({ url })
+    },
     new_clock () {
       const url = '../new_clock/main'
       wx.navigateTo({ url })
     },
     clock_detail(info){
-      console.log(info)
+      // console.log(info)
       wx.navigateTo({url:'../clock_detail/main?team_lead='+info})
     },
     
@@ -147,9 +150,8 @@ export default {
           wx.getUserInfo({
             withCredentials:true,
             success: (res) => {
-                  store.state.user_info = res.userInfo
-                  that.userInfo = store.state.user_info
-                  console.log('store.state.user_info',store.state.user_info)
+                  global.user_info = res.userInfo
+                  that.userInfo = res.userInfo
 
                   var sessionId = wx.getStorageSync('session');
                   var param = {
@@ -210,7 +212,9 @@ export default {
     },
   created () {
     // 调用应用实例的方法获取全局数据
-    this.getSession()
+    this.getSession(this.getUserInfo())
+   
+
   },
   
 }

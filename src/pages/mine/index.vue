@@ -42,7 +42,7 @@
 			      </div>
 			      <div class="zan-cell zan-cell--access">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon6"></span>意见反馈</div>
-			        <div class="zan-cell__ft"></div>
+			        <div class="zan-cell__ft"><button class="back_notice" open-type="contact">点击反馈</button></div>
 			      </div>
 			    </div>
 			</div>
@@ -60,8 +60,9 @@
 				userInfo: {}
 			}
 		},
-		onLoad(){
-			 this.userInfo = store.state.user_info
+		onShow(){
+			 this.userInfo = global.user_info
+			 console.log(global.user_info)
 		},
 		methods:{
 			edit_info(){
@@ -155,5 +156,12 @@
 				background url(../../../static/img/idea@2x.png) center center no-repeat
 				background-size 100% 100%
 				
-				
+	.back_notice
+		background-color #5acb9a
+		border none	0	
+		padding 0 20rpx
+		height 64rpx 
+		line-height 64rpx
+		font-size 28rpx
+		color #fff
 </style>

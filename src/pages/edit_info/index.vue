@@ -52,8 +52,6 @@
 		onLoad(options){
 			this.userInfo_avatarUrl = this.$root.$mp.query.userInfo.split(',')[1]
 			this.userInfo_nickName = this.$root.$mp.query.userInfo.split(',')[0]
-			store.state.user_info={}
-			console.log(store.state.user_info)
 			
 		},
 		methods:{

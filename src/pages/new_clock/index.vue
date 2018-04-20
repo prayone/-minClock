@@ -16,15 +16,6 @@
 			  </label>
 			</radio-group>
 		</div>
-		<div class="footer">
-			<div>
-				<p class="active_title">开启报名费</p>
-				<p class="entry_fee">
-					<span class="fee_text">是否开启报名费</span>
-					<switch  @change="switch1Change"/>
-				</p>
-			</div>
-		</div>
 		<div class="btn">
 			<button class="clock_btn">创建打卡</button>
 		</div>
