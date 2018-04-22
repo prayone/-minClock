@@ -20,7 +20,7 @@
 							</div>
 						</div>
 						<div class="record_info">
-							<p class="timer">定时器</p>
+							<p class="timer">{{min}}:{{sec}}</p>
 							<p class="record_text">录音时长10分钟以内</p>
 						</div>
 					</div>
@@ -36,7 +36,7 @@
 					      	<div class="zan-cell__bd">
 					        	<div class="zan-cell__text">
 					        		<div class="record_info_play">
-										<p class="record_text">点击可以播放录音</p>
+										<p class="record_text">点击可以播放录音{{min}}:{{sec}}</p>
 									</div>
 					        	</div>
 					        </div>
@@ -48,7 +48,6 @@
 					      </div>
 					    </div>
 					</div>
-
 				</div>
 				<!-- 视频 -->
 				<div class="main_video" v-if="video_src">
@@ -96,6 +95,8 @@
 	</div>
 </template>
 <script>
+	var timer 
+	var timer_over
 	export default {
 		data(){
 			return {
@@ -109,17 +110,26 @@
 				playStatus:false,
 				play_init:'/static/img/play_record.png',
 				address:"位置",
-				video_src:''
+				video_src:'',
+				count:0,
+				temCount:0
 			}
 		},
-		 onReady: function (e) {
-			    // 使用 wx.createAudioContext 获取 audio 上下文 context
-			    this.audioCtx = wx.createAudioContext('myAudio')
-			    this.audioCtx.setSrc('')
-			    this.audioCtx.play()
-			  },
-		onShow(){
-			
+		computed:{
+			min(){
+				let m = parseInt(this.count/60) 
+				if(m!=10){
+					m = "0"+ m
+				}
+				return m
+			},
+			sec(){
+				let s = this.count % 60
+				if(s < 10){
+					s = "0" + s
+				}
+				return s
+			}
 		},
 		methods:{
 			//获取位置
@@ -158,10 +168,19 @@
 				console.log(this.img_urls)
 			},
 			add_record(){
-				console.log("sssssssssss")
+		      this.count = 0
 		      var that=this
-		      this.start_record=true
-		      this.isRecord=false
+		      that.start_record=true
+		      that.isRecord=false
+		      timer = setInterval(()=>{
+		    	if(that.count<600){
+			      	that.count++
+		    	}else{
+		    		clearInterval(timer)
+		    		that.temCount = this.count
+		    		that.count = 0
+		    	}
+		      }, 1000)
 		      wx.startRecord({
 		        success: function(res) {
 		        	// 本地录音文件
@@ -171,6 +190,7 @@
 					  title: '提示',
 					  content: that.record_tempFilePath,
 					  success: function(res) {
+
 					  }
 					})
 		          
@@ -181,22 +201,37 @@
 		      })
 		    },
 		    over_record(){
+		    	clearInterval(timer)
 		    	wx.stopRecord()
+		    	this.temCount = this.count
+		    	this.count = 0
 		    	this.start_record=false
 		   		this.play_record=true
 		    },
 		    play_records(){
 		    	var that = this
+		    	that.count = 0
 	    		// that.playStatus = !that.playStatus
+				
+
 
 		    	if(that.playStatus){
 	    			that.playStatus = !that.playStatus
+			    	clearInterval(timer_over)
 
 		    		wx.stopVoice()
 
 		    	}else{
 	    			that.playStatus = !that.playStatus
+	    			timer_over = setInterval(()=>{
+			    	if(that.count < that.temCount){
 
+				      	that.count++
+			    	}else{
+			    		clearInterval(timer_over)
+			    		that.playStatus = false
+			    	}
+			    }, 1000)
 					wx.playVoice({
 				        filePath: that.record_tempFilePath,
 				        success: function(){

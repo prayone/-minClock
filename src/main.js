@@ -11,7 +11,7 @@ export default {
   // 这个字段走 app.json
   config: {
     // 页面前带有 ^ 符号的，会被编译成首页，其他页面可以选填，我们会自动把 webpack entry 里面的入口页面加进去
-    pages: ['pages/share_diary/main','pages/active_detail/main','pages/clockDetail_set/main','pages/authorize/main','^pages/index/main', 'pages/find/main', 'pages/mine/main', 'pages/new_clock/main','pages/clock_manager/main','pages/clock_detail/main','pages/edit_info/main','pages/test/main','pages/clock_set/main','pages/billboard/main','pages/calendar/main','pages/publish_diary/main','pages/add_theme/main'],
+    pages: ['pages/share_diary/main','pages/active_detail/main','pages/clockDetail_set/main','pages/authorize/main','pages/index/main', 'pages/find/main', 'pages/mine/main', 'pages/new_clock/main','pages/clock_manager/main','pages/clock_detail/main','pages/edit_info/main','pages/test/main','pages/clock_set/main','pages/billboard/main','pages/calendar/main','^pages/publish_diary/main','pages/add_theme/main'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#5acb9a',
