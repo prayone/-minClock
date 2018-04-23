@@ -25,7 +25,7 @@
               </p>
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
-                 <span>19:34:00</span>
+                 <span>19:00:00</span>
                  <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
                  <span>18人已打卡</span>
                </p>
@@ -124,10 +124,10 @@ export default {
       userInfo: {},
       tempFilePath:'',
       team_leader:1,
-
     }
   },
   onShow(){
+    this.getSession(this.getUserInfo())
     },
   
   methods: {
@@ -212,7 +212,6 @@ export default {
     },
   created () {
     // 调用应用实例的方法获取全局数据
-    this.getSession(this.getUserInfo())
    
 
   },

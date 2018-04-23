@@ -6,11 +6,20 @@
 	      </div>
 	      <div class="zan-cell">
 	        <div class="zan-cell__bd"><span class="imgIcon imgIcon2"></span>提醒开启状态</div>
-	        <div class="zan-cell__ft"><switch checked  @change="switch1Change"/></div>
+	        <div class="zan-cell__ft"><switch  @change="switch1Change"/></div>
 	      </div>
-	      <div class="zan-cell">
+	      <div :class="access">
 	        <div class="zan-cell__bd"><span class="imgIcon imgIcon3"></span>微信提醒通知时间</div>
-	        <div class="zan-cell__ft">19:00</div>
+	        <div class="zan-cell__ft">
+	        	<picker v-if='picker' mode="time" :value="time" start="06:00" end="23:00" @change="bindTimeChange">
+				    <view class="picker">
+				      {{time}}
+				    </view>
+				</picker>
+				<div v-if='!picker'>
+					{{time}}
+				</div>
+	    	</div>
 	      </div>
 	      <div class="remind">开启提醒后，每日打卡，第二天再提醒时间微信可接收到消息通知。</div>
 	    </div>
@@ -21,10 +30,30 @@
 </template>
 <script>
 	export default {
+		data(){
+			return {
+				access:'zan-cell',
+				time: '19:00',
+				picker:false
+			}
+		},
 		methods:{
 			switch1Change: function(e) {
+				var that=this
 				    console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
-				}
+				    if(e.mp.detail.value){
+				    	that.access = 'zan-cell zan-cell--access'
+				    	that.picker=true
+				    }else{
+				    	that.access = 'zan-cell'	
+				    	that.picker=false
+
+				    }
+				},
+			bindTimeChange: function(e) {
+			    console.log('picker发送选择改变，携带值为', e.mp.detail.value)
+			    this.time = e.mp.detail.value
+			},
 		}
 	}
 </script>

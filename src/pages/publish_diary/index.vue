@@ -28,15 +28,16 @@
 					<div class="play_record" v-if="play_record">
 						<div class="zan-panel zan_panel">
 					      <div class="zan-cell">
-					      	<div class="zan-cell__bd flexNone">
-					        	<div class="play_record_img" @click="play_records">
+					      	<div class="zan-cell__bd flexNone" @click="play_records">
+					        	<div class="play_record_img">
 									<img :src="(playStatus?'/static/img/bofang.gif':'/static/img/play_record.png')" alt="">
 								</div>
 					        </div>
-					      	<div class="zan-cell__bd">
-					        	<div class="zan-cell__text">
+					      	<div class="zan-cell__bd zan-cell__edit">
+					        	<div class="zan-cell__text zan-cell__edit">
 					        		<div class="record_info_play">
-										<p class="record_text">点击可以播放录音{{min}}:{{sec}}</p>
+					        			<p class="timer">{{min}}:{{sec}}</p>
+										<p class="record_text">点击可以播放录音</p>
 									</div>
 					        	</div>
 					        </div>
@@ -152,15 +153,15 @@
 			add_img(){
 				var that=this
 				wx.chooseImage({
-					  count: 9, 
-					  sizeType: ['compressed'], 
-					  sourceType: ['album', 'camera'], 
-					  success: function (res) {
-					    that.img_urls=that.img_urls.concat(res.tempFilePaths)
-					    //tempFilePaths是要上传给服务器的图片地址
-					    // that.tempFilePaths = res.tempFilePaths
-					    // console.log(that.img_urls)
-					  }
+					count: 9, 
+					sizeType: ['compressed'], 
+					sourceType: ['album', 'camera'], 
+					success: function (res) {
+						that.img_urls=that.img_urls.concat(res.tempFilePaths)
+						//tempFilePaths是要上传给服务器的图片地址
+						// that.tempFilePaths = res.tempFilePaths
+						// console.log(that.img_urls)
+					}
 				})
 			},
 			clear_img(index){
@@ -168,37 +169,36 @@
 				console.log(this.img_urls)
 			},
 			add_record(){
-		      this.count = 0
-		      var that=this
-		      that.start_record=true
-		      that.isRecord=false
-		      timer = setInterval(()=>{
-		    	if(that.count<600){
-			      	that.count++
-		    	}else{
-		    		clearInterval(timer)
-		    		that.temCount = this.count
-		    		that.count = 0
-		    	}
-		      }, 1000)
-		      wx.startRecord({
-		        success: function(res) {
-		        	// 本地录音文件
-		          that.record_tempFilePath = res.tempFilePath
-		          console.log(that.record_tempFilePath)
-		          wx.showModal({
-					  title: '提示',
-					  content: that.record_tempFilePath,
-					  success: function(res) {
-
-					  }
-					})
-		          
-		        },
-		        fail: function(res) {
-		           
-		        }
-		      })
+			    this.count = 0
+			    var that=this
+			    that.start_record=true
+			    that.isRecord=false
+			    timer = setInterval(()=>{
+			    	if(that.count<600){
+				      	that.count++
+			    	}else{
+			    		clearInterval(timer)
+			    		that.temCount = this.count
+			    		that.count = 0
+			    	}
+			    }, 1000)
+			    wx.startRecord({
+			        success: function(res) {
+			        	// 本地录音文件
+			          that.record_tempFilePath = res.tempFilePath
+			          console.log(that.record_tempFilePath)
+			          if(res.tempFilePath)
+			          wx.showModal({
+						  title: '提示',
+						  content: "录音成功",
+						  success: function(res) {
+						  }
+						})
+			        },
+			        fail: function(res) {
+			           
+			        }
+			    })
 		    },
 		    over_record(){
 		    	clearInterval(timer)
@@ -211,21 +211,14 @@
 		    play_records(){
 		    	var that = this
 		    	that.count = 0
-	    		// that.playStatus = !that.playStatus
-				
-
-
 		    	if(that.playStatus){
 	    			that.playStatus = !that.playStatus
 			    	clearInterval(timer_over)
-
 		    		wx.stopVoice()
-
 		    	}else{
 	    			that.playStatus = !that.playStatus
 	    			timer_over = setInterval(()=>{
 			    	if(that.count < that.temCount){
-
 				      	that.count++
 			    	}else{
 			    		clearInterval(timer_over)
@@ -238,12 +231,9 @@
 				        },
 				        complete:function(){
 				        	console.log(111)
-
 				        }
 		      		})
 		    	}
-		    	
-		    	
 		    },
 		    remove_record(){
 		    	this.record_tempFilePath=null
@@ -252,11 +242,11 @@
 				this.playStatus=false
 		    },
 		    add_video(){
-		    	 var that = this
+		    	var that = this
 			        wx.chooseVideo({
 			            sourceType: ['album','camera'],
 			            maxDuration: 60,
-			      camera: 'back',
+			        	camera: 'back',
 			            success: function(res) {
 			                that.video_src=res.tempFilePath
 			            }
@@ -270,6 +260,12 @@
 	}
 </script>
 <style lang='stylus'>
+.zan-cell__edit
+	position relative
+	top -10rpx
+.timer
+		color red
+		font-size 28rpx
 img
 	width 100%
 	height 100%
@@ -307,7 +303,6 @@ img
 			justify-content flex-start 
 			align-items center
 			padding 0 20rpx
-			
 			.record_img
 				width 50rpx
 				height 50rpx
