@@ -20,8 +20,8 @@
            </div>
            <div class="cont">
                <p class="cont_title">
-                活动名称
-                <span v-if="team_leader" class="team_leader">群主</span>
+                  每天一分钟，小编陪你学日语，一个月创造生命的奇迹hhjshjs 
+                
               </p>
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
@@ -34,6 +34,7 @@
            <div class="clock_btn">
              <button class="clock_button">打卡</button>
            </div>
+           <span v-if="team_leader" class="team_leader">群主</span>
       </div>
       <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
@@ -241,39 +242,55 @@ export default {
         border-radius: 50%;
     .content
       padding 24rpx
+      .clock_item
+        position relative
+        .team_leader
+          position absolute
+          top -20rpx
+          right -20rpx
+          display inline-block
+          width 78rpx
+          height 42rpx
+          line-height 42rpx
+          text-align center
+          font-size 24rpx
+          background-color #eaa246
+          color #fff
+          border-radius 6rpx
       .clock
         font-size 30rpx
         color #5acb9a
         margin-bottom 24rpx
       .clock_item
         border 1px solid #dddddd
-        padding 20rpx
+        padding 20rpx 10rpx
         display flex
-        justify-content space-between
+        justify-content flex-start
         margin-bottom 12rpx
+        align-items center
         .clock_img
+          flex 1.5
           width 160rpx 
           height 100rpx
           img
             width 100%
             height 100%
         .cont
+          flex 4
           font-size 24rpx  
           color #999
+          margin-left 20rpx
           .cont_title
-            font-size 28rpx
+            max-width: 860rpx;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display:-webkit-box; 
+            -webkit-box-orient:vertical;
+            -webkit-line-clamp:2; 
+            font-size 30rpx
             color #111111
-            margin-bottom 26rpx
-            .team_leader
-              display inline-block
-              width 78rpx
-              height 42rpx
-              line-height 42rpx
-              text-align center
-              font-size 24rpx
-              background-color #eaa246
-              color #fff
-              border-radius 6rpx
+            margin-bottom 16rpx
+            
           .cont_detail
             .cont_icon
               width 30rpx
@@ -284,15 +301,18 @@ export default {
             .icon_user
               margin-left 16rpx
         .clock_btn
+          flex 1
           display flex
           align-items center
           .clock_button
-            width 120rpx 
-            height 70rpx
-            line-height 70rpx
+            width 90rpx 
+            height 66rpx
+            line-height 66rpx
             background-color #5acb9a
             color #fff
-            font-size 30rpx
+            font-size 28rpx
+            border-radius 0
+            padding 0
     .diary
       font-size 34rpx
       padding 45rpx 30rpx 0 30rpx
@@ -319,7 +339,7 @@ export default {
       .userinfo_diary
         .nickName
           color #5acb9a
-          font-size 28rpx
+          font-size 30rpx
         .diary_timer
           color #888
           font-size 24rpx
@@ -327,7 +347,7 @@ export default {
           .timer
             margin-right 30rpx
     .diary_detail
-      font-size 28rpx
+      font-size 30rpx
       color #444
       padding 30rpx
     .active

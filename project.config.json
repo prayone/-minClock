@@ -9,8 +9,8 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wx63fabae13c45e5ae",
-	"projectname": "minclock",
+	"appid": "wx93395b6589e6e357",
+	"projectname": "minClock",
 	"condition": {
 		"search": {
 			"current": -1,

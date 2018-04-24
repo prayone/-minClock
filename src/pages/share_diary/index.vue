@@ -41,7 +41,6 @@
 				  url: '/pages/index/main'
 				})
 			},
-				
 		},
 		onShareAppMessage: function (res) {
 		    if (res.from === 'button') {

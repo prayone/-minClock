@@ -28,15 +28,14 @@
 					<div class="play_record" v-if="play_record">
 						<div class="zan-panel zan_panel">
 					      <div class="zan-cell">
-					      	<div class="zan-cell__bd flexNone" @click="play_records">
+					      	<div class="zan-cell__bd flexNone" @click="Play">
 					        	<div class="play_record_img">
 									<img :src="(playStatus?'/static/img/bofang.gif':'/static/img/play_record.png')" alt="">
 								</div>
 					        </div>
 					      	<div class="zan-cell__bd zan-cell__edit">
-					        	<div class="zan-cell__text zan-cell__edit">
+					        	<div class="zan-cell__text">
 					        		<div class="record_info_play">
-					        			<p class="timer">{{min}}:{{sec}}</p>
 										<p class="record_text">点击可以播放录音</p>
 									</div>
 					        	</div>
@@ -79,9 +78,6 @@
 		      </div>
 		    </div>
 		</div>
-		<div>
-			
-		</div>
 		<div class="footer">
 			<div class="all">
 				<div class="cancle">
@@ -91,13 +87,19 @@
 					发表日记
 				</div>
 			</div>
-			
 		</div>
+		<!-- <div style="width:100px;height:100px;display:inline-block!important;" v-for='(item,index) in imgUrls' :key='item'>
+			<img style="width:100%;height:100%;" :src="item" alt="" @click="seeImg(index)">
+		</div> -->
+		
 	</div>
 </template>
+
 <script>
-	var timer 
-	var timer_over
+	import  addImg  from '../../common/js/addImg.js'
+	const recorderManager = wx.getRecorderManager()
+	const innerAudioContext = wx.createInnerAudioContext()
+	var timer
 	export default {
 		data(){
 			return {
@@ -109,11 +111,11 @@
 				play_record:false,
 				isRecord:true,
 				playStatus:false,
-				play_init:'/static/img/play_record.png',
 				address:"位置",
 				video_src:'',
 				count:0,
-				temCount:0
+				temCount:0,
+				imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqvts6bgj20dw098dfw.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqwi8h8rj20sg0g6wf1.jpg']
 			}
 		},
 		computed:{
@@ -133,6 +135,9 @@
 			}
 		},
 		methods:{
+			seeImg(index){
+				addImg.previewImg(this.imgUrls[index],this.imgUrls)
+			},
 			//获取位置
 			getLocation(){
 				var that=this
@@ -152,88 +157,58 @@
 			//添加图片
 			add_img(){
 				var that=this
-				wx.chooseImage({
-					count: 9, 
-					sizeType: ['compressed'], 
-					sourceType: ['album', 'camera'], 
-					success: function (res) {
-						that.img_urls=that.img_urls.concat(res.tempFilePaths)
-						//tempFilePaths是要上传给服务器的图片地址
-						// that.tempFilePaths = res.tempFilePaths
-						// console.log(that.img_urls)
-					}
+				addImg.addimg().then((res) => {
+					that.img_urls = that.img_urls.concat(res.tempFilePaths)
+					console.log(that.img_urls)
 				})
 			},
 			clear_img(index){
 				this.img_urls.splice(index,1)
-				console.log(this.img_urls)
+				console.log("图片地址列表",this.img_urls)
 			},
 			add_record(){
-			    this.count = 0
 			    var that=this
-			    that.start_record=true
 			    that.isRecord=false
-			    timer = setInterval(()=>{
-			    	if(that.count<600){
-				      	that.count++
-			    	}else{
-			    		clearInterval(timer)
-			    		that.temCount = this.count
-			    		that.count = 0
-			    	}
-			    }, 1000)
-			    wx.startRecord({
-			        success: function(res) {
-			        	// 本地录音文件
-			          that.record_tempFilePath = res.tempFilePath
-			          console.log(that.record_tempFilePath)
-			          if(res.tempFilePath)
-			          wx.showModal({
-						  title: '提示',
-						  content: "录音成功",
-						  success: function(res) {
-						  }
-						})
-			        },
-			        fail: function(res) {
-			           
-			        }
-			    })
+			    const options = {
+	                  duration: 600000,
+	                  sampleRate: 44100,
+	                  numberOfChannels: 1,
+	                  encodeBitRate: 192000,
+	                  format: 'mp3',
+	                  frameSize: 50
+              	}
+	            recorderManager.start(options);
+	            recorderManager.onStart(() => {
+	                that.start_record = true
+	                timer = setInterval(()=>{
+	                    this.count++
+	                },1000)
+                   console.log('recorder start')
+               	})
 		    },
 		    over_record(){
-		    	clearInterval(timer)
-		    	wx.stopRecord()
-		    	this.temCount = this.count
-		    	this.count = 0
-		    	this.start_record=false
-		   		this.play_record=true
+		    	  var that = this
+	              recorderManager.stop();
+	              recorderManager.onStop((res) => {
+		              clearInterval(timer)
+		              that.start_record = false
+		              that.play_record = true
+		              that.record_tempFilePath = res.tempFilePath
+	              })
 		    },
-		    play_records(){
+		    Play(){
 		    	var that = this
-		    	that.count = 0
-		    	if(that.playStatus){
-	    			that.playStatus = !that.playStatus
-			    	clearInterval(timer_over)
-		    		wx.stopVoice()
-		    	}else{
-	    			that.playStatus = !that.playStatus
-	    			timer_over = setInterval(()=>{
-			    	if(that.count < that.temCount){
-				      	that.count++
-			    	}else{
-			    		clearInterval(timer_over)
-			    		that.playStatus = false
-			    	}
-			    }, 1000)
-					wx.playVoice({
-				        filePath: that.record_tempFilePath,
-				        success: function(){
-				        },
-				        complete:function(){
-				        	console.log(111)
-				        }
-		      		})
-		    	}
+	            innerAudioContext.src = that.record_tempFilePath
+	            if(that.playStatus){
+	                that.playStatus = !that.playStatus
+	                innerAudioContext.stop()
+	            } else {
+	                that.playStatus = !that.playStatus
+	                innerAudioContext.play()
+	                innerAudioContext.onEnded(() => {
+	                    that.playStatus = false
+	                })
+	            }
 		    },
 		    remove_record(){
 		    	this.record_tempFilePath=null
@@ -255,14 +230,20 @@
 		    remove_video(){
 		    	this.video_src=''
 		    },
-
-		}
+		    //图片上传
+		    uploadimg(){
+				const url='https://wap.yunshuxie.com/v1/teacher_clock/submit_clockv2.htm'
+				for(let i in this.img_urls){
+					addImg.uploadImg(url,this.img_urls[i],null).then((res) => {
+						console.log(res)
+					})
+				}
+				
+			}
+		},
 	}
 </script>
 <style lang='stylus'>
-.zan-cell__edit
-	position relative
-	top -10rpx
 .timer
 		color red
 		font-size 28rpx
