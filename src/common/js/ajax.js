@@ -20,7 +20,6 @@ export default function ajax (params, noRefetch) {
             resolve(res)
           } else {
             console.log(url, ' => 错误原因 => ', res.data.returnCode, res.data.returnMsg)
-             // wx.navigateTo({url:'../authorize/main'})
             reject(res.data.returnMsg)
           }
         }

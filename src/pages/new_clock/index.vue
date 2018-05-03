@@ -2,14 +2,14 @@
 	<div class="new_clock">
 		<div class="header">
 			<p class="active_title">活动名称</p>
-			<input class="active_input" type="text" placeholder="输入活动标题">
+			<input class="active_input" type="text" placeholder="输入活动标题" v-model='active_title'>
 		</div>
 		<div class="content">
 			<p class="active_title">隐私设置</p>
 			<radio-group class="radio-group" @change="radioChange">
 			  <label class="radio" v-for=" item in RadioItems" :key='item'>
 			  	<p class="radio_detail">
-			  		<radio class='' :value="item.name" :checked="item.checked"/>
+			  		<radio class='' :value="item.name" :checked="item.name==isopen"/>
 				    {{item.value}}
 				    <span class="remark">{{item.remark}}</span>
 			  	</p>
@@ -17,26 +17,43 @@
 			</radio-group>
 		</div>
 		<div class="btn">
-			<button class="clock_btn">创建打卡</button>
+			<button class="clock_btn" @click="creat_clock">创建打卡</button>
 		</div>
 	</div>
 </template>
 <script>
+	import  ajax  from '../../common/js/ajax.js'
 	export default {
 		data(){
 			return {
+				active_title:'',
 				RadioItems: [
-				      {name: '1', value: '公开',remark: '任何人都可以参与,且有机会被小打卡推荐', checked: 'true'},
-				      {name: '2',remark: '必须群主邀请才可以参与,成员邀请需群主审核', value: '私密'}
-				    ]
+				    {name: '1', value: '公开',remark: '任何人都可以参与,且有机会被小打卡推荐'},
+				    {name: '2', value: '私密',remark: '仅群主自己可以参加打卡，且不会被小打卡推荐'}
+				    ],
+				isopen:1
 			}
 		},
 		methods:{
-			radioChange: function(e) {
+			radioChange(e) {
 			    console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
+			    this.isopen = e.mp.detail.value
+			    console.log(900,this.isopen)
 			},
-			switch1Change: function(e) {
-			    console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
+			creat_clock(){
+				var sessionId = wx.getStorageSync('session');
+				console.log(666,this.isopen)
+				var data={
+
+				}
+				var param = {
+					url: '/v1/miniprogram/login.htm',
+	                data: data,
+	                setUpUrl: true,
+				}
+				ajax(param).then(function(res){
+                    
+                })
 			}
 		}
 	}

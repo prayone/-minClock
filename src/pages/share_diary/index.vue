@@ -43,10 +43,10 @@
 			},
 		},
 		onShareAppMessage: function (res) {
-		    if (res.from === 'button') {
-		      // 来自页面内转发按钮
-		      console.log(res.target)
-		    }
+		    // if (res.from === 'button') {
+		    //   // 来自页面内转发按钮
+		    //   console.log(res.target)
+		    // }
 		    return {
 		      title: '经典打卡',
 		      path: '/pages/share_dairy/main',

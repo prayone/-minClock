@@ -15,7 +15,7 @@
 	           <div class="cont">
 	               <p class="cont_title">诗词天天读</p>
 	               <p class="cont_detail">
-	                 每天一首经典诗
+	                 坚持打卡每一天
 	               </p>
 	               <p class="cont_text">
 	               	<span>52人参加</span>
@@ -31,7 +31,7 @@
 	           <div class="cont">
 	               <p class="cont_title">诗词天天读</p>
 	               <p class="cont_detail">
-	                 每天一首经典诗
+	                 坚持打卡每一天
 	               </p>
 	               <p class="cont_text">
 	               	<span>52人参加</span>
@@ -47,7 +47,7 @@
 	           <div class="cont">
 	               <p class="cont_title">诗词天天读</p>
 	               <p class="cont_detail">
-	                 每天一首经典诗
+	                 坚持打卡每一天
 	               </p>
 	               <p class="cont_text">
 	               	<span>52人参加</span>
@@ -63,7 +63,7 @@
 	           <div class="cont">
 	               <p class="cont_title">诗词天天读</p>
 	               <p class="cont_detail">
-	                 每天一首经典诗
+	                 坚持打卡每一天
 	               </p>
 	               <p class="cont_text">
 	               	<span>52人参加</span>
@@ -79,7 +79,7 @@
 	           <div class="cont">
 	               <p class="cont_title">诗词天天读</p>
 	               <p class="cont_detail">
-	                 每天一首经典诗
+	                 坚持打卡每一天
 	               </p>
 	               <p class="cont_text">
 	               	<span>52人参加</span>
@@ -107,29 +107,30 @@ export default{
 </script>
 <style lang="stylus">
 	.find
+		
 		font-size 28rpx
 		color #777
 		.header
 			padding 24rpx
 			background-color #fafafa
 		.search
-			margin 0 50rpx
+			margin 0 20rpx
 			width 100%
 			display flex
 			justify-content flex-start
 			.input
 				display inline-block
 				border 1px solid #ddd
-				width 70%
-				height 70rpx
+				width 75%
+				height 80rpx
 				padding 8rpx 30rpx
 				box-sizing border-box
 			.search_icon
 				text-align center
 				display inline-block
 				width 90rpx 
-				height 70rpx
-				line-height 70rpx
+				height 80rpx
+				line-height 80rpx
 				color #bbb
 				border 1px solid #ddd
 				box-sizing border-box

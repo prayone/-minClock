@@ -20,8 +20,7 @@
            </div>
            <div class="cont">
                <p class="cont_title">
-                  每天一分钟，小编陪你学日语，一个月创造生命的奇迹hhjshjs 
-                
+                  每天一分钟，小编陪你学日语，一个月创造生命的奇迹
               </p>
                <p class="cont_detail">
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
@@ -34,7 +33,8 @@
            <div class="clock_btn">
              <button class="clock_button">打卡</button>
            </div>
-           <span v-if="team_leader" class="team_leader">群主</span>
+           <img src="/static/img/qunzhu.png" alt="" v-if="team_leader" class="team_leader">
+
       </div>
       <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
@@ -48,7 +48,6 @@
                  <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
                  <span>18人已打卡</span>
                </p>
-               
            </div>
            <div class="clock_btn">
              <button class="clock_button">打卡</button>
@@ -69,7 +68,7 @@
         这里显示日记详情
       </div>
       <div class="zan-panel active">
-          <div class="zan-cell zan-cell--access">
+          <div class="zan-cell">
               <div class="zan-cell__bd active_all">
                 <div class="active_img">
                   <img src="/static/img/active_img.jpg">
@@ -98,7 +97,7 @@
         今天的任务是学习日语
       </div>
       <div class="zan-panel active">
-          <div class="zan-cell zan-cell--access">
+          <div class="zan-cell">
               <div class="zan-cell__bd active_all">
                 <div class="active_img">
                   <img src="/static/img/active_img.jpg">
@@ -154,7 +153,12 @@ export default {
                   global.user_info = res.userInfo
                   that.userInfo = res.userInfo
 
+
                   var sessionId = wx.getStorageSync('session');
+                  console.log("ggggggggggg---------",res.encryptedData)
+                  console.log("ggggggggggg---------",res.iv)
+                  console.log("ggggggggggg---------",sessionId)
+                  
                   var param = {
                         url: '/v1/miniprogram/decrypt_user_info.htm',
                         setUpUrl: true,
@@ -184,6 +188,7 @@ export default {
     getSession (callback) {
       wx.login({
         success: function(res) {
+          console.log('code......',res.code)
            if (res.code) {
              var param = {
                   url: '/v1/miniprogram/login.htm',
@@ -191,7 +196,7 @@ export default {
                   setUpUrl: true,
                 }
                 ajax(param).then(function(res){
-                    // console.log(res.data.data)
+                    console.log('session',res.data.data)
                     wx.setStorageSync('session', res.data.data);
                     callback && callback()
                 })
@@ -242,31 +247,17 @@ export default {
         border-radius: 50%;
     .content
       padding 24rpx
-      .clock_item
-        position relative
-        .team_leader
-          position absolute
-          top -20rpx
-          right -20rpx
-          display inline-block
-          width 78rpx
-          height 42rpx
-          line-height 42rpx
-          text-align center
-          font-size 24rpx
-          background-color #eaa246
-          color #fff
-          border-radius 6rpx
       .clock
         font-size 30rpx
         color #5acb9a
         margin-bottom 24rpx
       .clock_item
+        position relative
         border 1px solid #dddddd
         padding 20rpx 10rpx
         display flex
         justify-content flex-start
-        margin-bottom 12rpx
+        margin-bottom 25rpx
         align-items center
         .clock_img
           flex 1.5
@@ -275,6 +266,14 @@ export default {
           img
             width 100%
             height 100%
+        .team_leader
+            position absolute
+            top -15rpx
+            right -10rpx
+            display inline-block
+            width 60rpx
+            height 40rpx
+            text-align center
         .cont
           flex 4
           font-size 24rpx  
@@ -287,10 +286,9 @@ export default {
             display:-webkit-box; 
             -webkit-box-orient:vertical;
             -webkit-line-clamp:2; 
-            font-size 30rpx
+            font-size 28rpx
             color #111111
             margin-bottom 16rpx
-            
           .cont_detail
             .cont_icon
               width 30rpx

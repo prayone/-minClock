@@ -176,7 +176,6 @@
 			// console.log(typeof(this.team_leader))
 		},
 		methods:{
-
 			 ...ZanNoticeBar.methods,
 			 setRef: function (payload) {
 		        // console.log(payload)

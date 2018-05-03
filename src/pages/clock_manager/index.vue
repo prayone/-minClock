@@ -2,7 +2,7 @@
 	<div class="clock_manager">
 		<div class="header">
 			<p class="active_name">打卡名称</p>
-			<p class="active_id">项目编号：<span>741019</span></p>
+			<p class="active_id">活动编号：<span>741019</span></p>
 		</div>
 		<div class="content">
 			<div class="data_info header">
@@ -10,20 +10,26 @@
 				<p class="data_timer">数据更新至:<span>2018/4/12</span></p>
 			</div>
 			<div class="zan-panel">
-			    <div class="zan-cell zan-cell--access">
+			    <div class="zan-cell ">
 			        <div class="zan-cell__bd">用户总数</div>
 			        <div class="zan-cell__ft picker">
 			        	<span>100</span>
 			    	</div>
 			      </div>
-			      <div class="zan-cell zan-cell--access">
+			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">已打卡人数</div>
 			        <div class="zan-cell__ft picker">
 			        	<span>90</span>
 			    	</div>
 			      </div>
-			      <div class="zan-cell zan-cell--access">
+			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">访问人数</div>
+			        <div class="zan-cell__ft picker">
+			        	<span>400</span>
+			    	</div>
+			      </div>
+			      <div class="zan-cell ">
+			        <div class="zan-cell__bd">访问次数</div>
 			        <div class="zan-cell__ft picker">
 			        	<span>400</span>
 			    	</div>
