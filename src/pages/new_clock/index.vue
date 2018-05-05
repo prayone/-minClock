@@ -43,22 +43,23 @@
 			creat_clock(){
 				var sessionId = wx.getStorageSync('session');
 				var data = {
-					isopen:this.isopen,
-					title:this.active_title
+					activityStatus:this.isopen,
+					 activityName:this.active_title
 				}
 				var param = {
-					url: '/v1/miniprogram/login.htm',
+					url: 'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/insertActivity.htm',
 	                data: data,
-	                setUpUrl: true,
+	                setUpUrl: false,
 				}
 				if(this.active_title){
-					wx.navigateBack({
-					  delta: 1
-					})
-					this.active_title = ''
+					// wx.navigateBack({
+					//   delta: 1
+					// })
 					ajax(param).then(function(res){
 
+						console.log('ssssssssssssss',res)						
                 	})
+
 				} else {
 					wx.showToast({
 						  title: '活动名称不能为空',
