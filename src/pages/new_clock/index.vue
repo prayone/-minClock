@@ -42,18 +42,32 @@
 			},
 			creat_clock(){
 				var sessionId = wx.getStorageSync('session');
-				console.log(666,this.isopen)
-				var data={
-
+				var data = {
+					isopen:this.isopen,
+					title:this.active_title
 				}
 				var param = {
 					url: '/v1/miniprogram/login.htm',
 	                data: data,
 	                setUpUrl: true,
 				}
-				ajax(param).then(function(res){
-                    
-                })
+				if(this.active_title){
+					wx.navigateBack({
+					  delta: 1
+					})
+					this.active_title = ''
+					ajax(param).then(function(res){
+
+                	})
+				} else {
+					wx.showToast({
+						  title: '活动名称不能为空',
+						  icon: 'none',
+						  image: '/static/img/tishi.png',
+						  duration: 2000
+						})
+				}
+				
 			}
 		}
 	}
@@ -79,14 +93,8 @@
 					margin-left 15rpx
 					font-size 24rpx
 					color #999
-		.footer
-			margin-bottom 180rpx	
-			.entry_fee
-				display flex
-				justify-content space-between
-				.fee_text
-					color #777777
 		.btn
+			margin-top 400rpx
 			.clock_btn
 				width 80%
 				margin 0 auto

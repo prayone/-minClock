@@ -36,14 +36,6 @@
 			      </div>
 		    </div>
 		</div>
-		<div class="notice_set">
-			<div class="zan-panel">
-		      <div class="zan-cell zan-cell--access">
-		        <div class="zan-cell__bd"><span class="zan-icon zan-icon-edit"> </span>公告设置</div>
-		      </div>
-		    </div>
-			<input type="text" class="input" placeholder="请输入公告...">
-		</div>
 		<div class="notice_set" @click='click_set'>
 			<div class="zan-panel">
 		      <div class="zan-cell zan-cell--access">

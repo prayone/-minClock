@@ -11,10 +11,15 @@
 			<p class="img_set_text">活动名称<span>（必填）</span></p>
 			<input type="text">
 		</div>
-		<div class="detail_set space">
-			<p class="img_set_text">活动详情</p>
+		<div class="detail_set space notice">
+			<p class="img_set_text">公告设置</p>
+			<input type="text">
+		</div>
+		<div class="detail_set space active_detail" >
+			<p class="img_set_text ">活动详情</p>
 			<textarea name="" id="" cols="30" rows="10"></textarea>
 		</div>
+		
 		<div class="foot">
 			<button class="button">保存设置</button>
 		</div>
@@ -47,6 +52,10 @@ export default{
 }
 </script>
 <style lang='stylus'>
+input 
+	border 1px solid #ccc
+	padding 10rpx
+	margin 20rpx 0
 .space
 	margin 0
 	position relative
@@ -86,10 +95,7 @@ export default{
 		.img_set_text
 			span
 				color red
-		input 
-			border 1px solid #ccc
-			padding 10rpx
-			margin 20rpx 0
+		
 	.detail_set
 		textarea
 			border 1px solid #ccc
@@ -97,6 +103,8 @@ export default{
 			margin 20rpx auto
 			height 200rpx
 			width 90%
+	.active_detail
+		margin-bottom 200rpx
 	.foot
 		position fixed
 		bottom 0

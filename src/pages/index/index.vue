@@ -140,7 +140,6 @@ export default {
       wx.navigateTo({ url })
     },
     clock_detail(info){
-      // console.log(info)
       wx.navigateTo({url:'../clock_detail/main?team_lead='+info})
     },
     
@@ -152,13 +151,7 @@ export default {
             success: (res) => {
                   global.user_info = res.userInfo
                   that.userInfo = res.userInfo
-
-
                   var sessionId = wx.getStorageSync('session');
-                  console.log("ggggggggggg---------",res.encryptedData)
-                  console.log("ggggggggggg---------",res.iv)
-                  console.log("ggggggggggg---------",sessionId)
-                  
                   var param = {
                         url: '/v1/miniprogram/decrypt_user_info.htm',
                         setUpUrl: true,
