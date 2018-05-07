@@ -83,7 +83,6 @@
           setTimeout(() => {
             that[componentId].animationData = aninationData.export()
           }, 100)
-
           setTimeout(() => {
             that.scrollZanNoticeBar(that, componentId, mstime)
           }, mstime)

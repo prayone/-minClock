@@ -3,11 +3,11 @@
 		<div class="header">
 			<div class="header_top">
 				<div class="header_img">
-					<img src="/static/img/active_img.jpg" alt="">
+					<img :src="detail_lists.activityCoverPic" alt="">
 				</div>
 				<div class="header_text">
-					<p class="header_title">【每日一分钟】小编帮你学日语</p>
-					<p class="header_cont">589人已参加<span class="space">|</span>500人已打卡</p>
+					<p class="header_title">{{detail_lists.activityName}}</p>
+					<p class="header_cont">{{detail_lists.activityUserCount}}人已参加<span class="space">|</span>{{detail_lists.clockCount}}人已打卡</p>
 				</div>
 			</div>
 			<div class="admin" v-if='team_leader' @click="clock_manager">
@@ -95,15 +95,15 @@
 				<div class="title">
 					<p class="active_title">活动名称</p>
 					<div class="active_des">
-						<span>300人已参加</span>
+						<span>{{detail_lists.activityUserCount}}人已参加</span>
 						<span class="span_icon">|</span>
-						<span>100人打卡</span>
+						<span>{{detail_lists.clockCount}}人已打卡</span>
 					</div>
 				</div>
 				<div class="active_detail space">
 					<p class="img_set_text">活动详情</p>
 					<div class="detail_des">
-						这里是活动详情的介绍，希望大家能坚持打卡。
+						{{detail_lists.activityDesc}}
 					</div>
 				</div>
 		    </div>
@@ -143,6 +143,8 @@
 <script>
 	import ZanTab from '../../components/zan/tab'
 	import ZanNoticeBar from '../../components/zan/noticebar'
+	import  ajax  from '../../common/js/ajax.js'
+
 	export default {
 		 components: {
 		      ZanNoticeBar,
@@ -169,11 +171,42 @@
 			          selectedId: 'diary'
 			        },
 			    team_leader:null,
+			    detail_lists:{}
 			}
 		},
 		onLoad(options){
-			this.team_leader = parseInt(this.$root.$mp.query.team_lead) 
-			// console.log(typeof(this.team_leader))
+			this.detail_lists = {}
+			console.log('idididd',this.$root.$mp.query.activeId)
+			if(this.$root.$mp.query.team_lead == 'true'){
+				this.team_leader = true
+			} else {
+				this.team_leader = false
+			}
+			var that = this
+	      	var active_de_param = {
+	          url: '/v1/miniprogram/showActivity.htm',
+	                  data: {
+	                  	activityId:this.$root.$mp.query.activeId,
+	                  	userId:1
+	                  },
+	                  setUpUrl: true,
+	        }
+	      	ajax(active_de_param).then(function(res){
+	            that.detail_lists = res.data.data
+	            that.movable.text = res.data.data.activityNotice
+	        })
+	        var theme_param = {
+	          url: '/v1/miniprogram/showClockThem.htm',
+	                  data: {
+	                  	activityId:this.$root.$mp.query.activeId
+	                  },
+	                  setUpUrl: true,
+	        }
+	      	ajax(theme_param).then(function(res){
+	            console.log('mmmmmmm',res.data)
+	            
+	        })
+
 		},
 		methods:{
 			 ...ZanNoticeBar.methods,
@@ -182,7 +215,6 @@
 		        setTimeout(() => {
 		          var that = this
 		          this.initZanNoticeBarScroll(that, 'movable')
-		          this.initZanNoticeBarScroll(that, 'static1')
 		        }, 500)
 		     },
 		      jump_diary(){
@@ -191,8 +223,9 @@
 		      },
 		      ...ZanTab.methods,
 		      handleZanTabChange (e) {
+		      	console.log('eeeeeee',e)
 		        const {componentId, selectedId} = e
-		        this[componentId].selectedId = selectedId,
+		        this[componentId].selectedId = selectedId
 		        console.log(">>>",this.tab1.selectedId)
 		        console.log("e.selectedId",e.selectedId)
 		      },

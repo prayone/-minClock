@@ -14,28 +14,29 @@
       <div class="clock" @click="new_clock">
           + 新建打卡
       </div>
-      <div class="clock_item" @click="clock_detail(team_leader)">
-           <div class="clock_img">
-              <img src="/static/img/active_img.jpg" alt="">
-           </div>
-           <div class="cont">
-               <p class="cont_title">
-                  每天一分钟，小编陪你学日语，一个月创造生命的奇迹
-              </p>
-               <p class="cont_detail">
-                 <img class="cont_icon" src="/static/img/alarm.png" alt="">
-                 <span>19:00:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
-                 <span>18人已打卡</span>
-               </p>
-               
-           </div>
-           <div class="clock_btn">
-             <button class="clock_button">打卡</button>
-           </div>
-           <img src="/static/img/qunzhu.png" alt="" v-if="team_leader" class="team_leader">
-
+      <div class="active_big" v-for = "active in active_lists" :key='active'>
+          <div class="clock_item" @click="clock_detail(!(active.userRole*1),active.activityId)">
+             <div class="clock_img">
+                <img :src="active.activityCoverPic" alt="">
+             </div>
+             <div class="cont">
+                <p class="cont_title">
+                    {{active.activityName}}
+                </p>
+                 <p class="cont_detail">
+                   <img class="cont_icon" src="/static/img/alarm.png" alt="">
+                   <span>{{active.clockRemindDate}}</span>
+                   <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
+                   <span>{{active.clockCount}}人已打卡</span>
+                 </p>
+             </div>
+             <div class="clock_btn">
+               <button class="clock_button">打卡</button>
+             </div>
+             <img src="/static/img/qunzhu.png" alt="" v-if="!(active.userRole*1)" class="team_leader">
+          </div>
       </div>
+      
       <div class="clock_item" @click="clock_detail(0)">
            <div class="clock_img">
               <img src="/static/img/active_img.jpg" alt="">
@@ -46,7 +47,7 @@
                  <img class="cont_icon" src="/static/img/alarm.png" alt="">
                  <span>19:34:00</span>
                  <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
-                 <span>18人已打卡</span>
+                 <span>人已打卡</span>
                </p>
            </div>
            <div class="clock_btn">
@@ -124,12 +125,28 @@ export default {
       userInfo: {},
       tempFilePath:'',
       team_leader:1,
+      active_lists:[]
     }
   },
   onShow(){
-    this.getSession(this.getUserInfo())
-    },
-  
+      this.getSession(this.getUserInfo())
+      var that = this
+      var param = {
+          url: '/v1/miniprogram/showActivitys.htm',
+                  data: '',
+                  setUpUrl: true,
+        }
+      ajax(param).then(function(res){
+            console.log('hhhhhhhhhhhhh',res)
+            if(res.statusCode == 200){
+              that.active_lists = res.data.data
+              that.team_leader = parseInt(res.data.data.userRole)
+              console.log('that',that.active_lists)
+            } 
+        })
+  },
+  onLoad(){
+  },
   methods: {
     diary_share(){
       const url = '../share_diary/main'
@@ -139,8 +156,8 @@ export default {
       const url = '../new_clock/main'
       wx.navigateTo({ url })
     },
-    clock_detail(info){
-      wx.navigateTo({url:'../clock_detail/main?team_lead='+info})
+    clock_detail(info,activeId){
+      wx.navigateTo({url:'../clock_detail/main?team_lead='+info+'&activeId='+activeId})
     },
     
     getUserInfo () {
@@ -162,7 +179,7 @@ export default {
                         },
                       } 
                   ajax(param).then(function(res){
-                      console.log('res',res)
+                      console.log('resresresres------',res)
                      
                   },function(err){
                       console.log('err',err)

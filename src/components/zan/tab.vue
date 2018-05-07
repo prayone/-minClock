@@ -1,18 +1,18 @@
 <template>
   <div class="zan-tab">
-    <block  v-if="scroll || false">
+    <block v-if="scroll || false">
       <scroll-view
         class="zan-tab__bd zan-tab__bd--scroll"
         :class="{ 'zan-tab__bd--fixed' : fixed }"
         scroll-x="true"
         :style="'height' + mao +  height + 'px auto'"
       >
-        <ZanTabList  v-bind="{ list , selectedId, componentId, _handleZanTabChange }"/>
+        <ZanTabList v-bind="{ list , selectedId, componentId, _handleZanTabChange }"/>
       </scroll-view>
     </block>
     <block wx:else>
       <div class="zan-tab__bd" :class="{ 'zan-tab__bd--fixed' : fixed }">
-        <ZanTabList  v-bind="{ list, selectedId, componentId , _handleZanTabChange}"/>
+        <ZanTabList v-bind="{ list, selectedId, componentId , _handleZanTabChange}"/>
       </div>
     </block>
   </div>
@@ -31,6 +31,7 @@
       mao: function () {
         return maohao
       }
+
     },
     data () {
       return {
@@ -42,7 +43,7 @@
     },
     methods: {
       _handleZanTabChange (data) {
-        // console.info('[zan:tab:change]', data)
+        console.info('[zan:tab:change]', data)
         if (this.handleZanTabChange) {
           this.handleZanTabChange(data)
         } else {
@@ -54,4 +55,5 @@
 </script>
 
 <style scoped>
+
 </style>

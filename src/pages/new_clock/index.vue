@@ -17,7 +17,7 @@
 			</radio-group>
 		</div>
 		<div class="btn">
-			<button class="clock_btn" @click="creat_clock">创建打卡</button>
+			<button class="clock_btn" @click="creat_clock">创建活动</button>
 		</div>
 	</div>
 </template>
@@ -34,6 +34,9 @@
 				isopen:1
 			}
 		},
+		onLoad(){
+			this.active_title = ''
+		},
 		methods:{
 			radioChange(e) {
 			    console.log('radio发生change事件，携带value值为：', e.mp.detail.value)
@@ -42,24 +45,34 @@
 			},
 			creat_clock(){
 				var sessionId = wx.getStorageSync('session');
+				console.log(999,sessionId)
 				var data = {
 					activityStatus:this.isopen,
-					 activityName:this.active_title
+					 activityName:this.active_title,
+					 sessionId:sessionId
 				}
 				var param = {
-					url: 'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/insertActivity.htm',
+					url: '/v1/miniprogram/insertActivity.htm',
 	                data: data,
-	                setUpUrl: false,
+	                setUpUrl: true,
 				}
 				if(this.active_title){
-					// wx.navigateBack({
-					//   delta: 1
-					// })
 					ajax(param).then(function(res){
-
-						console.log('ssssssssssssss',res)						
+						if(res.data.data == 'success'){
+							wx.showToast({
+							  title: '创建成功',
+							  icon: 'success',
+							  duration: 2000,
+							  success(res){
+							  	setTimeout(function(){
+							  		wx.switchTab({
+									  url: '/pages/index/main'
+									})
+						  		},1000)
+							  }
+							})
+						}
                 	})
-
 				} else {
 					wx.showToast({
 						  title: '活动名称不能为空',
@@ -68,7 +81,6 @@
 						  duration: 2000
 						})
 				}
-				
 			}
 		}
 	}
