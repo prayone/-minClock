@@ -10,7 +10,7 @@
 					<p class="header_cont">{{detail_lists.activityUserCount}}人已参加<span class="space">|</span>{{detail_lists.clockCount}}人已打卡</p>
 				</div>
 			</div>
-			<div class="admin" v-if='team_leader' @click="clock_manager">
+			<div class="admin" v-if='team_leader' @click="clock_manager(activityID)">
 				<button class="admin_btn"><span class="tools_icon"></span>管理后台</button>
 			</div>
 		</div>
@@ -41,7 +41,7 @@
 			</div>
 		</div>
 		<div class="add_theme" v-if='team_leader'>
-			<div class="add_btn" @click="add_theme">
+			<div class="add_btn" @click="add_theme(activityID)">
 				<span class="zan-icon zan-icon-add-o add_icon"></span>
 				<span style="position:relative;top:-4rpx">添加打卡主题</span>
 			</div>
@@ -54,21 +54,21 @@
 			<div class="theme_cont">
 				<div class="header_top">
 					<div class="header_img">
-						<img src="/static/img/theme.jpg" alt="">
+						<img :src="theme_lists.themeCover" alt="">
 					</div>
 					<div class="header_text">
-						<p class="header_title">【每日一分钟】小编帮你学日语</p>
-						<p class="header_cont"><span>2018/4/12</span></p>
+						<p class="header_title">{{theme_lists.clockTheme}}</p>
+						<p class="header_cont"><span>{{theme_lists.themeDate}}</span></p>
 					</div>
 				</div>
 				<div class="theme_detail" style="margin-top:20rpx;color:#666;">
-					今日打卡要求，必须上传图片、语音、视频及打卡位置哦！
+					{{theme_lists.themeDesc}}
 				</div>
 			</div>
 		</div>
 		<div class="sec_tab">
 			<div style="margin: 20px 0">
-		      <ZanTab v-bind="tab1" :componentId="'tab1'" :handleZanTabChange="handleZanTabChange"/>
+		      <ZanTab v-bind="tab1" :componentId="'tab1'" @change="handleZanTabChange"/>
 		    </div>
 		     <div class="tab_cont tab_cont_diary" v-if="tab1.selectedId=='diary'">
 		    	 <div class="diary_item">
@@ -134,7 +134,7 @@
 		   
 		</div>
 		<div class="footer">
-			<div class="clock_btn" @click='jump_diary'>
+			<div class="clock_btn" @click='jump_diary(activityID)'>
 				<img src="/static/img/clock_btn.png" alt="">
 			</div>
 		</div>
@@ -171,22 +171,26 @@
 			          selectedId: 'diary'
 			        },
 			    team_leader:null,
-			    detail_lists:{}
+			    detail_lists:{},
+			    theme_lists:{},
+			    activityID:''
 			}
 		},
 		onLoad(options){
 			this.detail_lists = {}
 			console.log('idididd',this.$root.$mp.query.activeId)
+			this.activityID = this.$root.$mp.query.activeId
 			if(this.$root.$mp.query.team_lead == 'true'){
 				this.team_leader = true
 			} else {
 				this.team_leader = false
 			}
+	        // this.showTheme()
 			var that = this
 	      	var active_de_param = {
 	          url: '/v1/miniprogram/showActivity.htm',
 	                  data: {
-	                  	activityId:this.$root.$mp.query.activeId,
+	                  	activityId:this.activityID,
 	                  	userId:1
 	                  },
 	                  setUpUrl: true,
@@ -195,30 +199,46 @@
 	            that.detail_lists = res.data.data
 	            that.movable.text = res.data.data.activityNotice
 	        })
-	        var theme_param = {
-	          url: '/v1/miniprogram/showClockThem.htm',
-	                  data: {
-	                  	activityId:this.$root.$mp.query.activeId
-	                  },
-	                  setUpUrl: true,
-	        }
-	      	ajax(theme_param).then(function(res){
-	            console.log('mmmmmmm',res.data)
-	            
-	        })
-
+	      	var theme_param = {
+		          url: '/v1/miniprogram/showClockThem.htm',
+		                  data: {
+		                  	activityId:this.activityID
+		                  },
+		                  setUpUrl: true,
+		        }
+		      	ajax(theme_param).then(function(res){
+		      		console.log('hhhhuuuuiii',res)
+		            that.theme_lists = res.data.data
+		        })
+		},
+		onShow(){
+			console.log(11111111111111)
+	        this.showTheme()
 		},
 		methods:{
+			showTheme(){
+				var that = this
+				var theme_param = {
+		          url: '/v1/miniprogram/showClockThem.htm',
+		                  data: {
+		                  	activityId:this.activityID
+		                  },
+		                  setUpUrl: true,
+		        }
+		      	ajax(theme_param).then(function(res){
+		      		console.log('hhhhuuuuiii',res)
+		            that.theme_lists = res.data.data
+		        })
+			},
 			 ...ZanNoticeBar.methods,
 			 setRef: function (payload) {
-		        // console.log(payload)
 		        setTimeout(() => {
 		          var that = this
 		          this.initZanNoticeBarScroll(that, 'movable')
 		        }, 500)
 		     },
-		      jump_diary(){
-		      	const url="../publish_diary/main"
+		      jump_diary(activityID){
+		      	const url="../publish_diary/main?activityId=" + activityID
 		      	wx.navigateTo({ url })
 		      },
 		      ...ZanTab.methods,
@@ -229,11 +249,11 @@
 		        console.log(">>>",this.tab1.selectedId)
 		        console.log("e.selectedId",e.selectedId)
 		      },
-		      add_theme(){
-		      	wx.navigateTo({ url:"../add_theme/main" })
+		      add_theme(activityID){
+		      	wx.navigateTo({ url:"../add_theme/main?activityId=" + activityID})
 		      },
-		      clock_manager(){
-		      	wx.navigateTo({ url:"../clock_manager/main" })
+		      clock_manager(activityID){
+		      	wx.navigateTo({ url:"../clock_manager/main?activityId=" + activityID })
 		      },
 		      calendar(){
 		      	wx.navigateTo({ url:"../calendar/main" })
@@ -244,6 +264,9 @@
 		      billboard(){
 		      	wx.navigateTo({ url:"../billboard/main" })
 		      }
+		},
+		onUnload(){
+			this.theme_lists = {}
 		}
 	}
 </script>

@@ -30,6 +30,10 @@
 			return {
 				
 			}
+		},
+		onLoad(options){
+			this.activityID = this.$root.$mp.query.activityId
+			console.log('nnnnnnnn',this.activityID)
 		}
 	}
 </script>

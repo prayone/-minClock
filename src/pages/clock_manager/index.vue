@@ -36,7 +36,7 @@
 			      </div>
 		    </div>
 		</div>
-		<div class="notice_set" @click='click_set'>
+		<div class="notice_set" @click='click_set(activityID)'>
 			<div class="zan-panel">
 		      <div class="zan-cell zan-cell--access">
 		        <div class="zan-cell__bd"><span class="zan-icon zan-icon-edit"></span>打卡详情设置</div>
@@ -82,12 +82,23 @@
 </template>
 <script>
 	export default {
+		data(){
+			return {
+				activityID:'',
+				
+			}
+		},
+		onLoad(options){
+			this.activityID = this.$root.$mp.query.activityId
+			console.log('nnnnnnnn',this.activityID)
+
+		},
 		methods:{
 			user_manager(){
 
 			},
-			click_set(){
-				 wx.navigateTo({url:'../clockDetail_set/main'})
+			click_set(activityID){
+				 wx.navigateTo({url:'../clockDetail_set/main?activityId=' + activityID})
 			}
 		}
 	}

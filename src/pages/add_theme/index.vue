@@ -1,7 +1,7 @@
 <template>
 	<div class="add_theme">
 		<div class="theme_title">
-			<input class="title_input" type="text" placeholder="请输入主题标题">
+			<input class="title_input" type="text" placeholder="请输入主题标题" v-model="theme_title">
 		</div>
 		<div class="theme_timer">
 			<div class="zan-panel">
@@ -25,7 +25,7 @@
 				<span @click='clear_img' v-if='clear' class="zan-icon zan-icon-clear clear"></span>
 			</div>
 			<p class="index_title" style="margin-top:20rpx;">主题详情</p>
-			<textarea class="textarea" name="theme" placeholder="说说今天主题的详细要求吧...">
+			<textarea class="textarea" name="theme" placeholder="说说今天主题的详细要求吧..." v-model="theme_desc">
 			</textarea>
 		</div>
 		<div class="footer">
@@ -41,14 +41,24 @@
 	</div>
 </template>
 <script>
+	import  ajax  from '../../common/js/ajax.js'
+	import  addImg  from '../../common/js/addImg.js'
 	export default{
 		data(){
 			return {
-				date: '',
+				date:'',
 				img_url:'/static/img/add.png',
 				clear:'',
-				tempFilePaths:''
+				tempFilePaths:'',
+				theme_title:'',
+				theme_timer:'',
+				theme_desc:'',
+				activityId:''
 			}
+		},
+		onLoad(){
+			this.activityId = this.$root.$mp.query.activityId
+			
 		},
 		methods:{
 			bindDateChange: function(e) {
@@ -63,9 +73,10 @@
 					  sourceType: ['album', 'camera'], 
 					  success: function (res) {
 					    that.img_url = res.tempFilePaths[0]
-					    that.clear=true
+					    that.clear = true
 					    //tempFilePaths是要上传给服务器的图片地址
-					    that.tempFilePaths = res.tempFilePaths
+					    that.tempFilePaths = res.tempFilePaths[0]
+					    console.log('jjjjjjj',res.tempFilePaths[0])
 
 					  }
 					})
@@ -75,9 +86,36 @@
 				this.clear=false
 			},
 			publish_theme(){
-				wx.switchTab({
-				  url: '/pages/index/main'
-				})
+				var that = this
+				var data = {
+					activityId:that.activityId,
+                  	clockTheme:that.theme_title,
+                  	themeDate:that.date,
+                  	themeDesc:that.theme_desc
+				}
+				wx.uploadFile({
+			      url: 'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/insertClockThem.htm', //仅为示例，非真实的接口地址
+			      filePath: that.tempFilePaths,
+			      name: 'file',
+			      formData:data,
+			      success: function(res){
+			       	console.log('LLLLLLLLLLLLLLL---',res)
+			       	if(res.statusCode == 200){
+			       		wx.showToast({
+						  title: '发布成功',
+						  icon: 'success',
+						  duration: 2000,
+						  success(res){
+						  	setTimeout(function(){
+								wx.navigateBack({
+								  delta:1
+								})
+					  		},1000)
+						  }
+						})
+			       	}
+			      }
+			    })
 			}
 		}
 

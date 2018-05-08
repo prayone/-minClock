@@ -9,28 +9,54 @@
 		</div>
 		<div class="title_set space">
 			<p class="img_set_text">活动名称<span>（必填）</span></p>
-			<input type="text">
+			<input type="text" v-model="activityName">
 		</div>
 		<div class="detail_set space notice">
 			<p class="img_set_text">公告设置</p>
-			<input type="text">
+			<input type="text" v-model="avtivityNotice">
 		</div>
 		<div class="detail_set space active_detail" >
 			<p class="img_set_text ">活动详情</p>
-			<textarea name="" id="" cols="30" rows="10"></textarea>
+			<textarea name="" id="" cols="30" rows="10"  v-model="activityDesc"></textarea>
 		</div>
 		
 		<div class="foot">
-			<button class="button">保存设置</button>
+			<button class="button" @click='save_set'>保存设置</button>
 		</div>
 	</div>
 </template>	
 <script>
+import  ajax  from '../../common/js/ajax.js'
 export default{
 	data(){
 		return {
-			img:'/static/img/active_img.jpg'
+			img:'/static/img/active_img.jpg',
+			activityID:'',
+			tempFilePaths:'',
+			activityName:'',
+			avtivityNotice:'',
+			activityDesc:'',
+			activityStatus:''
 		}
+	},
+	onLoad(){
+		this.activityID = this.$root.$mp.query.activityId
+		var that = this
+		var theme_param = {
+		          url: '/v1/miniprogram/getActivity.htm',
+		                  data: {
+		                  	activityId:this.activityID
+		                  },
+		                  setUpUrl: true,
+		        }
+		      	ajax(theme_param).then(function(res){
+		      		console.log('aaaaaaa',res.data.data)
+		            that.img = res.data.data.activityCoverPic
+		            that.activityName = res.data.data.activityName
+		            that.avtivityNotice = res.data.data.avtivityNotice
+		            that.activityDesc = res.data.data.activityDesc
+		            that.activityStatus = res.data.data.activityStatus
+		        })
 	},
 	methods:{
 		edit_img(){
@@ -41,12 +67,53 @@ export default{
 					  sourceType: ['album', 'camera'], 
 					  success: function (res) {
 					    that.img=res.tempFilePaths
-					    //tempFilePaths是要上传给服务器的图片地址
-					    // that.tempFilePaths = res.tempFilePaths
-					    // console.log(that.img_urls)
+					    // tempFilePaths是要上传给服务器的图片地址
+					    that.tempFilePaths = res.tempFilePaths[0]
+					    console.log(that.img_urls)
 					  }
 				})
-		}
+		},
+		save_set(){
+			console.log("aa")
+				var that = this
+				var data = {
+					activityId:that.activityID,
+                  	activityName:that.activityName,
+                  	avtivityNotice:that.avtivityNotice,
+                  	activityDesc:that.activityDesc,
+                  	activityStatus:that.activityStatus
+				}
+				wx.uploadFile({
+			      url: 'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/updateActivity.htm', //仅为示例，非真实的接口地址
+			      filePath: that.tempFilePaths,
+			      name: 'file',
+			      formData:data,
+			      success: function(res){
+			       	console.log('xxxxxxxx---',res)
+			       	if(res.statusCode == 200){
+			       		wx.showToast({
+						  title: '保存成功',
+						  icon: 'success',
+						  duration: 2000,
+						  success(res){
+						  	setTimeout(function(){
+								wx.navigateBack({
+								  delta:1
+								})
+					  		},1000)
+						  }
+						})
+			       	}
+			      }
+			    })
+		},
+	},
+	onUnload(){
+		this.activityId = '',
+      	this.activityName = '',
+      	this.avtivityNotice = '',
+      	this.activityDesc = '',
+      	this.activityStatus = ''
 	}
 
 }
