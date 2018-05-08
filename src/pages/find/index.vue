@@ -67,10 +67,8 @@ export default{
 	              	active_lists_Tem = []
 	            	}
 	            	var active_lists = res.data.data.findSearchActivitys
-	            	console.log('active_lists',active_lists)
-	            	console.log('pageCount',res.data.data.pageCount)
-	            	var sum=(Math.ceil((res.data.data.pageCount)/10));
-	            	if(page>sum){
+	            	// var sum=(Math.ceil((res.page.count)/10));
+	            	if(active_lists<10){
 	            		that.active_lists = active_lists_Tem.concat(active_lists)
 	            		that.hasMoreData = false
 	            	} else {
