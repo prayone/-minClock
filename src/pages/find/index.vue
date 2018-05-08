@@ -40,35 +40,39 @@ export default{
 		}
 	},
 	onShow(){
-      this.search()
+      	this.search()
   	},
 	methods:{
 		jump_detail(activityId){
 			wx.navigateTo({ url:'../active_detail/main?activityId=' + activityId })
 		},
 		search(){
-		  var that = this
-	      var keywords = this.keywords
-	      console.log('keywords',keywords)
-	      var param = {
-	          url: '/v1/miniprogram/findSearchActivitys.htm',
-	                  data: {
-	                  	page:that.page,
-	                  	activityName:keywords
-	                  },
-	                  setUpUrl: true,
+		  	var that = this
+	      	var keywords = this.keywords
+	      	console.log('keywords',keywords)
+	      	var param = {
+	          	url: '/v1/miniprogram/findSearchActivitys.htm',
+              	data: {
+              		page:that.page,
+          			activityName:keywords
+             	},
+              	setUpUrl: true,
 	        }
-	      ajax(param).then(function(res){
+	        wx.showLoading({
+			  	title: '加载中',
+			})
+	      	ajax(param).then(function(res){
+	      		wx.hideLoading()
 	            console.log('fffffffff',res)
 	            var active_lists_Tem = that.active_lists
 
 	            if(res.statusCode == 200){
 	            	if(that.page == 1){
-	              	active_lists_Tem = []
+	              		active_lists_Tem = []
 	            	}
 	            	var active_lists = res.data.data.findSearchActivitys
 	            	// var sum=(Math.ceil((res.page.count)/10));
-	            	if(active_lists<10){
+	            	if(active_lists < 10){
 	            		that.active_lists = active_lists_Tem.concat(active_lists)
 	            		that.hasMoreData = false
 	            	} else {
@@ -92,9 +96,9 @@ export default{
 	    if (this.hasMoreData) {
 	    	this.search()
 	    } else {
-	      wx.showToast({
-	        title: '没有更多数据',
-	      })
+	      	wx.showToast({
+	       		 title: '没有更多数据',
+	      	})
 	    }
 	  },
 }
