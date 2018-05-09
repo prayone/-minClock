@@ -21,7 +21,7 @@
 			</div>
 		</div>
 		<div class="tools">
-			<div class="calander" @click="calendar">
+			<div class="calander" @click="calendar(activityID)">
 				<p class="calander_img">
 					<img src="/static/img/canader.png" alt="">
 				</p>
@@ -68,32 +68,33 @@
 		</div>
 		<div class="sec_tab">
 			<div style="margin: 20px 0">
-		      <ZanTab v-bind="tab1" :componentId="'tab1'" @change="handleZanTabChange"/>
+		      	<ZanTab v-bind="tab1" :componentId="'tab1'" @change="handleZanTabChange"/>
 		    </div>
-		     <div class="tab_cont tab_cont_diary" v-if="tab1.selectedId=='diary'">
-		    	 <div class="diary_item">
-				      <div class="diary">
+		    <!-- 日记详情 -->
+		    <div class="tab_cont tab_cont_diary" v-if="tab1.selectedId=='diary'">
+		    	<div class="diary_item">
+				    <div class="diary">
 				        <div class="diary_img">
-				          <img src="/static/img/header.jpg">
+				          	<img src="/static/img/header.jpg">
 				        </div>
 				        <div class="userinfo_diary">
-				          <p class="nickName">nickName</p>
-				          <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
+				          	<p class="nickName">nickName</p>
+				          	<p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
 				        </div>
-				      </div>
-				      <div class="diary_detail">
+				    </div>
+				    <div class="diary_detail">
 				        这里显示日记详情
-				      </div>
-				  </div>
+				    </div>
+				</div>
 		    </div>
 		    <div class="tab_cont tab_cont_detail" v-if="tab1.selectedId=='detail'">
 		    	<div class="img_set">
 					<div class="active_img">
-						<img src="/static/img/active_img.jpg" alt="">
+						<img :src="detail_lists.activityCoverPic" alt="">
 					</div>
 				</div>
 				<div class="title">
-					<p class="active_title">活动名称</p>
+					<p class="active_title">{{detail_lists.activityName}}</p>
 					<div class="active_des">
 						<span>{{detail_lists.activityUserCount}}人已参加</span>
 						<span class="span_icon">|</span>
@@ -134,8 +135,9 @@
 		   
 		</div>
 		<div class="footer">
-			<div class="clock_btn" @click='jump_diary(activityID)'>
-				<img src="/static/img/clock_btn.png" alt="">
+			<div class="clock_btn" >
+				<img v-if='!isClock' src="/static/img/clock_btn.png" alt="" @click='jump_diary(activityID)'>
+				<img v-if='isClock' src="/static/img/yidaka.png" alt="">
 			</div>
 		</div>
 	</div>
@@ -171,12 +173,15 @@
 			          selectedId: 'diary'
 			        },
 			    team_leader:null,
+			    isClock:0,
 			    detail_lists:{},
 			    theme_lists:{},
+			    diary_lists:[],
 			    activityID:''
 			}
 		},
 		onLoad(options){
+			this.isClock=0
 			this.detail_lists = {}
 			console.log('idididd',this.$root.$mp.query.activeId)
 			this.activityID = this.$root.$mp.query.activeId
@@ -185,13 +190,14 @@
 			} else {
 				this.team_leader = false
 			}
-	        // this.showTheme()
+	        this.showTheme()
+	        this.isclock()
+
 			var that = this
 	      	var active_de_param = {
 	          url: '/v1/miniprogram/showActivity.htm',
 	                  data: {
-	                  	activityId:this.activityID,
-	                  	userId:1
+	                  	activityId:that.activityID
 	                  },
 	                  setUpUrl: true,
 	        }
@@ -212,10 +218,29 @@
 		        })
 		},
 		onShow(){
-			console.log(11111111111111)
 	        this.showTheme()
+	        this.isclock()
 		},
 		methods:{
+			isclock(){
+				var that = this
+				var theme_param = {
+		          url: '/v1/miniprogram/checkClock.htm',
+		                  data: {
+		                  	activityId:that.activityID
+		                  },
+		                  setUpUrl: true,
+		        }
+		      	ajax(theme_param).then(function(res){
+		      		console.log('isclock---',res)
+		      		console.log('isclock---',res.data.data.clockNmber)
+		      		if(res.data.data.clockNmber == '1'){
+		      			that.isClock = 0
+		      		}else{
+		      			that.isClock = 1
+		      		}
+		        })
+			},
 			showTheme(){
 				var that = this
 				var theme_param = {
@@ -229,6 +254,20 @@
 		      		console.log('hhhhuuuuiii',res)
 		            that.theme_lists = res.data.data
 		        })
+			},
+			showDiary(){
+				// var that = this
+				// var theme_param = {
+		  //         url: '/v1/miniprogram/showClockThem.htm',
+		  //                 data: {
+		  //                 	activityId:this.activityID
+		  //                 },
+		  //                 setUpUrl: true,
+		  //       }
+		  //     	ajax(theme_param).then(function(res){
+		  //     		console.log('hhhhuuuuiii',res)
+		  //           that.diary_lists = res.data.data
+		  //       })
 			},
 			 ...ZanNoticeBar.methods,
 			 setRef: function (payload) {
@@ -255,8 +294,8 @@
 		      clock_manager(activityID){
 		      	wx.navigateTo({ url:"../clock_manager/main?activityId=" + activityID })
 		      },
-		      calendar(){
-		      	wx.navigateTo({ url:"../calendar/main" })
+		      calendar(activityID){
+		      	wx.navigateTo({ url:"../calendar/main?activityId=" + activityID })
 		      },
 		       clock_set(){
 		      	wx.navigateTo({ url:"../clock_set/main" })

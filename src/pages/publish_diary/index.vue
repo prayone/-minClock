@@ -1,7 +1,7 @@
 <template>
 	<div class="publish_diary">
 		<div class="header">
-			<textarea class="textarea" name="diary" placeholder="说说今天的感想和收获吧...">
+			<textarea class="textarea" name="diary" placeholder="说说今天的感想和收获吧..." v-model='words'>
 			</textarea>
 			<div class="main_function">
 				<div class="img" v-if='img_urls'>
@@ -83,7 +83,7 @@
 				<div class="cancle">
 				取消
 				</div>
-				<div class="publish">
+				<div class="publish" @click='publish_diary'>
 					发表日记
 				</div>
 			</div>
@@ -97,13 +97,13 @@
 
 <script>
 	import  addImg  from '../../common/js/addImg.js'
+	import  ajax  from '../../common/js/ajax.js'
 	const recorderManager = wx.getRecorderManager()
 	const innerAudioContext = wx.createInnerAudioContext()
 	var timer
 	export default {
 		data(){
 			return {
-				qqmapsdk:null,
 				img_urls:[],
 				addimg:false,
 				record_tempFilePath:'',
@@ -115,8 +115,28 @@
 				video_src:'',
 				count:0,
 				temCount:0,
-				imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqvts6bgj20dw098dfw.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqwi8h8rj20sg0g6wf1.jpg']
+				imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqvts6bgj20dw098dfw.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqwi8h8rj20sg0g6wf1.jpg'],
+				activityId:'',
+				saveFile:'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/saveFiles.htm',
+				words:'',
+				pic_arr:[],
+				record_arr:'',
+				video_arr:'',
+
 			}
+		},
+		onLoad(options){
+			this.activityId = this.$root.$mp.query.activityId
+			this.img_urls=[]
+			this.address='位置'
+			this.record_tempFilePath=''
+			this.video_src=''
+			this.isRecord=true
+			this.words= ''
+			this.pic_arr=[]
+			this.record_arr=''
+			this.video_arr=''
+
 		},
 		computed:{
 			min(){
@@ -159,12 +179,22 @@
 				var that=this
 				addImg.addimg().then((res) => {
 					that.img_urls = that.img_urls.concat(res.tempFilePaths)
-					console.log(that.img_urls)
+					// 图片上传开始
+					let url = that.saveFile
+					for(let i in res.tempFilePaths){
+						addImg.uploadImg(url,res.tempFilePaths[i],null).then((res) => {
+							console.log(JSON.parse(res.data))
+							var pic_url = JSON.parse(res.data).data.iconUrl
+								that.pic_arr.push(pic_url)
+						})
+					}
+					// 图片上传结束
 				})
 			},
 			clear_img(index){
 				this.img_urls.splice(index,1)
-				console.log("图片地址列表",this.img_urls)
+				this.pic_arr.splice(index,1)
+				console.log("图片sever地址列表",this.pic_arr)
 			},
 			add_record(){
 			    var that=this
@@ -187,14 +217,22 @@
                	})
 		    },
 		    over_record(){
-		    	  var that = this
-	              recorderManager.stop();
-	              recorderManager.onStop((res) => {
-		              clearInterval(timer)
-		              that.start_record = false
-		              that.play_record = true
-		              that.record_tempFilePath = res.tempFilePath
-	              })
+		    	var that = this
+	            recorderManager.stop();
+	            recorderManager.onStop((res) => {
+		            clearInterval(timer)
+		            that.start_record = false
+		            that.play_record = true
+		            that.record_tempFilePath = res.tempFilePath
+		            // 音频上传开始
+					let url = that.saveFile
+					addImg.uploadImg(url,that.record_tempFilePath,null).then((res) => {
+						that.record_arr = JSON.parse(res.data).data.iconUrl
+						console.log('===============',that.record_arr)
+
+					})
+					// 音频上传结束
+	            })
 		    },
 		    Play(){
 		    	var that = this
@@ -211,7 +249,8 @@
 	            }
 		    },
 		    remove_record(){
-		    	this.record_tempFilePath=null
+		    	this.record_tempFilePath=''
+		    	this.record_arr=''
 		      	this.isRecord=true
 				this.play_record=false
 				this.playStatus=false
@@ -224,22 +263,53 @@
 			        	camera: 'back',
 			            success: function(res) {
 			                that.video_src=res.tempFilePath
+			                console.log(that.video_src)
+			                 // 视频上传开始
+							let url = that.saveFile
+							addImg.uploadImg(url,that.video_src,null).then((res) => {
+								that.video_arr = JSON.parse(res.data).data.iconUrl
+								console.log(res)
+							})
+							// 视频上传结束
 			            }
 			        })
 		    },
 		    remove_video(){
-		    	this.video_src=''
+		    	this.video_src = ''
+		    	this.video_arr = ''
 		    },
-		    //图片上传
-		    uploadimg(){
-				const url='https://wap.yunshuxie.com/v1/teacher_clock/submit_clockv2.htm'
-				for(let i in this.img_urls){
-					addImg.uploadImg(url,this.img_urls[i],null).then((res) => {
-						console.log(res)
-					})
-				}
-				
-			}
+		    publish_diary(){
+		    	var that = this
+				var diary_param = {
+			          	url: '/v1/miniprogram/insertClock.htm',
+		                data: {
+		                	activityId:that.activityId,
+		                	clockWord:that.words,
+		                	clockPic:(that.pic_arr).join(','),
+		                	clockVoice:that.record_arr,
+		                	clockVideo:that.video_arr,
+		                	clockPosition:that.address
+		                },
+		                setUpUrl: true,
+		        	}
+		      	ajax(diary_param).then(function(res){
+		      		console.log('ppp',res)
+		      		if(res.statusCode == 200){
+			       		wx.showToast({
+						  title: '发表成功',
+						  icon: 'success',
+						  duration: 2000,
+						  success(res){
+						  	setTimeout(function(){
+								wx.navigateBack({
+								  delta:1
+								})
+					  		},1000)
+						  }
+						})
+			       	}
+		        })
+		    }
 		},
 	}
 </script>
@@ -345,6 +415,7 @@ img
 				width 100%
 				height 100%
 	.place
+		margin-bottom 200rpx
 		position relative
 		&::after
 			position absolute
@@ -365,6 +436,7 @@ img
 	.footer
 		width 100%
 		position fixed
+		z-index 999
 		left 0
 		bottom 0
 		font-size 30rpx

@@ -7,15 +7,15 @@
 			      </div>
 			      <div class="zan-cell">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon2"></span>加入日期</div>
-			        <div class="zan-cell__ft">2018-4-16</div>
+			        <div class="zan-cell__ft">{{clockMessage.joinDate}}</div>
 			      </div>
 			      <div class="zan-cell">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon3"></span>已打卡天数</div>
-			        <div class="zan-cell__ft">1天</div>
+			        <div class="zan-cell__ft">{{clockMessage.clockDays}}天</div>
 			      </div>
 			      <div class="zan-cell">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon4"></span>当月打卡天数</div>
-			        <div class="zan-cell__ft">1天</div>
+			        <div class="zan-cell__ft">{{clockMessage.clockMonthDays}}天</div>
 			      </div>
 			    </div>
 		</div>
@@ -53,6 +53,7 @@
 	</div>
 </template>
 <script>
+  import  ajax  from '../../common/js/ajax.js'
   import Calendar from '../../components/calendar/calendar.vue'
 	export default {
       components:{
@@ -60,8 +61,30 @@
       },
       data () {
         return {
-          // clockTimer_arr:['2018/4/1','2018/4/3']
+          clockTimer_arr:['2018/5/1','2018/5/8'],
+          activityId:'',
+          clockMessage:{}
         }
+      },
+      onLoad(options){
+          this.activityId = this.$root.$mp.query.activityId
+          var that = this
+          var active_de_param = {
+            url: '/v1/miniprogram/clockMessage.htm',
+                    data: {
+                      activityId:that.activityId
+                    },
+                    setUpUrl: true,
+          }
+          ajax(active_de_param).then(function(res){
+              console.log('uuuuuuuuuuu',res)
+              that.clockMessage = res.data.data
+              // that.clockTimer_arr = ['2018/5/1','2018/5/8']
+              // res.data.data.clockCalendars
+              console.log(that.clockTimer_arr)
+
+          })
+
       },
       methods: {
         clickDay(data) {

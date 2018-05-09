@@ -15,7 +15,7 @@ export default {
 	            fail(res) {
 	                wx.showModal({
 	                    title: '提示',
-	                    content: '网络错误',
+	                    content: '上传失败',
 	                    showCancel: false
 	                })
 	            }

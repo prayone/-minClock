@@ -56,17 +56,28 @@
       </div>
     </div>
     <div class="diary_item" @click='diary_share'>
-      <div class="diary">
-        <div class="diary_img">
-          <img src="/static/img/header.jpg">
-        </div>
-        <div class="userinfo_diary">
-          <p class="nickName">nickName</p>
-          <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
-        </div>
-      </div>
-      <div class="diary_detail">
-        这里显示日记详情
+      <div class="clockDiary">
+          <div class="diary">
+              <div class="diary_img">
+                  <img src="/static/img/header.jpg">
+              </div>
+              <div class="userinfo_diary">
+                  <p class="nickName">nickName</p>
+                  <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
+              </div>
+          </div>
+          <div class="diary_detail">
+            <p>这里显示日记详情</p>
+            <div class="img_diary">
+              <img src="/static/img/header.jpg" alt="">
+            </div>
+            <div class="img_diary">
+              <video id="myVideo" src="http://oss-ysx-video.yunshuxie.com/video/2018/05/09/17/1525859873202.mp4" controls></video>
+            </div>
+            <div class="record">
+              <audio  name="name" author="prayone" src="https://oss-ysx-audio.yunshuxie.com/audio/2018/05/09/17/1525859707283.mp3" id="myAudio" controls loop></audio>
+            </div>
+          </div>
       </div>
       <div class="zan-panel active">
           <div class="zan-cell">
@@ -344,6 +355,7 @@ export default {
           width 100%
           height 100%
           border-radius 50%
+        
       .userinfo_diary
         .nickName
           color #5acb9a
@@ -358,6 +370,17 @@ export default {
       font-size 30rpx
       color #444
       padding 30rpx
+      .img_diary
+        display inline-block
+        width 30%
+        height 150rpx
+        margin-right 10rpx
+        img
+          width 100%
+          height 100%
+        video
+          width 100%
+          height 100%
     .active
       .active_all
         margin 0

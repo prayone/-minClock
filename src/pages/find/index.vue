@@ -40,6 +40,11 @@ export default{
 		}
 	},
 	onShow(){
+		this.page = 1,
+		this.hasMoreData = true,
+		this.active_lists = [],
+		this.keywords = ''
+
       	this.search()
   	},
 	methods:{
@@ -65,13 +70,11 @@ export default{
 	      		wx.hideLoading()
 	            console.log('fffffffff',res)
 	            var active_lists_Tem = that.active_lists
-
 	            if(res.statusCode == 200){
-	            	if(that.page == 1){
+            		if(that.page == 1){
 	              		active_lists_Tem = []
 	            	}
 	            	var active_lists = res.data.data.findSearchActivitys
-	            	// var sum=(Math.ceil((res.page.count)/10));
 	            	if(active_lists < 10){
 	            		that.active_lists = active_lists_Tem.concat(active_lists)
 	            		that.hasMoreData = false
@@ -81,18 +84,19 @@ export default{
 	            		that.page++
 	            	}
 	            } 
-
-
 	       })
 		},
 		find(){
 			this.search()
 		}
 	},
-		 /**
-	   * 页面上拉触底事件的处理函数
-	   */
-	  onReachBottom: function () {
+	onUnload(){
+		
+	},
+	 /**
+   * 页面上拉触底事件的处理函数
+   */
+  	onReachBottom: function () {
 	    if (this.hasMoreData) {
 	    	this.search()
 	    } else {
@@ -100,7 +104,7 @@ export default{
 	       		 title: '没有更多数据',
 	      	})
 	    }
-	  },
+  	},
 }
 </script>
 <style lang="stylus">

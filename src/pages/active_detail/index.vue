@@ -2,38 +2,82 @@
 	<div class="active_detail">
 		<div class="img_set">
 			<div class="active_img">
-				<img src="/static/img/active_img.jpg" alt="">
+				<img :src="detail_lists.activityCoverPic" alt="">
 			</div>
 		</div>
 		<div class="title">
-			<p class="active_title">活动名称</p>
+			<p class="active_title">{{detail_lists.activityName}}</p>
 			<div class="active_des">
-				<span>300人已参加</span>
+				<span>{{detail_lists.activityUserCount}}人已参加</span>
 				<span class="span_icon">|</span>
-				<span>100人打卡</span>
+				<span>{{detail_lists.clockCount}}人打卡</span>
 			</div>
 		</div>
 		<div class="active_detail space">
 			<p class="img_set_text">活动详情</p>
 			<div class="detail_des">
-				这里是活动详情的介绍，希望大家能坚持打卡。
+				{{detail_lists.activityDesc}}
 			</div>
 		</div>
 		<div class="foot">
-			<button class="button">立即参加</button>
+			<button class="button" @click='join'>立即参加</button>
 		</div>
 	</div>
 </template>
 <script>
+	import  ajax  from '../../common/js/ajax.js'
 	export default{
 		data(){
 			return {
-				
+			    detail_lists:{},
+			    activityId:''
 			}
 		},
 		onLoad(options){
-			this.activityID = this.$root.$mp.query.activityId
-			console.log('nnnnnnnn',this.activityID)
+			this.activityId = this.$root.$mp.query.activityId
+			console.log('nnnnnnnn',this.activityId)
+			var that = this
+	      	var active_de_param = {
+	          	url: '/v1/miniprogram/AshowActivity.htm',
+	                data: {
+	                  	activityId:that.activityId
+	                },
+	                setUpUrl: true,
+	        	}
+	      	ajax(active_de_param).then(function(res){
+	      		// console.log('99999999999',res)
+	            that.detail_lists = res.data.data
+	        })
+		},
+		methods:{
+			join(){
+				var that = this
+		      	var active_de_param = {
+		          	url: '/v1/miniprogram/insertUserClock.htm',
+		                data: {
+		                  	activityId:that.activityId
+		                },
+		                setUpUrl: true,
+		        	}
+		      	ajax(active_de_param).then(function(res){
+		      		if(res.statusCode == 200){
+			       		wx.showToast({
+						  title: '参加成功',
+						  icon: 'success',
+						  duration: 2000,
+						  success(res){
+						  	setTimeout(function(){
+								wx.switchTab({
+									url:'/pages/index/main'
+								})
+					  		},1000)
+						  }
+						})
+			       	}
+		      		console.log('99999999999',res)
+		            
+		        })
+			}
 		}
 	}
 </script>
