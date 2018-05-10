@@ -36,46 +36,31 @@
              <img src="/static/img/qunzhu.png" alt="" v-if="!(active.userRole*1)" class="team_leader">
           </div>
       </div>
-      
-      <div class="clock_item" @click="clock_detail(0)">
-           <div class="clock_img">
-              <img src="/static/img/active_img.jpg" alt="">
-           </div>
-           <div class="cont">
-               <p class="cont_title">活动名称</p>
-               <p class="cont_detail">
-                 <img class="cont_icon" src="/static/img/alarm.png" alt="">
-                 <span>19:34:00</span>
-                 <img class="cont_icon icon_user" src="/static/img/user_min.png" alt="">
-                 <span>人已打卡</span>
-               </p>
-           </div>
-           <div class="clock_btn">
-             <button class="clock_button">打卡</button>
-           </div>
-      </div>
     </div>
-    <div class="diary_item" @click='diary_share'>
+    <div class="diary_item" @click='' v-for = "item in diary_lists" :key='item'>
       <div class="clockDiary">
           <div class="diary">
               <div class="diary_img">
-                  <img src="/static/img/header.jpg">
+                  <img :src="userInfo.avatarUrl">
               </div>
               <div class="userinfo_diary">
-                  <p class="nickName">nickName</p>
-                  <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
+                  <p class="nickName">{{userInfo.nickName}}</p>
+                  <p class="diary_timer"><span class="timer">{{item.clockDate}}</span><span class="">已坚持6天</span></p>
               </div>
           </div>
           <div class="diary_detail">
-            <p>这里显示日记详情</p>
-            <div class="img_diary">
-              <img src="/static/img/header.jpg" alt="">
+            <p>{{item.Word}}</p>
+            <div class="flex_img">
+                <div class="img_diary" v-for = "(pic_item,ind) in item.clockPic" :key='pic_item' v-if="item.clockPic.length">
+                  <img :src="pic_item" alt="">
+                </div>
+                <div class="img_diary" v-if='item.clockVideo'>
+                  <video id="myVideo" :src="item.clockVideo" controls></video>
+                </div>
             </div>
-            <div class="img_diary">
-              <video id="myVideo" src="http://oss-ysx-video.yunshuxie.com/video/2018/05/09/17/1525859873202.mp4" controls></video>
-            </div>
-            <div class="record">
-              <audio  name="name" author="prayone" src="https://oss-ysx-audio.yunshuxie.com/audio/2018/05/09/17/1525859707283.mp3" id="myAudio" controls loop></audio>
+
+            <div class="record" v-if='item.clockVoice'>
+              <audio name="日记语音" :poster="poster" :author="userInfo.nickName" :src="item.clockVoice" id="myAudio" controls loop></audio>
             </div>
           </div>
       </div>
@@ -136,27 +121,41 @@ export default {
       userInfo: {},
       tempFilePath:'',
       team_leader:1,
-      active_lists:[]
+      active_lists:[],
+      record:'',
+      poster:'http://ww1.sinaimg.cn/large/eccb7e56ly1fr63qo6ylnj20m80m874w.jpg',
+      // poster:'http://ww1.sinaimg.cn/large/eccb7e56ly1fr63xvy6y1j202s02saa2.jpg'
+      diary_lists:[],
+      memberId:''
     }
+  },
+
+  onLoad(){
+    this.memberId = wx.getStorageSync('memberId');
+    console.log('xxxx',this.memberId)
+
+    this.record = 'http://ord652itv.bkt.clouddn.com/12333.mp3'
   },
   onShow(){
       this.getSession(this.getUserInfo())
+      this.showDiarys()
+
       var that = this
       var param = {
           url: '/v1/miniprogram/showActivitys.htm',
-                  data: '',
+                  data: {
+                    memberId:that.memberId
+                  },
                   setUpUrl: true,
-        }
+      }
       ajax(param).then(function(res){
             console.log('hhhhhhhhhhhhh',res)
             if(res.statusCode == 200){
               that.active_lists = res.data.data
-              that.team_leader = parseInt(res.data.data.userRole)
+              // that.team_leader = parseInt(res.data.data.userRole)
               console.log('that',that.active_lists)
             } 
         })
-  },
-  onLoad(){
   },
   methods: {
     diary_share(){
@@ -179,6 +178,7 @@ export default {
             success: (res) => {
                   global.user_info = res.userInfo
                   that.userInfo = res.userInfo
+                  console.log('--------',that.userInfo)
                   var sessionId = wx.getStorageSync('session');
                   var param = {
                         url: '/v1/miniprogram/decrypt_user_info.htm',
@@ -191,7 +191,9 @@ export default {
                       } 
                   ajax(param).then(function(res){
                       console.log('resresresres------',res)
-                     
+                      console.log('memberId------',res.data.data.memberId)
+                      wx.setStorageSync('memberId', res.data.data.memberId);
+
                   },function(err){
                       console.log('err',err)
                       that.getSession(function (){
@@ -227,6 +229,23 @@ export default {
         }
       })
     },
+    showDiarys(){
+        var that = this
+        var param = {
+            url: '/v1/miniprogram/showClockDesc.htm',
+                    data: {
+                      memberId:that.memberId
+                    },
+                    setUpUrl: true,
+        }
+        ajax(param).then(function(res){
+              console.log('dairydairydairy',res)
+              if(res.statusCode == 200){
+                that.diary_lists = res.data.data
+                console.log('that.diary_lists====',that.diary_lists)
+              } 
+          })
+    }
   },
     onPullDownRefresh () {                          
       wx.showNavigationBarLoading() //在标题栏中显示加载
@@ -369,18 +388,29 @@ export default {
     .diary_detail
       font-size 30rpx
       color #444
-      padding 30rpx
+      padding 30rpx 30rpx 0 30rpx
+      .flex_img
+        display flex
+        justify-content space-between
+        flex-wrap wrap
       .img_diary
-        display inline-block
-        width 30%
-        height 150rpx
-        margin-right 10rpx
+        padding 10rpx
+        border 1px solid #f7f7f7
+        border-sizing border-box
+        width 200rpx
+        height 200rpx
         img
           width 100%
           height 100%
         video
           width 100%
           height 100%
+      .location
+        font-size 24rpx
+        color #888
+        margin-top 25rpx
+        .zan-icon-location
+          color 
     .active
       .active_all
         margin 0

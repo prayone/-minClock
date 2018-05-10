@@ -1,78 +1,19 @@
 <template>
 	<div class="test">
-      <button @click="onStart">开始录音</button>
-      <button @click="">结束录音</button>
-      <button type="primary" @click="Play">播放</button>
-      <button type="primary" @click="stopPlay">stop</button>
-
-      <div class="main_record" v-if="!isRecord">
-          <div class="start_record" v-if='start_record'>
-            <div class="record_img" @click="onStop">
-              <div class="record_mini">
-              </div>
-            </div>
-            <div class="record_info">
-              <p class="timer">{{min}}:{{sec}}</p>
-              <p class="record_text">录音时长10分钟以内</p>
-            </div>
-          </div>
-          <!-- 播放录音 -->
-          <div class="play_record" v-if="play_record">
-            <div class="zan-panel zan_panel">
-                <div class="zan-cell">
-                  <div class="zan-cell__bd flexNone" @click="Play">
-                    <div class="play_record_img">
-                      <img :src="(playStatus?'/static/img/bofang.gif':'/static/img/play_record.png')" alt="">
-                    </div>
-                  </div>
-                  <div class="zan-cell__bd zan-cell__edit">
-                    <div class="zan-cell__text zan-cell__edit">
-                      <div class="record_info_play">
-                        <p class="timer">{{min}}:{{sec}}</p>
-                        <p class="record_text">点击可以播放录音</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="zan-cell__ft">
-                    <div class="remove_record">
-                      <p class="remove_text" @click="remove_record">删除</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          </div>
-        </div>
+    <video id="myVideo" src="https://oss-ysx-video.yunshuxie.com/video/2018/05/10/15/1525937334644.mp4" controls></video>
+      
 	</div>
 </template>
 <script>
-const recorderManager = wx.getRecorderManager()
-const innerAudioContext = wx.createInnerAudioContext()
-var timer
+
 export default{
       data(){
           return {
-              record_temp:"",
-              start_record:false,
-              play_record:false,
-              count:0,
-              playStatus:false,
+             aa:'https://oss-ysx-video.yunshuxie.com/video/2018/05/10/15/1525937334644.mp4'
           }
       },
       computed:{
-          min(){
-              let m = parseInt(this.count/60) 
-              if(m!=10){
-                m = "0"+ m
-              }
-              return m
-          },
-          sec(){
-              let s = this.count % 60
-              if(s < 10){
-                s = "0" + s
-              }
-              return s
-          }
+         
       },
       methods:{
           // 录音开始

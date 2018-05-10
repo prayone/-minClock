@@ -61,26 +61,29 @@
       },
       data () {
         return {
-          clockTimer_arr:['2018/5/1','2018/5/8'],
+          clockTimer_arr:[],
           activityId:'',
-          clockMessage:{}
+          clockMessage:{},
+          memberId:''
         }
       },
       onLoad(options){
           this.activityId = this.$root.$mp.query.activityId
+          this.memberId = wx.getStorageSync('memberId');
           var that = this
+
           var active_de_param = {
             url: '/v1/miniprogram/clockMessage.htm',
                     data: {
-                      activityId:that.activityId
+                      activityId:that.activityId,
+                      memberId:that.memberId
                     },
                     setUpUrl: true,
           }
           ajax(active_de_param).then(function(res){
               console.log('uuuuuuuuuuu',res)
               that.clockMessage = res.data.data
-              // that.clockTimer_arr = ['2018/5/1','2018/5/8']
-              // res.data.data.clockCalendars
+              that.clockTimer_arr = res.data.data.clockCalendars
               console.log(that.clockTimer_arr)
 
           })

@@ -177,7 +177,8 @@
 			    detail_lists:{},
 			    theme_lists:{},
 			    diary_lists:[],
-			    activityID:''
+			    activityID:'',
+			    memberId:''
 			}
 		},
 		onLoad(options){
@@ -185,6 +186,8 @@
 			this.detail_lists = {}
 			console.log('idididd',this.$root.$mp.query.activeId)
 			this.activityID = this.$root.$mp.query.activeId
+
+			this.memberId = wx.getStorageSync('memberId');
 			if(this.$root.$mp.query.team_lead == 'true'){
 				this.team_leader = true
 			} else {
@@ -197,7 +200,8 @@
 	      	var active_de_param = {
 	          url: '/v1/miniprogram/showActivity.htm',
 	                  data: {
-	                  	activityId:that.activityID
+	                  	activityId:that.activityID,
+	                  	memberId:that.memberId
 	                  },
 	                  setUpUrl: true,
 	        }
@@ -205,17 +209,6 @@
 	            that.detail_lists = res.data.data
 	            that.movable.text = res.data.data.activityNotice
 	        })
-	      	var theme_param = {
-		          url: '/v1/miniprogram/showClockThem.htm',
-		                  data: {
-		                  	activityId:this.activityID
-		                  },
-		                  setUpUrl: true,
-		        }
-		      	ajax(theme_param).then(function(res){
-		      		console.log('hhhhuuuuiii',res)
-		            that.theme_lists = res.data.data
-		        })
 		},
 		onShow(){
 	        this.showTheme()
@@ -227,7 +220,8 @@
 				var theme_param = {
 		          url: '/v1/miniprogram/checkClock.htm',
 		                  data: {
-		                  	activityId:that.activityID
+		                  	activityId:that.activityID,
+		                  	memberId:that.memberId
 		                  },
 		                  setUpUrl: true,
 		        }

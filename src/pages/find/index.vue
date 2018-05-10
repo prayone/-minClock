@@ -36,8 +36,12 @@ export default{
 			page:1,
 			hasMoreData:true,
 			active_lists:[],
-			keywords:''
+			keywords:'',
+			memberId:''
 		}
+	},
+	onLoad(){
+		this.memberId = wx.getStorageSync('memberId');
 	},
 	onShow(){
 		this.page = 1,
@@ -59,7 +63,8 @@ export default{
 	          	url: '/v1/miniprogram/findSearchActivitys.htm',
               	data: {
               		page:that.page,
-          			activityName:keywords
+          			activityName:keywords,
+          			memberId:that.memberId
              	},
               	setUpUrl: true,
 	        }

@@ -97,8 +97,8 @@ export default{
 						  duration: 2000,
 						  success(res){
 						  	setTimeout(function(){
-								wx.navigateBack({
-								  delta:1
+								wx.switchTab({
+									url:'/pages/index/main'
 								})
 					  		},1000)
 						  }

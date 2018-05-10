@@ -126,6 +126,7 @@
 			}
 		},
 		onLoad(options){
+			this.memberId = wx.getStorageSync('memberId');
 			this.activityId = this.$root.$mp.query.activityId
 			this.img_urls=[]
 			this.address='位置'
@@ -288,7 +289,8 @@
 		                	clockPic:(that.pic_arr).join(','),
 		                	clockVoice:that.record_arr,
 		                	clockVideo:that.video_arr,
-		                	clockPosition:that.address
+		                	clockPosition:that.address,
+		                	memberId:that.memberId
 		                },
 		                setUpUrl: true,
 		        	}

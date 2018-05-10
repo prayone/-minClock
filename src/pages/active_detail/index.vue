@@ -30,17 +30,21 @@
 		data(){
 			return {
 			    detail_lists:{},
-			    activityId:''
+			    activityId:'',
+			    memberId:''
 			}
 		},
 		onLoad(options){
+			this.memberId = wx.getStorageSync('memberId');
 			this.activityId = this.$root.$mp.query.activityId
+			var memberId = wx.getStorageSync('memberId');
 			console.log('nnnnnnnn',this.activityId)
 			var that = this
 	      	var active_de_param = {
 	          	url: '/v1/miniprogram/AshowActivity.htm',
 	                data: {
-	                  	activityId:that.activityId
+	                  	activityId:that.activityId,
+	                  	memberId:memberId
 	                },
 	                setUpUrl: true,
 	        	}
@@ -55,7 +59,8 @@
 		      	var active_de_param = {
 		          	url: '/v1/miniprogram/insertUserClock.htm',
 		                data: {
-		                  	activityId:that.activityId
+		                  	activityId:that.activityId,
+		                  	memberId:that.memberId
 		                },
 		                setUpUrl: true,
 		        	}

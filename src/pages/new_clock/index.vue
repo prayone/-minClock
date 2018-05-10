@@ -44,12 +44,11 @@
 			    console.log(900,this.isopen)
 			},
 			creat_clock(){
-				var sessionId = wx.getStorageSync('session');
-				console.log(999,sessionId)
+				var memberId = wx.getStorageSync('memberId');
 				var data = {
 					activityStatus:this.isopen,
 					 activityName:this.active_title,
-					 sessionId:sessionId
+					 memberId:memberId
 				}
 				var param = {
 					url: '/v1/miniprogram/insertActivity.htm',

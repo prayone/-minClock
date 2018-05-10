@@ -1,8 +1,8 @@
 <template>
 	<div class="clock_manager">
 		<div class="header">
-			<p class="active_name">打卡名称</p>
-			<p class="active_id">活动编号：<span>741019</span></p>
+			<p class="active_name">{{lists.activityName}}</p>
+			<p class="active_id">活动编号：<span>{{lists.activityId}}</span></p>
 		</div>
 		<div class="content">
 			<div class="data_info header">
@@ -13,13 +13,13 @@
 			    <div class="zan-cell ">
 			        <div class="zan-cell__bd">用户总数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>100</span>
+			        	<span>{{lists.activityUserCount}}</span>
 			    	</div>
 			      </div>
 			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">已打卡人数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>90</span>
+			        	<span>{{lists.clockCount}}</span>
 			    	</div>
 			      </div>
 			      <div class="zan-cell ">
@@ -81,16 +81,36 @@
 	</div>
 </template>
 <script>
+import  ajax  from '../../common/js/ajax.js'
 	export default {
 		data(){
 			return {
 				activityID:'',
+				memberId:'',
+				lists:''
 				
 			}
 		},
 		onLoad(options){
+			this.memberId = wx.getStorageSync('memberId');
 			this.activityID = this.$root.$mp.query.activityId
 			console.log('nnnnnnnn',this.activityID)
+			 var that = this
+		      var param = {
+		          url: '/v1/miniprogram/activityMessage.htm',
+		                  data: {
+		                    memberId:that.memberId,
+		                    activityId:that.activityID
+		                  },
+		                  setUpUrl: true,
+		      }
+		      ajax(param).then(function(res){
+		            console.log('oooooooooooo',res)
+		            if(res.statusCode == 200){
+		              that.lists = res.data.data
+		              // console.log('that',that.active_lists)
+		            } 
+		        })
 
 		},
 		methods:{
