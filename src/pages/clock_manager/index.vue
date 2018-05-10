@@ -25,13 +25,13 @@
 			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">访问人数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>400</span>
+			        	<span>{{lists.accessPeople}}</span>
 			    	</div>
 			      </div>
 			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">访问次数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>400</span>
+			        	<span>{{lists.accessCount}}</span>
 			    	</div>
 			      </div>
 		    </div>
