@@ -19,13 +19,18 @@
 				{{detail_lists.activityDesc}}
 			</div>
 		</div>
-		<div class="foot">
-			<button class="button" @click='join'>立即参加</button>
-		</div>
+		<form @submit="FormSubmit" report-submit="true">
+           <div class="foot">
+				<button class="button" @click='join' formType="submit">立即参加</button>
+			</div>
+        </form>
+		
 	</div>
 </template>
 <script>
 	import  ajax  from '../../common/js/ajax.js'
+	import  dealFormIds  from '../../common/js/formIds.js'
+
 	export default{
 		data(){
 			return {
@@ -54,6 +59,12 @@
 	        })
 		},
 		methods:{
+			FormSubmit(e){
+		        let formId = e.mp.detail.formId;
+		        dealFormIds(formId).then(function(formIds){
+		        console.log('llll====',formIds);
+		      })
+		    },
 			join(){
 				var that = this
 		      	var active_de_param = {

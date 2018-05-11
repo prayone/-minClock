@@ -280,6 +280,7 @@
 		    	this.video_arr = ''
 		    },
 		    publish_diary(){
+		    	console.log('sssssssssss====',global.formIds)
 		    	var that = this
 				var diary_param = {
 			          	url: '/v1/miniprogram/insertClock.htm',
@@ -290,7 +291,8 @@
 		                	clockVoice:that.record_arr,
 		                	clockVideo:that.video_arr,
 		                	clockPosition:that.address,
-		                	memberId:that.memberId
+		                	memberId:that.memberId,
+		                	// formIds:global.formIds
 		                },
 		                setUpUrl: true,
 		        	}

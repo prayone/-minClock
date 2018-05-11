@@ -22,20 +22,38 @@
 	    	</div>
 	      </div>
 	      <div class="remind">开启提醒后，每日打卡，第二天再提醒时间微信可接收到消息通知。</div>
+	      <form @submit="FormSubmit" report-submit="true">
+		      <div class="all_btn" v-if='picker'>
+		      	<button>取消</button>
+		      	<button class="save" formType="submit" @click="save">保存</button>
+		      </div>
+ 		  </form>
+
 	    </div>
 	    <div class="btn zan-btns">
-	    	<button class="zan-btn zan-btn--danger">删除并退出打卡</button>
+	    	<button class="zan-btn zan-btn--danger" @click='remove'>删除并退出打卡</button>
 	    </div>
 	</div>
 </template>
 <script>
+	import  ajax  from '../../common/js/ajax.js'
+	import  dealFormIds  from '../../common/js/formIds.js'
+
 	export default {
 		data(){
 			return {
 				access:'zan-cell',
 				time: '19:00',
-				picker:false
+				picker:false,
+				memberId:'',
+				activityID:''
+
 			}
+		},
+		onLoad(options){
+			this.memberId = wx.getStorageSync('memberId');
+			this.activityID = this.$root.$mp.query.activityId
+			console.log(this.activityID)
 		},
 		methods:{
 			switch1Change: function(e) {
@@ -47,12 +65,73 @@
 				    }else{
 				    	that.access = 'zan-cell'	
 				    	that.picker=false
-
 				    }
 				},
 			bindTimeChange: function(e) {
 			    console.log('picker发送选择改变，携带值为', e.mp.detail.value)
 			    this.time = e.mp.detail.value
+			},
+			FormSubmit(e){
+		        let formId = e.mp.detail.formId;
+		        dealFormIds(formId).then(function(formIds){
+		        console.log('333====',formIds);
+		      })
+		    },
+			save(){
+			      var that = this
+			      var status;
+			      if(that.picker){
+			      		status = 1
+			      }else{
+			      		status = 0
+			      }
+			      console.log(status)
+			      // var param = {
+			      //     url: '/v1/miniprogram/activityMessage.htm',
+			      //             data: {
+			      //               memberId:that.memberId,
+			      //               activityId:that.activityID,
+			      //               date:that.time,
+			      //               status:status
+			      //             },
+			      //             setUpUrl: true,
+			      // }
+			      // ajax(param).then(function(res){
+			      //       console.log('oooooooooooo',res)
+			      //       if(res.statusCode == 200){
+
+			      //       } 
+			      //   })
+
+			},
+			remove(){
+				console.log(this.memberId,this.activityID)
+				var that=this
+				 var param = {
+			          url: '/v1/miniprogram/deleteUser.htm',
+			                  data: {
+			                    memberId:that.memberId,
+			                    activityId:that.activityID
+			                  },
+			                  setUpUrl: true,
+			      }
+			      ajax(param).then(function(res){
+			            console.log('oooooooooooo',res)
+			            if(res.statusCode == 200){
+			            	wx.showToast({
+							  title: '删除并退出成功',
+							  icon: 'success',
+							  duration: 2000,
+							  success(res){
+							  	setTimeout(function(){
+									wx.switchTab({
+										url:'/pages/index/main'
+									})
+						  		},1000)
+							  }
+							})
+			            } 
+			        })
 			},
 		}
 	}
@@ -75,4 +154,16 @@
   				line-height 90rpx
   				text-align center 
   				border-radius 10rpx
+  	.all_btn
+  		text-align center
+  		button
+  			display inline-block
+  			width 100rpx
+  			height 60rpx
+  			color #888
+  			font-size 24rpx
+  			padding 0
+  			margin 0 40rpx 10rpx 40rpx
+  		.save
+  			color #5acb9a
 </style>

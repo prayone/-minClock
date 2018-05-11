@@ -10,9 +10,12 @@
 					<p class="header_cont">{{detail_lists.activityUserCount}}人已参加<span class="space">|</span>{{detail_lists.clockCount}}人已打卡</p>
 				</div>
 			</div>
-			<div class="admin" v-if='team_leader' @click="clock_manager(activityID)">
-				<button class="admin_btn"><span class="tools_icon"></span>管理后台</button>
-			</div>
+			<form @submit="FormSubmit" report-submit="true">
+               <div class="admin" v-if='team_leader' @click="clock_manager(activityID)">
+					<button class="admin_btn" formType="submit"><span class="tools_icon"></span>管理后台</button>
+				</div>
+            </form>
+			
 		</div>
 		<div class="notice">
 			<div class="zan-panel notice_bar">
@@ -27,13 +30,13 @@
 				</p>
 				打卡日历
 			</div>
-			<div class="charts" @click="billboard">
+			<div class="charts" @click="billboard(activityID)">
 				<p class="calander_img">
 					<img src="/static/img/phb.png" alt="">
 				</p>
 				打卡排行
 			</div>
-			<div class="reset" @click="clock_set">
+			<div class="reset" @click="clock_set(activityID)">
 				<p class="calander_img">
 					<img src="/static/img/reset.png" alt="">
 				</p>
@@ -72,21 +75,35 @@
 		    </div>
 		    <!-- 日记详情 -->
 		    <div class="tab_cont tab_cont_diary" v-if="tab1.selectedId=='diary'">
-		    	<div class="diary_item">
-				    <div class="diary">
-				        <div class="diary_img">
-				          	<img src="/static/img/header.jpg">
-				        </div>
-				        <div class="userinfo_diary">
-				          	<p class="nickName">nickName</p>
-				          	<p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
-				        </div>
-				    </div>
-				    <div class="diary_detail">
-				        这里显示日记详情
-				    </div>
-				</div>
+		    	<div class="diary_item"  v-for = "item in diary_lists" :key='item'>
+			      	<div class="clockDiary">
+			          	<div class="diary">
+				            <div class="diary_img">
+				                <img :src="item.headPic">
+				            </div>
+				            <div class="userinfo_diary">
+				                <p class="nickName">{{item.nickName}}</p>
+				                <p class="diary_timer"><span class="timer">{{item.clockDate}}</span><span class="">已坚{{item.clockDay}}天</span></p>
+				            </div>
+			          	</div>
+			          	<div class="diary_detail">
+			            	<p>{{item.clockWord}}</p>
+				            <div class="flex_img">
+				                <div class="img_diary" v-for = "(pic_item,ind) in item.clockPic" :key='pic_item' v-if="item.clockPic.length">
+				                  <img :src="pic_item" alt="">
+				                </div>
+				                <div class="img_diary" v-if='item.clockVideo'>
+				                  <video id="myVideo" :src="item.clockVideo" controls></video>
+				                </div>
+				            </div>
+				            <div class="record" v-if='item.clockVoice'>
+				              	<audio name="日记语音" :poster="poster" :author="item.activityName" :src="item.clockVoice" id="myAudio" controls loop></audio>
+				            </div>
+			          </div>
+			      	</div>
+			    </div>
 		    </div>
+		    <!-- 活动详情 -->
 		    <div class="tab_cont tab_cont_detail" v-if="tab1.selectedId=='detail'">
 		    	<div class="img_set">
 					<div class="active_img">
@@ -108,6 +125,7 @@
 					</div>
 				</div>
 		    </div>
+		    <!-- 用户信息 -->
 		    <div class="tab_cont tab_cont_user" v-if="tab1.selectedId=='user'">
 		    	<div class="zan-panel">
 				    <div class="zan-cell zan-cell--access">
@@ -146,6 +164,8 @@
 	import ZanTab from '../../components/zan/tab'
 	import ZanNoticeBar from '../../components/zan/noticebar'
 	import  ajax  from '../../common/js/ajax.js'
+	import  dealFormIds  from '../../common/js/formIds.js'
+
 
 	export default {
 		 components: {
@@ -177,6 +197,7 @@
 			    detail_lists:{},
 			    theme_lists:{},
 			    diary_lists:[],
+			    user_lists:[],
 			    activityID:'',
 			    memberId:''
 			}
@@ -213,8 +234,16 @@
 		onShow(){
 	        this.showTheme()
 	        this.isclock()
+	        this.showDiarys()
+	        this.showUser()
 		},
 		methods:{
+			FormSubmit(e){
+		        let formId = e.mp.detail.formId;
+		        dealFormIds(formId).then(function(formIds){
+		        console.log('llll====',formIds);
+		      })
+		    },
 			isclock(){
 				var that = this
 				var theme_param = {
@@ -249,20 +278,41 @@
 		            that.theme_lists = res.data.data
 		        })
 			},
-			showDiary(){
-				// var that = this
-				// var theme_param = {
-		  //         url: '/v1/miniprogram/showClockThem.htm',
-		  //                 data: {
-		  //                 	activityId:this.activityID
-		  //                 },
-		  //                 setUpUrl: true,
-		  //       }
-		  //     	ajax(theme_param).then(function(res){
-		  //     		console.log('hhhhuuuuiii',res)
-		  //           that.diary_lists = res.data.data
-		  //       })
-			},
+			showDiarys(){
+		        var that = this
+		        var param = {
+		            url: '/v1/miniprogram/showActivityClockDesc.htm',
+		                    data: {
+		                      activityId:that.activityID   
+
+		                    },
+		                    setUpUrl: true,
+		        }
+		        ajax(param).then(function(res){
+		              console.log('dairydairydairy',res)
+		              if(res.statusCode == 200){
+		                that.diary_lists = res.data.data
+		                console.log('that.diary_lists====',that.diary_lists)
+		              } 
+		          })
+		  	},
+		  	showUser(){
+		        var that = this
+		        var param = {
+		            url: '/v1/miniprogram/showActivityMemebr.htm',
+		                    data: {
+		                      activityId:that.activityID
+		                    },
+		                    setUpUrl: true,
+		        }
+		        ajax(param).then(function(res){
+		              console.log('dairydairydairy',res)
+		              if(res.statusCode == 200){
+		                that.user_lists = res.data.data
+		                console.log('that====',that.user_lists)
+		              } 
+		          })
+		  	},
 			 ...ZanNoticeBar.methods,
 			 setRef: function (payload) {
 		        setTimeout(() => {
@@ -291,11 +341,11 @@
 		      calendar(activityID){
 		      	wx.navigateTo({ url:"../calendar/main?activityId=" + activityID })
 		      },
-		       clock_set(){
-		      	wx.navigateTo({ url:"../clock_set/main" })
+		       clock_set(activityID){
+		      	wx.navigateTo({ url:"../clock_set/main?activityId=" + activityID })
 		      },
-		      billboard(){
-		      	wx.navigateTo({ url:"../billboard/main" })
+		      billboard(activityID){
+		      	wx.navigateTo({ url:"../billboard/main?activityId=" + activityID })
 		      }
 		},
 		onUnload(){
@@ -462,9 +512,31 @@
 				.timer
 					margin-right 30rpx
 			.diary_detail
-					font-size 28rpx
-					color #444
-					padding 30rpx
+				font-size 30rpx
+				color #444
+				padding 30rpx 30rpx 0 30rpx
+				.flex_img
+					display flex
+					justify-content space-between
+					flex-wrap wrap
+				.img_diary
+					padding 10rpx
+					border 1px solid #f7f7f7
+					border-sizing border-box
+					width 200rpx
+					height 200rpx
+					img
+						width 100%
+						height 100%
+					video
+						width 100%
+						height 100%
+					.location
+						font-size 24rpx
+						color #888
+						margin-top 25rpx
+						.zan-icon-location
+							color 
 		.tab_cont_detail
 			font-size 30rpx
 			color #333

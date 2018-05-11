@@ -35,20 +35,34 @@
               <div class="zan-cell__bd"><span class="zan-icon zan-icon-description"></span>打卡日记列表</div>
             </div>
       </div>
-			<div class="diary_item">
-          <div class="diary">
-            <div class="diary_img">
-              <img src="/static/img/header.jpg">
-            </div>
-            <div class="userinfo_diary">
-              <p class="nickName">nickName</p>
-              <p class="diary_timer"><span class="timer">2018-4-1</span><span class="">已坚持6天</span></p>
-            </div>
-          </div>
-          <div class="diary_detail">
-            今天的任务是学习日语
-          </div>
+			<div class="diary_item" v-if='hasDiary'>
+              <div class="clockDiary">
+                  <div class="diary">
+                    <div class="diary_img">
+                        <img :src="userInfo.avatarUrl">
+                    </div>
+                    <div class="userinfo_diary">
+                        <p class="nickName">{{userInfo.nickName}}</p>
+                        <p class="diary_timer"><span class="timer">{{diaryTem.clockDate}}</span><span class="">已坚持{{diaryTem.clockDay}}天</span></p>
+                    </div>
+                  </div>
+                  <div class="diary_detail">
+                    <p>{{diaryTem.clockWord}}</p>
+                    <div class="flex_img">
+                        <div class="img_diary" v-for = "(pic_item,ind) in diaryTem.clockPic" :key='pic_item' v-if="diaryTem.clockPic.length">
+                          <img :src="pic_item" alt="">
+                        </div>
+                        <div class="img_diary" v-if='diaryTem.clockVideo'>
+                          <video id="myVideo" :src="diaryTem.clockVideo" controls></video>
+                        </div>
+                    </div>
+                    <div class="record" v-if='diaryTem.clockVoice'>
+                        <audio name="日记语音" :poster="poster" :author="diaryTem.activityName" :src="diaryTem.clockVoice" id="myAudio" controls loop></audio>
+                    </div>
+                </div>
+              </div>
       </div>
+      <p style="text-align:center;color:#777;" v-if='!hasDiary'>您今天还没有打卡哦！</p>
 		</div>
 	</div>
 </template>
@@ -64,14 +78,18 @@
           clockTimer_arr:[],
           activityId:'',
           clockMessage:{},
-          memberId:''
+          memberId:'',
+          clockDay:'',
+          diaryTem:{},
+          userInfo:{},
+          hasDiary:false
         }
       },
       onLoad(options){
+          this.userInfo = global.user_info
           this.activityId = this.$root.$mp.query.activityId
           this.memberId = wx.getStorageSync('memberId');
           var that = this
-
           var active_de_param = {
             url: '/v1/miniprogram/clockMessage.htm',
                     data: {
@@ -90,8 +108,32 @@
 
       },
       methods: {
+        showDiary(){
+          var that = this
+          var active_de_param = {
+            url: '/v1/miniprogram/clockDayMessage.htm',
+                    data: {
+                      activityId:that.activityId,
+                      memberId:that.memberId,
+                      clockDate:that.clockDay
+                    },
+                    setUpUrl: true,
+          }
+          ajax(active_de_param).then(function(res){
+              console.log('uuuuuuuuuuu',res)
+              that.diaryTem = res.data.data
+              if(res.data.data){
+                  that.hasDiary = true
+              }
+
+          })
+
+        },
         clickDay(data) {
           console.log(data); //选中某天
+          this.clockDay = data 
+          this.showDiary()
+
         },
         changeDate(data) {
           console.log(data); //左右点击切换月份
@@ -153,7 +195,29 @@
             .timer
               margin-right 30rpx
       .diary_detail
-        font-size 28rpx
+        font-size 30rpx
         color #444
-        padding 30rpx
+        padding 30rpx 30rpx 0 30rpx
+        .flex_img
+          display flex
+          justify-content space-between
+          flex-wrap wrap
+        .img_diary
+          padding 10rpx
+          border 1px solid #f7f7f7
+          border-sizing border-box
+          width 200rpx
+          height 200rpx
+          img
+            width 100%
+            height 100%
+          video
+            width 100%
+            height 100%
+          .location
+            font-size 24rpx
+            color #888
+            margin-top 25rpx
+            .zan-icon-location
+              color 
 </style>

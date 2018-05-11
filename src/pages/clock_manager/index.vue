@@ -88,7 +88,6 @@ import  ajax  from '../../common/js/ajax.js'
 				activityID:'',
 				memberId:'',
 				lists:''
-				
 			}
 		},
 		onLoad(options){

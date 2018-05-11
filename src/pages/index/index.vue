@@ -30,9 +30,11 @@
                    <span>{{active.clockCount}}人已打卡</span>
                  </p>
              </div>
-             <div class="clock_btn">
-               <button class="clock_button">打卡</button>
-             </div>
+             <form @submit="FormSubmit" report-submit="true">
+               <div class="clock_btn">
+                 <button class="clock_button" formType="submit">打卡</button>
+               </div>
+            </form>
              <img src="/static/img/qunzhu.png" alt="" v-if="!(active.userRole*1)" class="team_leader">
           </div>
       </div>
@@ -47,6 +49,7 @@
                   <p class="nickName">{{userInfo.nickName}}</p>
                   <p class="diary_timer"><span class="timer">{{item.clockDate}}</span><span class="">已坚持6天</span></p>
               </div>
+              <div style="margin-left:260rpx;" @click="diary_share"><span class="share"></span></div>
           </div>
           <div class="diary_detail">
             <p>{{item.Word}}</p>
@@ -80,41 +83,12 @@
           </div>
       </div>
     </div>
-    <div class="diary_item" @click='diary_share'>
-      <div class="diary">
-        <div class="diary_img">
-          <img src="/static/img/header.jpg">
-        </div>
-        <div class="userinfo_diary">
-          <p class="nickName">nickName</p>
-          <p class="diary_timer"><span class="timer">22分钟前</span><span class="">已坚持6天</span></p>
-        </div>
-      </div>
-      <div class="diary_detail">
-        今天的任务是学习日语
-      </div>
-      <div class="zan-panel active">
-          <div class="zan-cell">
-              <div class="zan-cell__bd active_all">
-                <div class="active_img">
-                  <img src="/static/img/active_img.jpg">
-                </div>
-                <div class="active_info">
-                  <p style="margin-bottom:18rpx;">活动名称</p>
-                  <p style="color:#888;font-size:24rpx">1233人已参加</p>
-                </div>
-              </div>
-              <div class="zan-cell__ft">
-              </div>
-          </div>
-      </div>
-    </div>
   </div>
 </template>
 <script>
 import  ajax  from '../../common/js/ajax.js'
 import store from '../../store'
-
+import  dealFormIds  from '../../common/js/formIds.js'
 export default {
   data () {
     return {
@@ -133,31 +107,23 @@ export default {
   onLoad(){
     this.memberId = wx.getStorageSync('memberId');
     console.log('xxxx',this.memberId)
+    this.userInfo=global.user_info
+
 
     this.record = 'http://ord652itv.bkt.clouddn.com/12333.mp3'
   },
   onShow(){
-      this.getSession(this.getUserInfo())
+      // this.getSession(this.getUserInfo())
       this.showDiarys()
-
-      var that = this
-      var param = {
-          url: '/v1/miniprogram/showActivitys.htm',
-                  data: {
-                    memberId:that.memberId
-                  },
-                  setUpUrl: true,
-      }
-      ajax(param).then(function(res){
-            console.log('hhhhhhhhhhhhh',res)
-            if(res.statusCode == 200){
-              that.active_lists = res.data.data
-              // that.team_leader = parseInt(res.data.data.userRole)
-              console.log('that',that.active_lists)
-            } 
-        })
+      this.showActives()
   },
   methods: {
+    FormSubmit(e){
+        let formId = e.mp.detail.formId;
+        dealFormIds(formId).then(function(formIds){
+        console.log('llll====',formIds);
+      })
+    },
     diary_share(){
       const url = '../share_diary/main'
       wx.navigateTo({ url })
@@ -173,6 +139,8 @@ export default {
     getUserInfo () {
       // 调用登录接口
       var that=this
+      console.log('0000000000000000')
+      console.log(wx.getUserInfo)
           wx.getUserInfo({
             withCredentials:true,
             success: (res) => {
@@ -193,6 +161,7 @@ export default {
                       console.log('resresresres------',res)
                       console.log('memberId------',res.data.data.memberId)
                       wx.setStorageSync('memberId', res.data.data.memberId);
+                      that.memberId = wx.getStorageSync('memberId');
 
                   },function(err){
                       console.log('err',err)
@@ -202,47 +171,47 @@ export default {
 
                   })
             },
-            fail(){
-                  wx.navigateTo({url:'../authorize/main'})
+            fail(err){
+                  console.log(err)
+                  // wx.navigateTo({url:'../authorize/main'})
             }
           })
         },
-        // 获取session
-    getSession (callback) {
-      wx.login({
-        success: function(res) {
-          console.log('code......',res.code)
-           if (res.code) {
-             var param = {
-                  url: '/v1/miniprogram/login.htm',
-                  data: { code: res.code },
-                  setUpUrl: true,
-                }
-                ajax(param).then(function(res){
-                    console.log('session',res.data.data)
-                    wx.setStorageSync('session', res.data.data);
-                    callback && callback()
-                })
-          } else {
-            console.log('登录失败！' + res.errMsg)
-          }
-        }
-      })
-    },
-    showDiarys(){
+      
+     showDiarys(){
         var that = this
+        // await getUserInfo()
         var param = {
             url: '/v1/miniprogram/showClockDesc.htm',
-                    data: {
-                      memberId:that.memberId
-                    },
-                    setUpUrl: true,
+            data: {
+              memberId:that.memberId
+            },
+            setUpUrl: true,
         }
         ajax(param).then(function(res){
               console.log('dairydairydairy',res)
               if(res.statusCode == 200){
                 that.diary_lists = res.data.data
                 console.log('that.diary_lists====',that.diary_lists)
+              } 
+          })
+    },
+     showActives(){
+        var that = this
+        // await getUserInfo()
+        var param = {
+            url: '/v1/miniprogram/showActivitys.htm',
+            data: {
+              memberId:that.memberId
+            },
+            setUpUrl: true,
+        }
+        ajax(param).then(function(res){
+              console.log('hhhhhhhhhhhhh',res)
+              if(res.statusCode == 200){
+                that.active_lists = res.data.data
+                // that.team_leader = parseInt(res.data.data.userRole)
+                console.log('that',that.active_lists)
               } 
           })
     }
@@ -385,6 +354,12 @@ export default {
           margin-top 10rpx
           .timer
             margin-right 30rpx
+      .share
+        width 50rpx
+        height 50rpx
+        display inline-block
+        background url('http://ww1.sinaimg.cn/large/eccb7e56ly1fr7czqcz2xj200w00w0cu.jpg') center center no-repeat
+        background-size 100% 100%
     .diary_detail
       font-size 30rpx
       color #444

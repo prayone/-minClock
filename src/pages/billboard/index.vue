@@ -67,7 +67,38 @@
 	</div>
 </template>
 <script>
+	import  ajax  from '../../common/js/ajax.js'
 	export default {
+		data(){
+			return{
+				activityId:'',
+				ranking:[]
+			}
+		},
+		onLoad(options){
+			this.activityID = this.$root.$mp.query.activityId
+			this.showUser()
+
+		},
+		methods:{
+			showUser(){
+		        var that = this
+		        var param = {
+		            url: '/v1/miniprogram/v1/clock_ranking.htm',
+		                    data: {
+		                      activityId:that.activityID
+		                    },
+		                    setUpUrl: true,
+		        }
+		        ajax(param).then(function(res){
+		              console.log('dairydairydairy',res)
+		              if(res.statusCode == 200){
+		                that.ranking = res.data.data
+		                console.log('that.ranking====',that.ranking)
+		              } 
+		          })
+		  	},
+		}
 
 	}
 </script>

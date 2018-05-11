@@ -1,5 +1,5 @@
 export default function ajax (params, noRefetch) {
-  let url = params.setUpUrl === false ? params.url : 'http://192.168.100.8:8081//wacc-wap-web' + params.url
+  let url = params.setUpUrl === false ? params.url : 'https://wap.yunshuxie.com' + params.url
   if (!params.type) {
     params.type = 'get'
   }
