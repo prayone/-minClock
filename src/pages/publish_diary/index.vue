@@ -117,7 +117,7 @@
 				temCount:0,
 				imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqvts6bgj20dw098dfw.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqwi8h8rj20sg0g6wf1.jpg'],
 				activityId:'',
-				saveFile:'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/saveFiles.htm',
+				saveFile:'https://wap.yunshuxie.com/v1/miniprogram/saveFiles.htm',
 				words:'',
 				pic_arr:[],
 				record_arr:'',
