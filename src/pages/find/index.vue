@@ -37,11 +37,9 @@ export default{
 			hasMoreData:true,
 			active_lists:[],
 			keywords:'',
-			memberId:''
 		}
 	},
 	onLoad(){
-		this.memberId = wx.getStorageSync('memberId');
 	},
 	onShow(){
 		this.page = 1,
@@ -64,14 +62,13 @@ export default{
               	data: {
               		page:that.page,
           			activityName:keywords,
-          			memberId:that.memberId
              	},
               	setUpUrl: true,
 	        }
 	        wx.showLoading({
 			  	title: '加载中',
 			})
-	      	ajax(param).then(function(res){
+	      	ajax(param,'memberId').then(function(res){
 	      		wx.hideLoading()
 	            console.log('fffffffff',res)
 	            var active_lists_Tem = that.active_lists

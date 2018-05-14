@@ -19,12 +19,11 @@
 		<div class="content">
 			<div class="cont_item">
 				<div class="zan-panel zan_panel">
-			      <div class="zan-cell zan-cell--access">
+			      <!-- <div class="zan-cell zan-cell--access">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon1"></span>我的关注</div>
-
 			        <div class="zan-cell__ft"></div>
-			      </div>
-			      <div class="zan-cell zan-cell--access">
+			      </div> -->
+			      <!-- <div class="zan-cell zan-cell--access">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon2"></span>我的粉丝</div>
 			        <div class="zan-cell__ft"></div>
 			      </div>
@@ -39,7 +38,7 @@
 			      <div class="zan-cell zan-cell--access">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon5"></span>设置</div>
 			        <div class="zan-cell__ft"></div>
-			      </div>
+			      </div> -->
 			      <div class="zan-cell zan-cell--access">
 			        <div class="zan-cell__bd"><span class="imgIcon imgIcon6"></span>意见反馈</div>
 			        <div class="zan-cell__ft"><button class="back_notice" open-type="contact">点击反馈</button></div>

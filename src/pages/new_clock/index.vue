@@ -44,19 +44,16 @@
 			    console.log(900,this.isopen)
 			},
 			creat_clock(){
-				var memberId = wx.getStorageSync('memberId');
-				var data = {
-					activityStatus:this.isopen,
-					 activityName:this.active_title,
-					 memberId:memberId
-				}
 				var param = {
 					url: '/v1/miniprogram/insertActivity.htm',
-	                data: data,
+	                data: {
+						activityStatus:this.isopen,
+						activityName:this.active_title
+					},
 	                setUpUrl: true,
 				}
 				if(this.active_title){
-					ajax(param).then(function(res){
+					ajax(param,'member').then(function(res){
 						if(res.data.data == 'success'){
 							wx.showToast({
 							  title: '创建成功',

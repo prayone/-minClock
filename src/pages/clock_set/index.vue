@@ -45,13 +45,12 @@
 				access:'zan-cell',
 				time: '19:00',
 				picker:false,
-				memberId:'',
-				activityID:''
+				activityID:'',
+				show:true
 
 			}
 		},
 		onLoad(options){
-			this.memberId = wx.getStorageSync('memberId');
 			this.activityID = this.$root.$mp.query.activityId
 			console.log(this.activityID)
 		},
@@ -78,6 +77,8 @@
 		      })
 		    },
 			save(){
+			      this.show = false
+
 			      var that = this
 			      var status;
 			      if(that.picker){
@@ -86,36 +87,32 @@
 			      		status = 0
 			      }
 			      console.log(status)
-			      // var param = {
-			      //     url: '/v1/miniprogram/activityMessage.htm',
-			      //             data: {
-			      //               memberId:that.memberId,
-			      //               activityId:that.activityID,
-			      //               date:that.time,
-			      //               status:status
-			      //             },
-			      //             setUpUrl: true,
-			      // }
-			      // ajax(param).then(function(res){
-			      //       console.log('oooooooooooo',res)
-			      //       if(res.statusCode == 200){
-
-			      //       } 
-			      //   })
+			      var param = {
+			          url: '/v1/miniprogram/set_activity_remind.htm',
+			                  data: {
+			                    activityId:that.activityID,
+			                    remindTime:that.time,
+			                    status:status
+			                  },
+			                  setUpUrl: true,
+			      }
+			      ajax(param,'memberId').then(function(res){
+			            console.log('oooooooooooo',res)
+			            if(res.statusCode == 200){
+			            } 
+			        })
 
 			},
 			remove(){
-				console.log(this.memberId,this.activityID)
 				var that=this
 				 var param = {
 			          url: '/v1/miniprogram/deleteUser.htm',
 			                  data: {
-			                    memberId:that.memberId,
 			                    activityId:that.activityID
 			                  },
 			                  setUpUrl: true,
 			      }
-			      ajax(param).then(function(res){
+			      ajax(param,'memberId').then(function(res){
 			            console.log('oooooooooooo',res)
 			            if(res.statusCode == 200){
 			            	wx.showToast({

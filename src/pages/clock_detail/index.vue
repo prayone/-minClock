@@ -49,7 +49,7 @@
 				<span style="position:relative;top:-4rpx">添加打卡主题</span>
 			</div>
 		</div>
-		<div class="theme">
+		<div class="theme" v-if='theme_lists'>
 			<div class="theme_title">
 				<span class="zan-icon zan-icon-pending-deliver"></span>
 				打卡主题
@@ -61,7 +61,7 @@
 					</div>
 					<div class="header_text">
 						<p class="header_title">{{theme_lists.clockTheme}}</p>
-						<p class="header_cont"><span>{{theme_lists.themeDate}}</span></p>
+						<p class="header_cont">{{theme_lists.themeDate}}</p>
 					</div>
 				</div>
 				<div class="theme_detail" style="margin-top:20rpx;color:#666;">
@@ -127,26 +127,16 @@
 		    </div>
 		    <!-- 用户信息 -->
 		    <div class="tab_cont tab_cont_user" v-if="tab1.selectedId=='user'">
-		    	<div class="zan-panel">
+		    	<div class="zan-panel" v-for='user in user_lists' :key="user">
 				    <div class="zan-cell zan-cell--access">
 				        <div class="zan-cell__bd flexNone header_img">
-				        	<img src="/static/img/header.jpg" alt="">
+				        	<img :src="user.headPic" alt="">
 				        </div>
-				        <div class="zan-cell__bd nickName">nickName</div>
+				        <div class="zan-cell__bd nickName">{{user.nickName}}</div>
 				        <div class="join_time">
-				        	<span>2018-4-10加入</span>
+				        	<span>{{user.joinDate}}&nbsp;加入</span>
 				    	</div>
 				    </div>
-				    <div class="zan-cell zan-cell--access">
-				        <div class="zan-cell__bd flexNone header_img">
-				        	<img src="/static/img/header.jpg" alt="">
-				        </div>
-				        <div class="zan-cell__bd nickName">nickName</div>
-				        <div class="join_time">
-				        	<span>2018-4-10加入</span>
-				    	</div>
-				    </div>
-				      
 			    </div>
 		    </div>
 		    
@@ -190,7 +180,7 @@
 			            title: '成员'
 			          }],
 			          scroll: false,
-			          selectedId: 'diary'
+			          selectedId: 'detail'
 			        },
 			    team_leader:null,
 			    isClock:0,
@@ -199,7 +189,6 @@
 			    diary_lists:[],
 			    user_lists:[],
 			    activityID:'',
-			    memberId:''
 			}
 		},
 		onLoad(options){
@@ -208,7 +197,6 @@
 			console.log('idididd',this.$root.$mp.query.activeId)
 			this.activityID = this.$root.$mp.query.activeId
 
-			this.memberId = wx.getStorageSync('memberId');
 			if(this.$root.$mp.query.team_lead == 'true'){
 				this.team_leader = true
 			} else {
@@ -221,12 +209,11 @@
 	      	var active_de_param = {
 	          url: '/v1/miniprogram/showActivity.htm',
 	                  data: {
-	                  	activityId:that.activityID,
-	                  	memberId:that.memberId
+	                  	activityId:that.activityID
 	                  },
 	                  setUpUrl: true,
 	        }
-	      	ajax(active_de_param).then(function(res){
+	      	ajax(active_de_param,'memberId').then(function(res){
 	            that.detail_lists = res.data.data
 	            that.movable.text = res.data.data.activityNotice
 	        })
@@ -249,12 +236,11 @@
 				var theme_param = {
 		          url: '/v1/miniprogram/checkClock.htm',
 		                  data: {
-		                  	activityId:that.activityID,
-		                  	memberId:that.memberId
+		                  	activityId:that.activityID
 		                  },
 		                  setUpUrl: true,
 		        }
-		      	ajax(theme_param).then(function(res){
+		      	ajax(theme_param,'memberId').then(function(res){
 		      		console.log('isclock---',res)
 		      		console.log('isclock---',res.data.data.clockNmber)
 		      		if(res.data.data.clockNmber == '1'){
@@ -381,7 +367,6 @@
 				margin 16rpx 0
 				font-size 26rpx
 				color #bbb
-				margin-left 14rpx
 				text-align left
 				.space
 					margin 0 14rpx

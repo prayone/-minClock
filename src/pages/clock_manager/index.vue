@@ -2,36 +2,36 @@
 	<div class="clock_manager">
 		<div class="header">
 			<p class="active_name">{{lists.activityName}}</p>
-			<p class="active_id">活动编号：<span>{{lists.activityId}}</span></p>
+			<p class="active_id">活动编号：<span class="common">{{lists.activityId}}</span></p>
 		</div>
 		<div class="content">
 			<div class="data_info header">
 				<p>昨日数据报告</p>
-				<p class="data_timer">数据更新至:<span>2018/4/12</span></p>
+				<p class="data_timer">数据更新至:<span class="data_timer_date">{{lists.onTime}}</span></p>
 			</div>
 			<div class="zan-panel">
 			    <div class="zan-cell ">
 			        <div class="zan-cell__bd">用户总数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>{{lists.activityUserCount}}</span>
+			        	<span class="common">{{lists.activityUserCount}}</span>
 			    	</div>
 			      </div>
 			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">已打卡人数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>{{lists.clockCount}}</span>
+			        	<span class="common">{{lists.clockCount}}</span>
 			    	</div>
 			      </div>
 			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">访问人数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>{{lists.accessPeople}}</span>
+			        	<span class="common">{{lists.accessPeople}}</span>
 			    	</div>
 			      </div>
 			      <div class="zan-cell ">
 			        <div class="zan-cell__bd">访问次数</div>
 			        <div class="zan-cell__ft picker">
-			        	<span>{{lists.accessCount}}</span>
+			        	<span class="common">{{lists.accessCount}}</span>
 			    	</div>
 			      </div>
 		    </div>
@@ -50,31 +50,33 @@
 		        <div class="zan-cell__bd"><img class="user_icon" src="/static/img/user.png" alt="">成员管理</div>
 		      </div>
 		    </div>
-		    <div class="user_item">
-		    	<div class="user_info">
-		    		<img src="/static/img/header.jpg" alt="">
-		    		<span class="nickName">prayone</span>
-		    		<span class="user_id">用户编号:<span>87675</span></span>
-		    	</div>
-		    	<div class="join_time all_class">
-		    		<p>加入时间</p>
-		    		<p>2018-04-12 00:00:26</p>
-		    	</div>
-		    	<div class="join_time all_class">
-		    		<p>总打卡天数</p>
-		    		<p>23</p>
-		    	</div>
-		    	<div class="join_time all_class">
-		    		<p>打卡日记数</p>
-		    		<p>23</p>
-		    	</div>
-		    	<div class="join_time all_class">
-		    		<p>最后一次打卡日期</p>
-		    		<p>2018-4-12</p>
-		    	</div>
-		    	<div class="remove_user">
-		    		<button class="zan-btn zan-btn--small zan-btn--warn">淘汰</button>
-		    	</div>
+		    <div class="allUser" v-for='user in user_items' :key="user">
+		    	<div class="user_item" >
+			    	<div class="user_info">
+			    		<img :src="user.headPic" alt="">
+			    		<span class="nickName">{{user.nickName}}</span>
+			    	</div>
+			    	<div class="join_time all_class">
+			    		<p>加入时间</p>
+			    		<p class="common">{{user.joinDate}}</p>
+			    	</div>
+			    	<div class="join_time all_class">
+			    		<p>总打卡天数</p>
+			    		<p class="common">{{user.clockDay}}</p>
+			    	</div>
+			    	<div class="join_time all_class">
+			    		<p>打卡日记数</p>
+			    		<p class="common">{{user.clockDescCount}}</p>
+			    	</div>
+			    	<div class="join_time all_class">
+			    		<p>最后一次打卡日期</p>
+			    		<p v-if='user.clockDateEnd' class="common">{{user.clockDateEnd}}</p>
+			    		<p v-if='!user.clockDateEnd' class="common">还未打过卡哦</p>
+			    	</div>
+			    	<div class="remove_user">
+			    		<button class="zan-btn zan-btn--small zan-btn--warn" @click='remove(user.memberId)'>淘汰</button>
+			    	</div>
+			    </div>
 		    </div>
 		</div>
 
@@ -86,24 +88,23 @@ import  ajax  from '../../common/js/ajax.js'
 		data(){
 			return {
 				activityID:'',
-				memberId:'',
-				lists:''
+				lists:{},
+				user_items:[]
+
 			}
 		},
 		onLoad(options){
-			this.memberId = wx.getStorageSync('memberId');
 			this.activityID = this.$root.$mp.query.activityId
 			console.log('nnnnnnnn',this.activityID)
 			 var that = this
 		      var param = {
 		          url: '/v1/miniprogram/activityMessage.htm',
 		                  data: {
-		                    memberId:that.memberId,
 		                    activityId:that.activityID
 		                  },
 		                  setUpUrl: true,
 		      }
-		      ajax(param).then(function(res){
+		      ajax(param,'memberId').then(function(res){
 		            console.log('oooooooooooo',res)
 		            if(res.statusCode == 200){
 		              that.lists = res.data.data
@@ -112,25 +113,73 @@ import  ajax  from '../../common/js/ajax.js'
 		        })
 
 		},
+		onShow(){
+			this.user_manager()
+		},
 		methods:{
 			user_manager(){
-
+				  var that = this
+			      var param = {
+			          url: '/v1/miniprogram/showActivityMemebr.htm',
+			                  data: {
+			                    activityId:that.activityID
+			                  },
+			                  setUpUrl: true,
+			      }
+			      ajax(param,'memberId').then(function(res){
+			            if(res.statusCode == 200){
+			              that.user_items = res.data.data
+			              console.log('666',that.user_items)
+			            } 
+			        })
 			},
 			click_set(activityID){
 				 wx.navigateTo({url:'../clockDetail_set/main?activityId=' + activityID})
-			}
+			},
+			remove(memberId){
+				var that=this
+				 var param = {
+			          url: '/v1/miniprogram/deleteUser.htm',
+			                  data: {
+			                    activityId:that.activityID,
+			                    memberId:memberId
+			                  },
+			                  setUpUrl: true,
+			      }
+			      ajax(param,'memberId').then(function(res){
+			            console.log('oooooooooooo',res)
+			            if(res.statusCode == 200){
+			            	wx.showToast({
+							  title: '已成功删除该成员',
+							  icon: 'success',
+							  duration: 2000,
+							  success(res){
+							  	setTimeout(function(){
+									wx.switchTab({
+										url:'/pages/index/main'
+									})
+						  		},1000)
+							  }
+							})
+			            } 
+			        })
+			},
 		}
 	}
 </script>
 <style lang='stylus'> 
 	Page
 		background-color #f7f7f7
+	.common
+		color #5acb9a
 	.header
 		padding 20rpx 25rpx
 		background-color #fff
 		font-size 32rpx
 		color #444
 		margin-bottom 20rpx
+		.active_name
+			font-weight 600
 		.active_id
 			margin-top 20rpx
 			font-size 24rpx
@@ -140,9 +189,12 @@ import  ajax  from '../../common/js/ajax.js'
 		justify-content space-between
 		align-items center
 		margin-bottom 0
+		font-size 32rpx
 		.data_timer
 			color #888
-			font-size 28rpx
+			font-size 26rpx
+			.data_timer_date
+				color #5acb9a
 	.zan-panel	
 		margin 0
 		.zan-cell__bd
@@ -198,5 +250,4 @@ import  ajax  from '../../common/js/ajax.js'
 			.remove_user
 				text-align right
 				margin 20rpx
-					
 </style>

@@ -14,7 +14,6 @@
 			<p class="notice">点击下方<span class="notice_span">“微信授权”</span>按钮，按图示打开授权</p>
 		</div>
 		<div class="footer">
-			<!-- <button class="button" @click="reAuthorize">重新授权</button> -->
 			<button type="primary" open-type="getUserInfo" @getuserinfo="getInfo" >微信授权</button>
 		</div>
 	</div>
@@ -25,81 +24,62 @@
 		data(){
 		},
 		onLoad(){
-     	 	// this.getInfo()
+							
 		},
 		methods:{
-			// reAuthorize(){
-			// 	wx.authorize({
-	  //               scope: 'scope.record'
-	  //           })
-	  //           wx.authorize({
-	  //               scope: 'scope.userLocation'
-	  //           })
-	  //           wx.openSetting({
-
-	  //           })
-			// },
-			    getSession () {
-			    	console.log(0)
-			     	return new Promise((resolve,reject) => {
-			     		 wx.login({
-					        success: function(res) {
-					          console.log('code......',res.code)
-					           if (res.code) {
-					             var param = {
-					                  url: '/v1/miniprogram/login.htm',
-					                  data: { code: res.code },
-					                  setUpUrl: true,
-					                }
-					                ajax(param).then(function(res){
-					                    // console.log('session----',res.data.data)
-					                    // wx.setStorageSync('session', res.data.data);
-					                    resolve(res.data.data)
-					                })
-					          } else {
-					            console.log('登录失败！' + res.errMsg)
-					          }
-					        }
-					      })
-			     	})
-			     
-			    },
-		async   getInfo(e){
-					console.log(e)
-					console.log('888')
-		         	let that=this
-		         	let sessionId = await this.getSession()
-			        wx.getUserInfo({
-			            withCredentials:true,
-			            success: (res) => {
-			                global.user_info = res.userInfo
-			                console.log('--------',res.userInfo)
-			                // var sessionId = wx.getStorageSync('session');
-			                var param = {
-				                    url: '/v1/miniprogram/decrypt_user_info.htm',
-				                    setUpUrl: true,
-				                    data: {
-				                        encryptedData: res.encryptedData,
-				                        iv: res.iv,
-				                        sessionId: sessionId
-				                    },
-			                	} 
-			                ajax(param).then(function(res){
-			                    console.log('memberId------',res.data.data.memberId)
-			                    wx.setStorageSync('memberId', res.data.data.memberId);
-			                    wx.switchTab({
-									url:'/pages/index/main'
-								})
-			                },function(err){
-			                    that.getInfo()
-			                })
-			            },
-			            fail(err){
-			                  console.log(err)
-			                  wx.navigateTo({url:'../authorize/main'})
-			            }
-			          })
-			        }
+		    getSession () {
+		    	console.log(0)
+		     	return new Promise((resolve,reject) => {
+		     		 wx.login({
+				        success: function(res) {
+				          console.log('code......',res.code)
+				           if (res.code) {
+				             var param = {
+				                  url: '/v1/miniprogram/login.htm',
+				                  data: { code: res.code },
+				                  setUpUrl: true,
+				                }
+				                ajax(param).then(function(res){
+				                    resolve(res.data.data)
+				                })
+				          } else {
+				            console.log('登录失败！' + res.errMsg)
+				          }
+				        }
+				      })
+		     	})
+		     
+		    },
+	async  	getInfo(){
+	         	let sessionId = await this.getSession()
+	         	let that=this
+		        wx.getUserInfo({
+		            withCredentials:true,
+		            success: (res) => {
+		                console.log('--------',res.userInfo)
+		                var param = {
+			                    url: '/v1/miniprogram/decrypt_user_info.htm',
+			                    setUpUrl: true,
+			                    data: {
+			                        encryptedData: res.encryptedData,
+			                        iv: res.iv,
+			                        sessionId: sessionId
+			                    },
+		                	} 
+		                ajax(param).then(function(res){
+		                    console.log('memberId------',res.data.data.memberId)
+	                    	wx.setStorageSync('memberId', res.data.data.memberId);
+		                    wx.switchTab({
+								url:'/pages/index/main'
+							})
+		                })
+		            },
+		            fail(err){
+		                console.log(err)
+		                wx.navigateTo({url:'../authorize/main'})
+		            }
+		          })
+		        }
 
 		}
 	}

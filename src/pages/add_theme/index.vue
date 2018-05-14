@@ -93,8 +93,9 @@
                   	themeDate:that.date,
                   	themeDesc:that.theme_desc
 				}
+				console.log(data)
 				wx.uploadFile({
-			      url: 'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/insertClockThem.htm', //仅为示例，非真实的接口地址
+			      url: 'https://wap.yunshuxie.com/v1/miniprogram/insertClockThem.htm', 
 			      filePath: that.tempFilePaths,
 			      name: 'file',
 			      formData:data,

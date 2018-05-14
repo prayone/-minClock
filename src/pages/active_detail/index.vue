@@ -36,24 +36,20 @@
 			return {
 			    detail_lists:{},
 			    activityId:'',
-			    memberId:''
 			}
 		},
 		onLoad(options){
-			this.memberId = wx.getStorageSync('memberId');
 			this.activityId = this.$root.$mp.query.activityId
-			var memberId = wx.getStorageSync('memberId');
 			console.log('nnnnnnnn',this.activityId)
 			var that = this
 	      	var active_de_param = {
 	          	url: '/v1/miniprogram/AshowActivity.htm',
 	                data: {
-	                  	activityId:that.activityId,
-	                  	memberId:memberId
+	                  	activityId:that.activityId
 	                },
 	                setUpUrl: true,
 	        	}
-	      	ajax(active_de_param).then(function(res){
+	      	ajax(active_de_param,'memberId').then(function(res){
 	      		// console.log('99999999999',res)
 	            that.detail_lists = res.data.data
 	        })
@@ -70,12 +66,11 @@
 		      	var active_de_param = {
 		          	url: '/v1/miniprogram/insertUserClock.htm',
 		                data: {
-		                  	activityId:that.activityId,
-		                  	memberId:that.memberId
+		                  	activityId:that.activityId
 		                },
 		                setUpUrl: true,
 		        	}
-		      	ajax(active_de_param).then(function(res){
+		      	ajax(active_de_param,'memberId').then(function(res){
 		      		if(res.statusCode == 200){
 			       		wx.showToast({
 						  title: '参加成功',

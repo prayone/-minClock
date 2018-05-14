@@ -80,9 +80,6 @@
 		</div>
 		<div class="footer">
 			<div class="all">
-				<div class="cancle">
-				取消
-				</div>
 				<div class="publish" @click='publish_diary'>
 					发表日记
 				</div>
@@ -122,11 +119,9 @@
 				pic_arr:[],
 				record_arr:'',
 				video_arr:'',
-
 			}
 		},
 		onLoad(options){
-			this.memberId = wx.getStorageSync('memberId');
 			this.activityId = this.$root.$mp.query.activityId
 			this.img_urls=[]
 			this.address='位置'
@@ -291,12 +286,11 @@
 		                	clockVoice:that.record_arr,
 		                	clockVideo:that.video_arr,
 		                	clockPosition:that.address,
-		                	memberId:that.memberId,
-		                	// formIds:global.formIds
+		                	formIds:global.formIds
 		                },
 		                setUpUrl: true,
 		        	}
-		      	ajax(diary_param).then(function(res){
+		      	ajax(diary_param,'memberId').then(function(res){
 		      		console.log('ppp',res)
 		      		if(res.statusCode == 200){
 			       		wx.showToast({
@@ -319,8 +313,8 @@
 </script>
 <style lang='stylus'>
 .timer
-		color red
-		font-size 28rpx
+	color red
+	font-size 28rpx
 img
 	width 100%
 	height 100%
@@ -447,14 +441,11 @@ img
 		.all
 			display flex
 			justify-content flex-start
-		.cancle,.publish
-			width 38%
+		.publish
+			width 100%
 			height 100rpx
 			line-height 100rpx
-			background-color #aaa
+			background-color #5acb9a
 			text-align center
 			color #fff
-		.publish
-			width 62%
-			background-color #5acb9a
 </style>

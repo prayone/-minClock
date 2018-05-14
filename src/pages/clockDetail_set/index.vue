@@ -1,7 +1,7 @@
 <template>
 	<div class="clockDetail_set">
 		<div class="img_set">
-			<p class="img_set_text">活动图片<span>（必填）</span></p>
+			<p class="img_set_text">活动图片<span>（必须修改上传）</span></p>
 			<div class="active_img">
 				<img :src="img" alt="">
 				<span class="edit_icon" @click='edit_img'>修改图片</span>
@@ -13,7 +13,7 @@
 		</div>
 		<div class="detail_set space notice">
 			<p class="img_set_text">公告设置</p>
-			<input type="text" v-model="avtivityNotice">
+			<input type="text" v-model="avtivityNotice"> 
 		</div>
 		<div class="detail_set space active_detail" >
 			<p class="img_set_text ">活动详情</p>
@@ -21,7 +21,7 @@
 		</div>
 		
 		<div class="foot">
-			<button class="button" @click='save_set'>保存设置</button>
+			<button class="button_uu" @click='save_set'>保存设置</button>
 		</div>
 	</div>
 </template>	
@@ -69,12 +69,11 @@ export default{
 					    that.img=res.tempFilePaths
 					    // tempFilePaths是要上传给服务器的图片地址
 					    that.tempFilePaths = res.tempFilePaths[0]
-					    console.log(that.img_urls)
+					    console.log(that.tempFilePaths)
 					  }
 				})
 		},
 		save_set(){
-			console.log("aa")
 				var that = this
 				var data = {
 					activityId:that.activityID,
@@ -83,29 +82,42 @@ export default{
                   	activityDesc:that.activityDesc,
                   	activityStatus:that.activityStatus
 				}
-				wx.uploadFile({
-			      url: 'http://192.168.100.8:8081//wacc-wap-web/v1/miniprogram/updateActivity.htm', //仅为示例，非真实的接口地址
-			      filePath: that.tempFilePaths,
-			      name: 'file',
-			      formData:data,
-			      success: function(res){
-			       	console.log('xxxxxxxx---',res)
-			       	if(res.statusCode == 200){
-			       		wx.showToast({
-						  title: '保存成功',
+				console.log(data)
+				if(!that.tempFilePaths){
+					wx.showToast({
+						  title: '您还没有修改图片',
 						  icon: 'success',
 						  duration: 2000,
 						  success(res){
-						  	setTimeout(function(){
-								wx.switchTab({
-									url:'/pages/index/main'
-								})
-					  		},1000)
+						  	
 						  }
 						})
-			       	}
-			      }
-			    })
+				}else{
+					wx.uploadFile({
+				      url: 'https://wap.yunshuxie.com/v1/miniprogram/updateActivity.htm', //仅为示例，非真实的接口地址
+				      filePath: file_img,
+				      name: 'file',
+				      formData:data,
+				      success: function(res){
+				       	console.log('xxxxxxxx---',res)
+				       	if(res.statusCode == 200){
+				       		wx.showToast({
+							  title: '保存成功',
+							  icon: 'success',
+							  duration: 2000,
+							  success(res){
+							  	setTimeout(function(){
+									wx.switchTab({
+										url:'/pages/index/main'
+									})
+						  		},1000)
+							  }
+							})
+				       	}
+				      }
+				    })
+				}
+				
 		},
 	},
 	onUnload(){
@@ -176,7 +188,7 @@ input
 		position fixed
 		bottom 0
 		width 100%
-		.button
+		.button_uu
 			background-color #5acb9a
 			border-radius 0
 			color #fff

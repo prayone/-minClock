@@ -78,7 +78,6 @@
           clockTimer_arr:[],
           activityId:'',
           clockMessage:{},
-          memberId:'',
           clockDay:'',
           diaryTem:{},
           userInfo:{},
@@ -88,17 +87,15 @@
       onLoad(options){
           this.userInfo = global.user_info
           this.activityId = this.$root.$mp.query.activityId
-          this.memberId = wx.getStorageSync('memberId');
           var that = this
           var active_de_param = {
             url: '/v1/miniprogram/clockMessage.htm',
                     data: {
-                      activityId:that.activityId,
-                      memberId:that.memberId
+                      activityId:that.activityId
                     },
                     setUpUrl: true,
           }
-          ajax(active_de_param).then(function(res){
+          ajax(active_de_param,'memberId').then(function(res){
               console.log('uuuuuuuuuuu',res)
               that.clockMessage = res.data.data
               that.clockTimer_arr = res.data.data.clockCalendars
@@ -107,6 +104,11 @@
           })
 
       },
+      onShow(){
+        this.clockDay = this.getToday
+        this.showDiary()
+        
+      },
       methods: {
         showDiary(){
           var that = this
@@ -114,12 +116,11 @@
             url: '/v1/miniprogram/clockDayMessage.htm',
                     data: {
                       activityId:that.activityId,
-                      memberId:that.memberId,
                       clockDate:that.clockDay
                     },
                     setUpUrl: true,
           }
-          ajax(active_de_param).then(function(res){
+          ajax(active_de_param,'memberId').then(function(res){
               console.log('uuuuuuuuuuu',res)
               that.diaryTem = res.data.data
               if(res.data.data){
@@ -141,7 +142,25 @@
         clickToday(data) {
           console.log(data); //跳到了本月
         }
-      }
+      },
+      computed:{
+          getToday(){
+            var date = new Date();
+            var seperator1 = "/";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            console.log(currentdate)
+            return currentdate;
+          }
+      },
 }
 </script>
 <style lang='stylus'> 

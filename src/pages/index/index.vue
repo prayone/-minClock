@@ -5,9 +5,7 @@
         <img src="/static/img/headerbg.png" alt=""> 
       </div>
       <div class="userinfo">
-        <a href="../test/main">
-          <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover"/>
-        </a>
+          <img class="userinfo-avatar" v-if="getuserInfo.avatarUrl" :src="getuserInfo.avatarUrl" background-size="cover"/>
       </div>
     </div>
     <div class="content">
@@ -43,13 +41,13 @@
       <div class="clockDiary">
           <div class="diary">
               <div class="diary_img">
-                  <img :src="userInfo.avatarUrl">
+                  <img :src="getuserInfo.avatarUrl">
               </div>
               <div class="userinfo_diary">
-                  <p class="nickName">{{userInfo.nickName}}</p>
-                  <p class="diary_timer"><span class="timer">{{item.clockDate}}</span><span class="">已坚持6天</span></p>
+                  <p class="nickName">{{getuserInfo.nickName}}</p>
+                  <p class="diary_timer"><span class="timer">{{item.clockDate}}</span><span class="">已坚持{{item.clockDay}}天</span></p>
               </div>
-              <div style="margin-left:260rpx;" @click="diary_share"><span class="share"></span></div>
+              <div style="margin-left:260rpx;" @click="diary_share(item.clockId)"><span class="share"></span></div>
           </div>
           <div class="diary_detail">
             <p>{{item.Word}}</p>
@@ -63,7 +61,7 @@
             </div>
 
             <div class="record" v-if='item.clockVoice'>
-              <audio name="日记语音" :poster="poster" :author="userInfo.nickName" :src="item.clockVoice" id="myAudio" controls loop></audio>
+              <audio name="日记语音" :poster="poster" :author="getuserInfo.nickName" :src="item.clockVoice" id="myAudio" controls loop></audio>
             </div>
           </div>
       </div>
@@ -71,11 +69,11 @@
           <div class="zan-cell">
               <div class="zan-cell__bd active_all">
                 <div class="active_img">
-                  <img src="/static/img/active_img.jpg">
+                  <img :src="item.activityPic">
                 </div>
                 <div class="active_info">
-                  <p style="margin-bottom:18rpx;">活动名称</p>
-                  <p style="color:#888;font-size:24rpx">1233人已参加</p>
+                  <p style="margin-bottom:18rpx;">{{item.activityName}}</p>
+                  <p style="color:#888;font-size:24rpx">{{item.activityUserCount}}人已参加</p>
                 </div>
               </div>
               <div class="zan-cell__ft">
@@ -92,30 +90,28 @@ import  dealFormIds  from '../../common/js/formIds.js'
 export default {
   data () {
     return {
-      userInfo: {},
+      getuserInfo: {},
       tempFilePath:'',
       team_leader:1,
       active_lists:[],
-      record:'',
       poster:'http://ww1.sinaimg.cn/large/eccb7e56ly1fr63qo6ylnj20m80m874w.jpg',
       // poster:'http://ww1.sinaimg.cn/large/eccb7e56ly1fr63xvy6y1j202s02saa2.jpg'
       diary_lists:[],
-      memberId:''
     }
   },
 
   onLoad(){
-    this.memberId = wx.getStorageSync('memberId');
-    console.log('xxxx',this.memberId)
-    this.userInfo=global.user_info
-
-
-    this.record = 'http://ord652itv.bkt.clouddn.com/12333.mp3'
+    var that = this
+     wx.getUserInfo({
+        success: function(res) {
+          that.getuserInfo = res.userInfo
+          global.user_info = res.userInfo
+        }
+      })
   },
   onShow(){
-      // this.getSession(this.getUserInfo())
-      this.showDiarys()
       this.showActives()
+      this.showDiarys()
   },
   methods: {
     FormSubmit(e){
@@ -124,8 +120,8 @@ export default {
         console.log('llll====',formIds);
       })
     },
-    diary_share(){
-      const url = '../share_diary/main'
+    diary_share(diary_id){
+      const url = '../share_diary/main?diary_id=' + diary_id
       wx.navigateTo({ url })
     },
     new_clock () {
@@ -135,66 +131,22 @@ export default {
     clock_detail(info,activeId){
       wx.navigateTo({url:'../clock_detail/main?team_lead='+info+'&activeId='+activeId})
     },
-    
-    getUserInfo () {
-      // 调用登录接口
-      var that=this
-      console.log('0000000000000000')
-      console.log(wx.getUserInfo)
-          wx.getUserInfo({
-            withCredentials:true,
-            success: (res) => {
-                  global.user_info = res.userInfo
-                  that.userInfo = res.userInfo
-                  console.log('--------',that.userInfo)
-                  var sessionId = wx.getStorageSync('session');
-                  var param = {
-                        url: '/v1/miniprogram/decrypt_user_info.htm',
-                        setUpUrl: true,
-                        data: {
-                          encryptedData: res.encryptedData,
-                          iv: res.iv,
-                          sessionId: sessionId
-                        },
-                      } 
-                  ajax(param).then(function(res){
-                      console.log('resresresres------',res)
-                      console.log('memberId------',res.data.data.memberId)
-                      wx.setStorageSync('memberId', res.data.data.memberId);
-                      that.memberId = wx.getStorageSync('memberId');
-
-                  },function(err){
-                      console.log('err',err)
-                      that.getSession(function (){
-                        that.getUserInfo ()
-                      })
-
-                  })
-            },
-            fail(err){
-                  console.log(err)
-                  // wx.navigateTo({url:'../authorize/main'})
-            }
-          })
-        },
-      
-     showDiarys(){
-        var that = this
-        // await getUserInfo()
-        var param = {
-            url: '/v1/miniprogram/showClockDesc.htm',
-            data: {
-              memberId:that.memberId
-            },
-            setUpUrl: true,
-        }
-        ajax(param).then(function(res){
-              console.log('dairydairydairy',res)
-              if(res.statusCode == 200){
-                that.diary_lists = res.data.data
-                console.log('that.diary_lists====',that.diary_lists)
-              } 
-          })
+    showDiarys(){
+      var that = this
+      // await getUserInfo()
+      var param = {
+          url: '/v1/miniprogram/showClockDesc.htm',
+          data: {
+          },
+          setUpUrl: true,
+      }
+      ajax(param,'memberId').then(function(res){
+            console.log('dairydairydairy',res)
+            if(res.statusCode == 200){
+              that.diary_lists = res.data.data
+              console.log('=-------====',that.diary_lists)
+            } 
+        })
     },
      showActives(){
         var that = this
@@ -202,11 +154,10 @@ export default {
         var param = {
             url: '/v1/miniprogram/showActivitys.htm',
             data: {
-              memberId:that.memberId
             },
             setUpUrl: true,
         }
-        ajax(param).then(function(res){
+        ajax(param,'memberId').then(function(res){
               console.log('hhhhhhhhhhhhh',res)
               if(res.statusCode == 200){
                 that.active_lists = res.data.data
@@ -225,11 +176,6 @@ export default {
         wx.stopPullDownRefresh() //停止下拉刷新
       }, 1000)
     },
-  created () {
-    // 调用应用实例的方法获取全局数据
-   
-
-  },
   
 }
 </script>
