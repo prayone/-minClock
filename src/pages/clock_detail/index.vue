@@ -579,7 +579,6 @@
 		z-index 999
 		background-color #fff
 		.clock_btn
-			background-color #fff
 			z-index 777
 			position relative
 			bottom 40rpx

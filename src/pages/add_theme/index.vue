@@ -93,30 +93,38 @@
                   	themeDate:that.date,
                   	themeDesc:that.theme_desc
 				}
-				console.log(data)
-				wx.uploadFile({
-			      url: 'https://wap.yunshuxie.com/v1/miniprogram/insertClockThem.htm', 
-			      filePath: that.tempFilePaths,
-			      name: 'file',
-			      formData:data,
-			      success: function(res){
-			       	console.log('LLLLLLLLLLLLLLL---',res)
-			       	if(res.statusCode == 200){
-			       		wx.showToast({
-						  title: '发布成功',
-						  icon: 'success',
-						  duration: 2000,
-						  success(res){
-						  	setTimeout(function(){
-								wx.navigateBack({
-								  delta:1
-								})
-					  		},1000)
-						  }
+				if(!that.tempFilePaths){
+					wx.showToast({
+						 title: '请修改图片！',
+						  icon: 'none',
+						  image: '/static/img/tishi.png',
+						  duration: 2000
 						})
-			       	}
-			      }
-			    })
+				}else{
+					wx.uploadFile({
+				      url: 'https://wap.yunshuxie.com/v1/miniprogram/insertClockThem.htm', 
+				      filePath: that.tempFilePaths,
+				      name: 'file',
+				      formData:data,
+				      success: function(res){
+				       	console.log('LLLLLLLLLLLLLLL---',res)
+				       	if(res.statusCode == 200){
+				       		wx.showToast({
+							  title: '发布成功',
+							  icon: 'success',
+							  duration: 2000,
+							  success(res){
+							  	setTimeout(function(){
+									wx.navigateBack({
+									  delta:1
+									})
+						  		},1000)
+							  }
+							})
+				       	}
+				      }
+				    })
+				}
 			}
 		}
 

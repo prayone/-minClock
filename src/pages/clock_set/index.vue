@@ -24,7 +24,7 @@
 	      <div class="remind">开启提醒后，每日打卡，第二天再提醒时间微信可接收到消息通知。</div>
 	      <form @submit="FormSubmit" report-submit="true">
 		      <div class="all_btn" v-if='picker'>
-		      	<button>取消</button>
+		      	<!-- <button>取消</button> -->
 		      	<button class="save" formType="submit" @click="save">保存</button>
 		      </div>
  		  </form>
@@ -46,7 +46,6 @@
 				time: '19:00',
 				picker:false,
 				activityID:'',
-				show:true
 
 			}
 		},
@@ -77,8 +76,8 @@
 		      })
 		    },
 			save(){
-			      this.show = false
-
+				  this.picker = false
+				  this.access = 'zan-cell'
 			      var that = this
 			      var status;
 			      if(that.picker){

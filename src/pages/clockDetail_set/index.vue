@@ -82,20 +82,17 @@ export default{
                   	activityDesc:that.activityDesc,
                   	activityStatus:that.activityStatus
 				}
-				console.log(data)
 				if(!that.tempFilePaths){
 					wx.showToast({
-						  title: '您还没有修改图片',
-						  icon: 'success',
-						  duration: 2000,
-						  success(res){
-						  	
-						  }
+						 title: '请修改图片！',
+						  icon: 'none',
+						  image: '/static/img/tishi.png',
+						  duration: 2000
 						})
 				}else{
 					wx.uploadFile({
 				      url: 'https://wap.yunshuxie.com/v1/miniprogram/updateActivity.htm', //仅为示例，非真实的接口地址
-				      filePath: file_img,
+				      filePath: that.tempFilePaths,
 				      name: 'file',
 				      formData:data,
 				      success: function(res){
@@ -103,7 +100,7 @@ export default{
 				       	if(res.statusCode == 200){
 				       		wx.showToast({
 							  title: '保存成功',
-							  icon: 'success',
+							  icon: '/static/',
 							  duration: 2000,
 							  success(res){
 							  	setTimeout(function(){
@@ -182,11 +179,10 @@ input
 			margin 20rpx auto
 			height 200rpx
 			width 90%
+			z-index 1
 	.active_detail
-		margin-bottom 200rpx
+		margin-bottom 100rpx
 	.foot
-		position fixed
-		bottom 0
 		width 100%
 		.button_uu
 			background-color #5acb9a

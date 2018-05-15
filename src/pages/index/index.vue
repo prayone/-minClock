@@ -87,6 +87,7 @@
 import  ajax  from '../../common/js/ajax.js'
 import store from '../../store'
 import  dealFormIds  from '../../common/js/formIds.js'
+import  addImg  from '../../common/js/addImg.js'
 export default {
   data () {
     return {
@@ -209,7 +210,7 @@ export default {
       .clock_item
         position relative
         border 1px solid #dddddd
-        padding 20rpx 10rpx
+        padding 20rpx 20rpx
         display flex
         justify-content flex-start
         margin-bottom 25rpx
@@ -234,6 +235,7 @@ export default {
           font-size 24rpx  
           color #999
           margin-left 20rpx
+          margin-right 15rpx
           .cont_title
             max-width: 860rpx;
             overflow: hidden;
