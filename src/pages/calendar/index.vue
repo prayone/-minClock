@@ -49,7 +49,7 @@
                   <div class="diary_detail">
                     <p>{{diaryTem.clockWord}}</p>
                     <div class="flex_img">
-                        <div class="img_diary" v-for = "(pic_item,ind) in diaryTem.clockPic" :key='pic_item' v-if="diaryTem.clockPic.length">
+                        <div class="img_diary" v-for = "(pic_item,ind) in diaryTem.clockPic" :key='pic_item' v-if="diaryTem.clockPic[0]" @click="previewImg(pic_item,diaryTem.clockPic)">
                           <img :src="pic_item" alt="">
                         </div>
                         <div class="img_diary" v-if='diaryTem.clockVideo'>
@@ -67,6 +67,7 @@
 	</div>
 </template>
 <script>
+  import  addImg  from '../../common/js/addImg.js'
   import  ajax  from '../../common/js/ajax.js'
   import Calendar from '../../components/calendar/calendar.vue'
 	export default {
@@ -110,6 +111,9 @@
         
       },
       methods: {
+         previewImg(pic_item,clockPic){
+            addImg.previewImg(pic_item, clockPic)
+          },
         showDiary(){
           var that = this
           var active_de_param = {

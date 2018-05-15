@@ -25,7 +25,7 @@ export default {
 	addimg(){
 		return new Promise((resolve,reject) => {
 			wx.chooseImage({
-				count: 9, 
+				count: 1, 
 				sizeType: ['compressed'], 
 				sourceType: ['album', 'camera'], 
 				success: function (res) {

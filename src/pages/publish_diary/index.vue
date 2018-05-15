@@ -152,7 +152,7 @@
 		},
 		methods:{
 			seeImg(index){
-				addImg.previewImg(this.imgUrls[index],this.imgUrls)
+				// addImg.previewImg(this.imgUrls[index],this.imgUrls)
 			},
 			//获取位置
 			getLocation(){
@@ -194,6 +194,16 @@
 			},
 			add_record(){
 			    var that=this
+               	 //判断是否获得了用户地理位置授权
+			    wx.getSetting({
+			      success: (res) => {
+			        if (!res.authSetting['scope.record']){
+			        	that.isRecord=true
+			          	that.openConfirm()
+			        }
+			    	  
+			      }
+			    })
 			    that.isRecord=false
 			    const options = {
 	                  duration: 600000,
@@ -212,6 +222,25 @@
                    console.log('recorder start')
                	})
 		    },
+		     openConfirm: function () {
+			    wx.showModal({
+			      content: '检测到您没打开录音权限，是否去设置打开？',
+			      confirmText: "确认",
+			      cancelText: "取消",
+			      success: function (res) {
+			        console.log(res);
+			        //点击“确认”时打开设置页面
+			        if (res.confirm) {
+			          console.log('用户点击确认')
+			          wx.openSetting({
+			            success: (res) => { }
+			          })
+			        } else {
+			          console.log('用户点击取消')
+			        }
+			      }
+			    });
+			  },
 		    over_record(){
 		    	var that = this
 	            recorderManager.stop();
@@ -261,8 +290,12 @@
 			                that.video_src=res.tempFilePath
 			                console.log(that.video_src)
 			                 // 视频上传开始
+			                  wx.showLoading({
+								  	title: '上传中',
+								})
 							let url = that.saveFile
 							addImg.uploadImg(url,that.video_src,null).then((res) => {
+	      						wx.hideLoading()
 								that.video_arr = JSON.parse(res.data).data.iconUrl
 								console.log(res)
 							})

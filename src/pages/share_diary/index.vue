@@ -20,7 +20,7 @@
 	      	<div class="diary_detail">
             <p>{{diary.clockWord}}</p>
             <div class="flex_img">
-                <div class="img_diary" v-for = "(pic_item,ind) in diary.clockPic" :key='pic_item' v-if="diary.clockPic.length">
+                <div class="img_diary" v-for = "(pic_item,ind) in diary.clockPic" :key='pic_item' v-if="diary.clockPic[0]">
                   <img :src="pic_item" alt="">
                 </div>
                 <div class="img_diary" v-if='diary.clockVideo'>

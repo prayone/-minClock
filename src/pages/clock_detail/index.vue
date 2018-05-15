@@ -89,7 +89,7 @@
 			          	<div class="diary_detail">
 			            	<p>{{item.clockWord}}</p>
 				            <div class="flex_img">
-				                <div class="img_diary" v-for = "(pic_item,ind) in item.clockPic" :key='pic_item' v-if="item.clockPic.length">
+				                <div class="img_diary" v-for = "(pic_item,ind) in item.clockPic" :key='pic_item' v-if="item.clockPic[0]"  @click="previewImg(pic_item,item.clockPic)" >
 				                  <img :src="pic_item" alt="">
 				                </div>
 				                <div class="img_diary" v-if='item.clockVideo'>
@@ -155,7 +155,7 @@
 	import ZanNoticeBar from '../../components/zan/noticebar'
 	import  ajax  from '../../common/js/ajax.js'
 	import  dealFormIds  from '../../common/js/formIds.js'
-
+	import  addImg  from '../../common/js/addImg.js'
 
 	export default {
 		 components: {
@@ -225,6 +225,9 @@
 	        this.showUser()
 		},
 		methods:{
+			previewImg(pic_item,clockPic){
+				addImg.previewImg(pic_item, clockPic)
+			},
 			FormSubmit(e){
 		        let formId = e.mp.detail.formId;
 		        dealFormIds(formId).then(function(formIds){

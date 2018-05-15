@@ -37,10 +37,10 @@
           </div>
       </div>
     </div>
-    <div class="diary_item" @click='' v-for = "item in diary_lists" :key='item'>
+    <div class="diary_item" v-for = "item in diary_lists" :key='item'>
       <div class="clockDiary">
           <div class="diary">
-              <div class="diary_img">
+              <div class="diary_img" >
                   <img :src="getuserInfo.avatarUrl">
               </div>
               <div class="userinfo_diary">
@@ -52,7 +52,7 @@
           <div class="diary_detail">
             <p>{{item.Word}}</p>
             <div class="flex_img">
-                <div class="img_diary" v-for = "(pic_item,ind) in item.clockPic" :key='pic_item' v-if="item.clockPic.length">
+                <div class="img_diary" v-for = "(pic_item,ind) in item.clockPic" :key='pic_item' v-if="item.clockPic[0]"  @click="previewImg(pic_item,item.clockPic)">
                   <img :src="pic_item" alt="">
                 </div>
                 <div class="img_diary" v-if='item.clockVideo'>
@@ -88,6 +88,7 @@ import  ajax  from '../../common/js/ajax.js'
 import store from '../../store'
 import  dealFormIds  from '../../common/js/formIds.js'
 import  addImg  from '../../common/js/addImg.js'
+console.log(9797, addImg)
 export default {
   data () {
     return {
@@ -113,8 +114,13 @@ export default {
   onShow(){
       this.showActives()
       this.showDiarys()
+
   },
+  
   methods: {
+    previewImg(pic_item,clockPic){
+      addImg.previewImg(pic_item, clockPic)
+    },
     FormSubmit(e){
         let formId = e.mp.detail.formId;
         dealFormIds(formId).then(function(formIds){
