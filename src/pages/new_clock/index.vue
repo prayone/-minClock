@@ -28,9 +28,9 @@
 			return {
 				active_title:'',
 				RadioItems: [
-				    {name: '1', value: '公开',remark: '任何人都可以参与,且有机会被小打卡推荐'},
-				    {name: '2', value: '私密',remark: '仅群主自己可以参加打卡，且不会被小打卡推荐'}
-				    ],
+				    {name: '1', value: '公开',remark: '任何人都可以参与，且有机会被经典导读推荐'},
+				    {name: '2', value: '私密',remark: '仅群主可以参加打卡，且不会被经典导读推荐'}
+				],
 				isopen:1
 			}
 		},

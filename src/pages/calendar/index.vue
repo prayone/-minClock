@@ -97,16 +97,17 @@
                     setUpUrl: true,
           }
           ajax(active_de_param,'memberId').then(function(res){
-              console.log('uuuuuuuuuuu',res)
+              // console.log('uuuuuuuuuuu',res)
               that.clockMessage = res.data.data
               that.clockTimer_arr = res.data.data.clockCalendars
-              console.log(that.clockTimer_arr)
+              // console.log(that.clockTimer_arr)
 
           })
 
       },
       onShow(){
         this.clockDay = this.getToday
+
         this.showDiary()
         
       },
@@ -116,6 +117,7 @@
           },
         showDiary(){
           var that = this
+          console.log('222',that.clockDay)
           var active_de_param = {
             url: '/v1/miniprogram/clockDayMessage.htm',
                     data: {
@@ -129,6 +131,8 @@
               that.diaryTem = res.data.data
               if(res.data.data){
                   that.hasDiary = true
+              }else{
+                  that.hasDiary = false
               }
 
           })
@@ -136,7 +140,7 @@
         },
         clickDay(data) {
           console.log(data); //选中某天
-          this.clockDay = data 
+          this.clockDay = data
           this.showDiary()
 
         },
@@ -161,7 +165,7 @@
                 strDate = "0" + strDate;
             }
             var currentdate = year + seperator1 + month + seperator1 + strDate;
-            console.log(currentdate)
+            console.log('type-----',typeof(currentdate))
             return currentdate;
           }
       },

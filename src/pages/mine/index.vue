@@ -5,10 +5,9 @@
 				<img :src="userInfo.avatarUrl"  alt="">
 			</div>
 			<div class="person_info">
-				<div class="userinfo-nickname">
+				<!-- <div class="userinfo-nickname"> -->
 			     <p class="nickName">{{userInfo.nickName}}</p> 
-			     <p>用户id：23348148</p>
-			    </div>
+			    <!-- </div> -->
 			</div>
 			<div class="edit_info">
 				<p>修改个人资料
@@ -97,6 +96,7 @@
 		padding 30rpx 22rpx
 		display flex
 		justify-content space-between
+		align-items center
 		.head_img
 			width 100rpx
 			height 100rpx
@@ -109,7 +109,6 @@
 			.nickName 
 				font-size 34rpx
 				font-weight 700
-				margin-bottom 16rpx
 		.edit_info
 			display flex
 			align-items center

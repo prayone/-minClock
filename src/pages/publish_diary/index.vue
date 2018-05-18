@@ -13,7 +13,7 @@
 						<img src="/static/img/add.png" alt="">
 					</div>
 				</div>
-				<div class="main_record" v-if="!isRecord">
+				<!-- <div class="main_record" v-if="!isRecord">
 					<div class="start_record" v-if='start_record'>
 						<div class="record_img" @click="over_record">
 							<div class="record_mini">
@@ -24,7 +24,7 @@
 							<p class="record_text">录音时长10分钟以内</p>
 						</div>
 					</div>
-					<!-- 播放录音 -->
+					播放录音
 					<div class="play_record" v-if="play_record">
 						<div class="zan-panel zan_panel">
 					      <div class="zan-cell">
@@ -49,27 +49,27 @@
 					    </div>
 					</div>
 				</div>
-				<!-- 视频 -->
+				视频
 				<div class="main_video" v-if="video_src">
 					<video :src="video_src"></video>
 					<div class="remove_video">
 						<p class="remove_text" @click="remove_video">删除</p>
 					</div>
-				</div>
+				</div> -->
 			</div>
 			<div class="function">
 				<div class="photo" v-if="!img_urls.length" @click='add_img'>
 					<img src="/static/img/photo.png" alt="">
 				</div>
-				<div class="record" v-if="isRecord" @click="add_record">
+				<!-- <div class="record" v-if="isRecord" @click="add_record">
 					<img src="/static/img/record.png" alt="">
 				</div>
 				<div class="video" v-if="!video_src" @click="add_video">
 					<img src="/static/img/video.png" alt="">
-				</div>
+				</div> -->
 			</div>
 		</div>
-		<div class="place">
+		<!-- <div class="place">
 			<div class="zan-panel" @click='getLocation'>
 		      <div class="zan-cell zan-cell--access">
 		      	<span class="zan-icon zan-icon-location"></span>
@@ -77,7 +77,7 @@
 		        <div class="zan-cell__ft"></div>
 		      </div>
 		    </div>
-		</div>
+		</div> -->
 		<div class="footer">
 			<div class="all">
 				<div class="publish" @click='publish_diary'>
@@ -112,7 +112,8 @@
 				video_src:'',
 				count:0,
 				temCount:0,
-				imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqvts6bgj20dw098dfw.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqwi8h8rj20sg0g6wf1.jpg'],
+				imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg'],
+				// imgUrls:['http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqljyat3j2040040744.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqvts6bgj20dw098dfw.jpg','http://ww1.sinaimg.cn/large/eccb7e56ly1fqnqwi8h8rj20sg0g6wf1.jpg'],
 				activityId:'',
 				saveFile:'https://wap.yunshuxie.com/v1/miniprogram/saveFiles.htm',
 				words:'',

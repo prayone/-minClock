@@ -3,7 +3,7 @@
 		<div class="header">
 			<div class="search">
 				<input type="text" class="input" placeholder="请输入搜索内容" v-model='keywords'>
-				<span class="zan-icon zan-icon-search search_icon" @click='search'></span>
+				<span class="zan-icon zan-icon-search search_icon" @click='find'></span>
 			</div>
 		</div>
 		<div class="content">
@@ -57,6 +57,7 @@ export default{
 		  	var that = this
 	      	var keywords = this.keywords
 	      	console.log('keywords',keywords)
+	      	console.log('page',this.page)
 	      	var param = {
 	          	url: '/v1/miniprogram/findSearchActivitys.htm',
               	data: {
@@ -89,6 +90,8 @@ export default{
 	       })
 		},
 		find(){
+			this.page = 1
+			console.log('oooo',this.page)
 			this.search()
 		}
 	},
@@ -155,9 +158,16 @@ export default{
 				.cont
 					font-size 24rpx
 					color #999
+					flex 4
 				.cont_title
 					font-size 28rpx
 					color #111111
+					max-width: 860rpx;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					display:-webkit-box; 
+					-webkit-box-orient:vertical;
+					-webkit-line-clamp:1; 
 				.cont_detail
 					padding 2rpx 4rpx
 					border 1px solid #fc642d
